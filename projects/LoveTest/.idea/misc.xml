@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/yp050/AndroidStudyProjects/android-kotlin/projects/LoveTest/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/yp050/AndroidStudyProjects/android-kotlin/projects/LoveTest/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/yp050/AndroidStudyProjects/android-kotlin/projects/LoveTest/app/src/main/res/layout/fragment_main.xml" value="0.14" />
+        <entry key="..\:/Users/yp050/AndroidStudyProjects/android-kotlin/projects/LoveTest/app/src/main/res/layout/fragment_question.xml" value="0.13378378378378378" />
+        <entry key="..\:/Users/yp050/AndroidStudyProjects/android-kotlin/projects/LoveTest/app/src/main/res/layout/fragment_result.xml" value="0.13378378378378378" />
+        <entry key="..\:/Users/yp050/AndroidStudyProjects/android-kotlin/projects/LoveTest/app/src/main/res/layout/fragment_selection.xml" value="0.15" />
       </map>
     </option>
   </component>
