@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".fragment.SelectionFragment">
 
     <LinearLayout
@@ -25,7 +26,8 @@
             android:layout_weight="1"
             android:background="@drawable/selection"
             android:gravity="center"
-            android:text="1. Throw it away." />
+            android:text="1. Throw it away."
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/option_2"
@@ -35,7 +37,8 @@
             android:layout_weight="1"
             android:background="@drawable/selection"
             android:gravity="center"
-            android:text="2. Water the flowers." />
+            android:text="2. Water the flowers."
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/option_3"
@@ -45,7 +48,8 @@
             android:layout_weight="1"
             android:background="@drawable/selection"
             android:gravity="center"
-            android:text="3. Cut it off with sissors." />
+            android:text="3. Cut it off with sissors."
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/option_4"
@@ -55,7 +59,8 @@
             android:layout_weight="1"
             android:background="@drawable/selection"
             android:gravity="center"
-            android:text="4. Make them as dried flower." />
+            android:text="4. Make them as dried flower."
+            android:textColor="@color/black" />
 
     </LinearLayout>
 
@@ -68,10 +73,12 @@
 
     <ImageView
         android:id="@+id/btn_back"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/previous"
+        app:layout_constraintHeight_percent="0.12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline2"
+        app:layout_constraintWidth_percent="0.25" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
