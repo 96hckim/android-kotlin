@@ -4,5 +4,5 @@
 * ViewModel
 * LiveData
 * Retrofit
-* Recyclerview
+* Recycleriew
 * Glide
