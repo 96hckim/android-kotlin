@@ -1,6 +1,6 @@
 # Title
 
-심리테스트
+심리테스트(Kotlin)
 
 # Preview
 
