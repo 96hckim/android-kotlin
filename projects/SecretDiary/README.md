@@ -13,6 +13,9 @@
    *  ConstraintLayout
    *  Custom Font
  * Handler
- * SharedPreference (android-ktx)
+ * SharedPreference
  * Theme
  * AlertDialog
+
+# Kotlin
+ * android-ktx 로 SharedPreference 사용하기 (Kotlin Android Extension)
