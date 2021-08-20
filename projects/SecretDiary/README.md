@@ -10,8 +10,8 @@
 
 # Skill
  * Layout
-  - ConstraintLayout
-  - Custom Font
+ - ConstraintLayout
+ - Custom Font
  * Handler
  * SharedPreference (android-ktx)
  * Theme
