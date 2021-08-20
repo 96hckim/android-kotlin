@@ -1,6 +1,7 @@
 package com.hocheol.secretdiary
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.NumberPicker
@@ -62,10 +63,7 @@ class MainActivity : AppCompatActivity() {
             val passwordFromUser = "${numberPicker1.value}${numberPicker2.value}${numberPicker3.value}"
 
             if (passwordPreferences.getString("password", "000").equals(passwordFromUser)) {
-                // 패스워드 성공
-
-                // TODO 다이어리 페이지 작성 후에 넘겨주어야함
-                // startActivity()
+                startActivity(Intent(this, DiaryActivity::class.java))
             } else {
                 showErrorAlertDialog()
             }
@@ -110,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("실패!!")
             .setMessage("비밀번호가 잘못되었습니다.")
-            .setPositiveButton("확인") { _, _ -> }
+            .setPositiveButton("확인", null) // { _, _ -> }
             .create()
             .show()
     }
