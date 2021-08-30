@@ -19,5 +19,5 @@
  * when
  * Random
  * Collection
-    - Set
-    - List
+    * Set
+    * List
