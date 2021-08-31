@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Recorder</string>
+    <string name="reset_button">RESET</string>
 </resources>

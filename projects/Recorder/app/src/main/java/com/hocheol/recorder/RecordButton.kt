@@ -10,7 +10,7 @@ class RecordButton(
 ) : AppCompatImageButton(context, attrs) {
 
     fun updateIconWithState(state: State) {
-        when(state) {
+        when (state) {
             State.BEFORE_RECORDING -> {
                 setImageResource(R.drawable.ic_record)
             }
@@ -25,4 +25,5 @@ class RecordButton(
             }
         }
     }
+
 }
