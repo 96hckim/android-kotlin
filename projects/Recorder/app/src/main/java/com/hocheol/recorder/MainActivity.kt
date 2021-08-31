@@ -119,7 +119,6 @@ class MainActivity : AppCompatActivity() {
         recorder?.start()
         soundVisualizerView.startVisualizing(false)
         recordTimeTextView.startCountUp()
-        recordTimeTextView.stopCountUp()
         state = State.ON_RECORDING
     }
 
@@ -130,6 +129,7 @@ class MainActivity : AppCompatActivity() {
         }
         recorder = null
         soundVisualizerView.stopVisualizing()
+        recordTimeTextView.stopCountUp()
         state = State.AFTER_RECORDING
     }
 
