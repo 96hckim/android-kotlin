@@ -5,9 +5,14 @@ import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+
+    private val resetButton: Button by lazy {
+        findViewById(R.id.resetButton)
+    }
 
     private val recordButton: RecordButton by lazy {
         findViewById(R.id.recordButton)
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private var state = State.BEFORE_RECORDING
         set(value) {
             field = value
+            resetButton.isEnabled = (value == State.AFTER_RECORDING) || (value == State.ON_PLAYING)
             recordButton.updateIconWithState(value)
         }
 
@@ -37,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         requestAudioPermission()
         initViews()
+        bindViews()
+        initVariables()
     }
 
     override fun onRequestPermissionsResult(
@@ -64,6 +72,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
+        resetButton.setOnClickListener {
+            stopPlaying()
+            state = State.BEFORE_RECORDING
+        }
         recordButton.setOnClickListener {
             when (state) {
                 State.BEFORE_RECORDING -> {
@@ -80,6 +92,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun initVariables() {
+        state = State.BEFORE_RECORDING
     }
 
     private fun startRecording() {
