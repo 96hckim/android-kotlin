@@ -1,5 +1,6 @@
 package com.hocheol.pushnotificationreceiver
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initFirebase()
+        updateResult()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        setIntent(intent)
+        updateResult(true)
     }
 
     private fun initFirebase() {
@@ -28,6 +37,15 @@ class MainActivity : AppCompatActivity() {
                 firebaseToken.text = task.result
             }
         }
+    }
+
+    private fun updateResult(isNewIntent: Boolean = false) {
+        resultTextView.text = (intent.getStringExtra("notificationType") ?: "앱 런처") +
+                if (isNewIntent) {
+                    "(으)로 갱신했습니다."
+                } else {
+                    "(으)로 실행했습니다."
+                }
     }
 
 }
