@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFirebase() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if(task.isSuccessful) {
+            if (task.isSuccessful) {
                 firebaseToken.text = task.result
             }
         }
