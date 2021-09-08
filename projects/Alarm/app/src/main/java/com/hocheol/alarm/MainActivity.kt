@@ -1,5 +1,6 @@
 package com.hocheol.alarm
 
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
@@ -28,6 +29,38 @@ class MainActivity : AppCompatActivity() {
         val onOffButton = findViewById<Button>(R.id.onOffButton)
         onOffButton.setOnClickListener {
 
+            val model = it.tag as? AlarmDisplayModel ?: return@setOnClickListener
+            val newModel = saveAlarmModel(model.hour, model.minute, model.onOff.not())
+            renderView(newModel)
+
+            if (newModel.onOff) {
+                val calendar = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, newModel.hour)
+                    set(Calendar.MINUTE, newModel.minute)
+
+                    if (before(Calendar.getInstance())) {
+                        add(Calendar.DATE, 1)
+                    }
+                }
+
+                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val intent = Intent(this, AlarmReceiver::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    ALARM_REQUEST_CODE,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+                )
+            } else {
+                cancelAlarm()
+            }
+
         }
     }
 
@@ -41,6 +74,7 @@ class MainActivity : AppCompatActivity() {
 
                 val model = saveAlarmModel(hour, minute, false)
                 renderView(model)
+                cancelAlarm()
 
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show()
 
@@ -55,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         val model = AlarmDisplayModel(
             hour = hour,
             minute = minute,
-            onOff = false
+            onOff = onOff
         )
 
         val sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -82,20 +116,20 @@ class MainActivity : AppCompatActivity() {
             onOff = onOffDBValue
         )
 
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            this,
-//            ALARM_REQUEST_CODE,
-//            Intent(this, AlarmReceiver::class.java),
-//            PendingIntent.FLAG_NO_CREATE
-//        )
-//
-//        if ((pendingIntent == null) and alarmModel.onOff) {
-//            // 알람은 꺼져있는데, 데이터는 켜져있는 경우
-//            alarmModel.onOff = false
-//        } else if ((pendingIntent != null) and alarmModel.onOff.not()) {
-//            // 알람은 켜져있는데, 데이터는 꺼져있는 경우
-//            pendingIntent.cancel()
-//        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            ALARM_REQUEST_CODE,
+            Intent(this, AlarmReceiver::class.java),
+            PendingIntent.FLAG_NO_CREATE
+        )
+
+        if ((pendingIntent == null) and alarmModel.onOff) {
+            // 알람은 꺼져있는데, 데이터는 켜져있는 경우
+            alarmModel.onOff = false
+        } else if ((pendingIntent != null) and alarmModel.onOff.not()) {
+            // 알람은 켜져있는데, 데이터는 꺼져있는 경우
+            pendingIntent.cancel()
+        }
 
         return alarmModel
     }
@@ -113,6 +147,16 @@ class MainActivity : AppCompatActivity() {
             text = model.onOffText
             tag = model
         }
+    }
+
+    private fun cancelAlarm() {
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            ALARM_REQUEST_CODE,
+            Intent(this, AlarmReceiver::class.java),
+            PendingIntent.FLAG_NO_CREATE
+        )
+        pendingIntent?.cancel()
     }
 
     companion object {
