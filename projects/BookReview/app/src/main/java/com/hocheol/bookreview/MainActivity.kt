@@ -2,12 +2,15 @@ package com.hocheol.bookreview
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.bookreview.adapter.BookAdapter
 import com.hocheol.bookreview.api.BookService
 import com.hocheol.bookreview.databinding.ActivityMainBinding
 import com.hocheol.bookreview.model.BestSellerDto
+import com.hocheol.bookreview.model.SearchBookDto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: BookAdapter
+    private lateinit var bookService: BookService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +35,9 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val bookService = retrofit.create(BookService::class.java)
+        bookService = retrofit.create(BookService::class.java)
 
-        bookService.getBestSellerBooks(API_KEY)
+        bookService.getBestSellerBooks(getString(R.string.interparkAPIKey))
             .enqueue(object : Callback<BestSellerDto> {
 
                 override fun onResponse(
@@ -46,17 +50,43 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     response.body()?.let {
-                        Log.d(TAG, it.toString())
-
-                        it.books.forEach { book ->
-                            Log.d(TAG, book.toString())
-                        }
-
                         adapter.submitList(it.books)
                     }
                 }
 
                 override fun onFailure(call: Call<BestSellerDto>, t: Throwable) {
+                    Log.e(TAG, t.toString())
+                }
+
+            })
+
+        binding.searchEditText.setOnKeyListener { view, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == MotionEvent.ACTION_DOWN) {
+                search(binding.searchEditText.text.toString())
+                return@setOnKeyListener true
+            }
+
+            return@setOnKeyListener false
+        }
+    }
+
+    private fun search(keyword: String) {
+        bookService.getBooksByName(getString(R.string.interparkAPIKey), keyword)
+            .enqueue(object : Callback<SearchBookDto> {
+
+                override fun onResponse(
+                    call: Call<SearchBookDto>,
+                    response: Response<SearchBookDto>
+                ) {
+                    if (response.isSuccessful.not()) {
+                        Log.e(TAG, "NOT!! SUCCESS")
+                        return
+                    }
+
+                    adapter.submitList(response.body()?.books.orEmpty())
+                }
+
+                override fun onFailure(call: Call<SearchBookDto>, t: Throwable) {
                     Log.e(TAG, t.toString())
                 }
 
@@ -71,8 +101,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val API_KEY =
-            "5A72EC06545F22DD9F567A545C3C91A3C103F65F8E0E3353E16759C6B2CA35C9"
         private const val TAG = "MainActivity"
     }
 
