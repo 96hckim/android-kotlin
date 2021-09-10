@@ -5,11 +5,15 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.hocheol.bookreview.adapter.BookAdapter
+import com.hocheol.bookreview.adapter.HistoryAdapter
 import com.hocheol.bookreview.api.BookService
 import com.hocheol.bookreview.databinding.ActivityMainBinding
 import com.hocheol.bookreview.model.BestSellerDto
+import com.hocheol.bookreview.model.History
 import com.hocheol.bookreview.model.SearchBookDto
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,8 +24,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: BookAdapter
+    private lateinit var bookAdapter: BookAdapter
+    private lateinit var historyAdapter: HistoryAdapter
     private lateinit var bookService: BookService
+
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +36,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBookRecyclerView()
+        initHistoryRecyclerView()
+        initSearchEditText()
+
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "BookSearchDB"
+        ).build()
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://book.interpark.com")
@@ -50,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     response.body()?.let {
-                        adapter.submitList(it.books)
+                        bookAdapter.submitList(it.books)
                     }
                 }
 
@@ -60,14 +75,6 @@ class MainActivity : AppCompatActivity() {
 
             })
 
-        binding.searchEditText.setOnKeyListener { view, keyCode, keyEvent ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == MotionEvent.ACTION_DOWN) {
-                search(binding.searchEditText.text.toString())
-                return@setOnKeyListener true
-            }
-
-            return@setOnKeyListener false
-        }
     }
 
     private fun search(keyword: String) {
@@ -78,15 +85,21 @@ class MainActivity : AppCompatActivity() {
                     call: Call<SearchBookDto>,
                     response: Response<SearchBookDto>
                 ) {
+
+                    hideHistoryView()
+                    saveSearchKeyword(keyword)
+
                     if (response.isSuccessful.not()) {
                         Log.e(TAG, "NOT!! SUCCESS")
                         return
                     }
 
-                    adapter.submitList(response.body()?.books.orEmpty())
+                    bookAdapter.submitList(response.body()?.books.orEmpty())
+
                 }
 
                 override fun onFailure(call: Call<SearchBookDto>, t: Throwable) {
+                    hideHistoryView()
                     Log.e(TAG, t.toString())
                 }
 
@@ -94,10 +107,67 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBookRecyclerView() {
-        adapter = BookAdapter()
+        bookAdapter = BookAdapter()
 
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.bookRecyclerView.adapter = adapter
+        binding.bookRecyclerView.adapter = bookAdapter
+    }
+
+    private fun initHistoryRecyclerView() {
+        historyAdapter = HistoryAdapter(historyDeleteClickedListener = {
+            deleteSearchKeyword(it)
+        })
+
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.historyRecyclerView.adapter = historyAdapter
+    }
+
+    private fun initSearchEditText() {
+        binding.searchEditText.setOnKeyListener { view, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == MotionEvent.ACTION_DOWN) {
+                search(binding.searchEditText.text.toString())
+                return@setOnKeyListener true
+            }
+
+            return@setOnKeyListener false
+        }
+
+        binding.searchEditText.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                showHistoryView()
+            }
+
+            return@setOnTouchListener false
+        }
+    }
+
+    private fun showHistoryView() {
+        Thread {
+            val keywords = db.historyDao().getAll().reversed()
+
+            runOnUiThread {
+                binding.historyRecyclerView.isVisible = true
+                historyAdapter.submitList(keywords.orEmpty())
+            }
+        }.start()
+        binding.historyRecyclerView.isVisible = true
+    }
+
+    private fun hideHistoryView() {
+        binding.historyRecyclerView.isVisible = false
+    }
+
+    private fun saveSearchKeyword(keyword: String) {
+        Thread {
+            db.historyDao().insertHistory(History(null, keyword))
+        }.start()
+    }
+
+    private fun deleteSearchKeyword(keyword: String) {
+        Thread {
+            db.historyDao().delete(keyword)
+            showHistoryView()
+        }.start()
     }
 
     companion object {
