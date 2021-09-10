@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
 
                     hideHistoryView()
-                    if (!isClickKeyword) {
+                    if (isClickKeyword.not()) {
                         saveSearchKeyword(keyword)
                     }
 
@@ -135,7 +135,6 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    binding.searchEditText.text = null
                     bookAdapter.submitList(response.body()?.books.orEmpty())
                     if (response.body()?.books.isNullOrEmpty()) {
                         Toast.makeText(applicationContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT)
