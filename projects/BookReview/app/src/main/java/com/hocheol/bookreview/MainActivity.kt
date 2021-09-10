@@ -1,5 +1,6 @@
 package com.hocheol.bookreview
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -39,11 +40,7 @@ class MainActivity : AppCompatActivity() {
         initHistoryRecyclerView()
         initSearchEditText()
 
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "BookSearchDB"
-        ).build()
+        db = getAppDatabase(this)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://book.interpark.com")
@@ -107,7 +104,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBookRecyclerView() {
-        bookAdapter = BookAdapter()
+        bookAdapter = BookAdapter(itemClickedListener = {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("bookModel", it)
+            startActivity(intent)
+        })
 
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.bookRecyclerView.adapter = bookAdapter
@@ -146,7 +147,6 @@ class MainActivity : AppCompatActivity() {
             val keywords = db.historyDao().getAll().reversed()
 
             runOnUiThread {
-                binding.historyRecyclerView.isVisible = true
                 historyAdapter.submitList(keywords.orEmpty())
             }
         }.start()
