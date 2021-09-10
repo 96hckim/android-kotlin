@@ -2,7 +2,6 @@ package com.hocheol.bookreview
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.hocheol.bookreview.databinding.ActivityDetailBinding
 import com.hocheol.bookreview.model.Book
@@ -23,11 +22,12 @@ class DetailActivity : AppCompatActivity() {
         val bookModel = intent.getParcelableExtra<Book>("bookModel")
 
         binding.titleTextView.text = bookModel?.title.orEmpty()
-        binding.descriptionTextView.text = bookModel?.description.orEmpty()
 
         Glide.with(binding.coverImageView.context)
-            .load(bookModel?.coverSmallUrl.orEmpty())
+            .load(bookModel?.coverLargeUrl.orEmpty())
             .into(binding.coverImageView)
+
+        binding.descriptionTextView.text = bookModel?.description.orEmpty()
 
         Thread {
             val review = db.reviewDao().getOneReview(bookModel?.id?.toInt() ?: 0)

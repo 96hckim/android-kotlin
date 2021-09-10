@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.hocheol.bookreview.adapter.BookAdapter
 import com.hocheol.bookreview.adapter.HistoryAdapter
 import com.hocheol.bookreview.api.BookService
@@ -74,35 +74,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun search(keyword: String) {
-        bookService.getBooksByName(getString(R.string.interparkAPIKey), keyword)
-            .enqueue(object : Callback<SearchBookDto> {
-
-                override fun onResponse(
-                    call: Call<SearchBookDto>,
-                    response: Response<SearchBookDto>
-                ) {
-
-                    hideHistoryView()
-                    saveSearchKeyword(keyword)
-
-                    if (response.isSuccessful.not()) {
-                        Log.e(TAG, "NOT!! SUCCESS")
-                        return
-                    }
-
-                    bookAdapter.submitList(response.body()?.books.orEmpty())
-
-                }
-
-                override fun onFailure(call: Call<SearchBookDto>, t: Throwable) {
-                    hideHistoryView()
-                    Log.e(TAG, t.toString())
-                }
-
-            })
-    }
-
     private fun initBookRecyclerView() {
         bookAdapter = BookAdapter(itemClickedListener = {
             val intent = Intent(this, DetailActivity::class.java)
@@ -115,9 +86,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initHistoryRecyclerView() {
-        historyAdapter = HistoryAdapter(historyDeleteClickedListener = {
-            deleteSearchKeyword(it)
-        })
+        historyAdapter = HistoryAdapter(
+            historyKeywordClickedListener = {
+                search(it, true)
+            }, historyDeleteClickedListener = {
+                deleteSearchKeyword(it)
+            })
 
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.historyRecyclerView.adapter = historyAdapter
@@ -142,15 +116,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun search(keyword: String, isClickKeyword: Boolean = false) {
+        bookService.getBooksByName(getString(R.string.interparkAPIKey), keyword)
+            .enqueue(object : Callback<SearchBookDto> {
+
+                override fun onResponse(
+                    call: Call<SearchBookDto>,
+                    response: Response<SearchBookDto>
+                ) {
+
+                    hideHistoryView()
+                    if (!isClickKeyword) {
+                        saveSearchKeyword(keyword)
+                    }
+
+                    if (response.isSuccessful.not()) {
+                        Log.e(TAG, "NOT!! SUCCESS")
+                        return
+                    }
+
+                    binding.searchEditText.text = null
+                    bookAdapter.submitList(response.body()?.books.orEmpty())
+                    if (response.body()?.books.isNullOrEmpty()) {
+                        Toast.makeText(applicationContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                }
+
+                override fun onFailure(call: Call<SearchBookDto>, t: Throwable) {
+                    hideHistoryView()
+                    Log.e(TAG, t.toString())
+                }
+
+            })
+    }
+
     private fun showHistoryView() {
         Thread {
             val keywords = db.historyDao().getAll().reversed()
 
             runOnUiThread {
                 historyAdapter.submitList(keywords.orEmpty())
+                binding.historyRecyclerView.isVisible = keywords.isNotEmpty()
             }
         }.start()
-        binding.historyRecyclerView.isVisible = true
     }
 
     private fun hideHistoryView() {

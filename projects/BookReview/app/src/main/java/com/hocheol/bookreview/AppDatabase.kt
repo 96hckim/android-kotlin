@@ -16,9 +16,26 @@ abstract class AppDatabase : RoomDatabase() {
 }
 
 fun getAppDatabase(context: Context): AppDatabase {
+
+//    val migration_1_2 = object : Migration(1, 2) {
+//        override fun migrate(database: SupportSQLiteDatabase) {
+//            database.execSQL("CREATE TABLE `REVIEW` (`id` INTEGER, `review` TEXT," + "PRIMARY KEY(`id`))")
+//        }
+//    }
+//
+//    return Room.databaseBuilder(
+//        context,
+//        AppDatabase::class.java,
+//        "BookDB"
+//    )
+//        .addMigrations(migration_1_2)
+//        .build()
+
     return Room.databaseBuilder(
         context,
         AppDatabase::class.java,
         "BookDB"
-    ).build()
+    )
+        .build()
+
 }

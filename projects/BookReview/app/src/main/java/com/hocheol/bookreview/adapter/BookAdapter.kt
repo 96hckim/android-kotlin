@@ -30,12 +30,12 @@ class BookAdapter(private val itemClickedListener: (Book) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bookModel: Book) {
-            binding.titleTextView.text = bookModel.title
-            binding.descriptionTextView.text = bookModel.description
-
             binding.root.setOnClickListener {
                 itemClickedListener(bookModel)
             }
+
+            binding.titleTextView.text = bookModel.title
+            binding.descriptionTextView.text = bookModel.description
 
             Glide.with(binding.coverImageView.context)
                 .load(bookModel.coverSmallUrl)

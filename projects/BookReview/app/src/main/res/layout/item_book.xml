@@ -27,8 +27,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/coverImageView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="안드로이드 마스터하기" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/descriptionTextView"
