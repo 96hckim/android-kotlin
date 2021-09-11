@@ -9,6 +9,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.hocheol.tinder.DBKey.Companion.LIKED_BY
+import com.hocheol.tinder.DBKey.Companion.MATCH
+import com.hocheol.tinder.DBKey.Companion.NAME
+import com.hocheol.tinder.DBKey.Companion.USERS
 
 class MatchedUserActivity : AppCompatActivity() {
 
@@ -21,7 +25,7 @@ class MatchedUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
 
-        userDB = Firebase.database.reference.child("Users")
+        userDB = Firebase.database.reference.child(USERS)
 
         initMatchedUserRecyclerView()
         getMatchUsers()
@@ -35,7 +39,7 @@ class MatchedUserActivity : AppCompatActivity() {
     }
 
     private fun getMatchUsers() {
-        val matchedDB = userDB.child(getCurrentUserID()).child("likedBy").child("match")
+        val matchedDB = userDB.child(getCurrentUserID()).child(LIKED_BY).child(MATCH)
 
         matchedDB.addChildEventListener(object : ChildEventListener {
 
@@ -60,7 +64,7 @@ class MatchedUserActivity : AppCompatActivity() {
         userDB.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                cardItems.add(CardItem(userId, snapshot.child("name").value.toString()))
+                cardItems.add(CardItem(userId, snapshot.child(NAME).value.toString()))
                 adapter.submitList(cardItems)
             }
 

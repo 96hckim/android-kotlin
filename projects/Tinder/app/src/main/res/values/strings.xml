@@ -2,4 +2,13 @@
     <string name="app_name">Tinder</string>
     <string name="facebook_app_id">255717066418996</string>
     <string name="fb_login_protocol_scheme">fb255717066418996</string>
+    <string name="write_name">이름을 입력해주세요</string>
+    <string name="save">저장</string>
+    <string name="match_list_button">매치 리스트 보기</string>
+    <string name="sign_out_button">로그아웃 하기</string>
+    <string name="sign_up_button">회원가입</string>
+    <string name="login_button">로그인</string>
+    <string name="not_matched">매칭할 카드가 없습니다.</string>
+    <string name="like">LIKE</string>
+    <string name="dis_like">DISLIKE</string>
 </resources>
