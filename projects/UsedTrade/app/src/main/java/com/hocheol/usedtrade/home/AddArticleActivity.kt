@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
@@ -78,7 +79,7 @@ class AddArticleActivity : AppCompatActivity() {
             val title = binding.titleEditText.text.toString()
             val price = binding.priceEditText.text.toString()
 
-            if (title.isEmpty() && price.isEmpty()) {
+            if (TextUtils.isEmpty(title) && TextUtils.isEmpty(price)) {
                 Toast.makeText(this, "제목과 가격을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -89,10 +90,12 @@ class AddArticleActivity : AppCompatActivity() {
 
             if (selectedUri != null) {
                 val photoUri = selectedUri ?: return@setOnClickListener
-                uploadPhoto(photoUri,
+                uploadPhoto(
+                    photoUri,
                     successHandler = { uri ->
                         uploadArticle(sellerId, title, price, uri)
-                    }, errorHandler = {
+                    },
+                    errorHandler = {
                         Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
                         hideProgress()
                     }

@@ -9,4 +9,7 @@
     <string name="reg_image">이미지 등록하기</string>
     <string name="price">가격</string>
     <string name="title">글 제목</string>
+    <string name="sign_up">회원가입</string>
+    <string name="login">로그인</string>
+    <string name="logout">로그아웃</string>
 </resources>
