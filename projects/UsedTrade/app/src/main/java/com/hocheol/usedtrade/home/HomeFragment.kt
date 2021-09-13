@@ -1,9 +1,11 @@
 package com.hocheol.usedtrade.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
@@ -59,6 +61,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
+
+        fragmentHomeBinding.addFloatingButton.setOnClickListener {
+//            if (auth.currentUser != null) {
+                startActivity(Intent(requireContext(), AddArticleActivity::class.java))
+//            } else {
+//                Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
+//            }
+        }
 
         articleDB.addChildEventListener(listener)
     }
