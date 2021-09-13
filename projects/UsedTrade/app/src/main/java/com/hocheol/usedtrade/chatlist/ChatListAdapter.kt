@@ -40,6 +40,7 @@ class ChatListAdapter(
 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ChatListItem>() {
+
             override fun areItemsTheSame(oldItem: ChatListItem, newItem: ChatListItem): Boolean {
                 return oldItem.key == newItem.key
             }

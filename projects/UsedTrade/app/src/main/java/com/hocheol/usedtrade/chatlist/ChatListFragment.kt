@@ -1,5 +1,6 @@
 package com.hocheol.usedtrade.chatlist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import com.hocheol.usedtrade.DBKey.Companion.CHILD_CHAT
 import com.hocheol.usedtrade.DBKey.Companion.DB_USERS
 import com.hocheol.usedtrade.R
+import com.hocheol.usedtrade.chatdetail.ChatRoomActivity
 import com.hocheol.usedtrade.databinding.FragmentChatlistBinding
 
 class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
@@ -32,8 +34,12 @@ class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
         val fragmentChatlistBinding = FragmentChatlistBinding.bind(view)
         binding = fragmentChatlistBinding
 
-        chatListAdapter = ChatListAdapter(onItemClicked = {
-
+        chatListAdapter = ChatListAdapter(onItemClicked = { chatRoom ->
+            context?.let { context ->
+                val intent = Intent(context, ChatRoomActivity::class.java)
+                intent.putExtra("chatKey", chatRoom.key)
+                startActivity(intent)
+            }
         })
 
         chatRoomList.clear()
