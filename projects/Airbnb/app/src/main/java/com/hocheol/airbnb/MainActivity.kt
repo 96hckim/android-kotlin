@@ -8,6 +8,11 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -41,11 +46,45 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this@MainActivity, LOCATION_PERMISSION_REQUEST_CODE)
         naverMap.locationSource = locationSource
 
-        val marker = Marker()
-        marker.position = LatLng(37.500835, 127.029694)
-        marker.map = naverMap
-        marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = Color.RED
+        getHouseListFromAPI()
+    }
+
+    private fun getHouseListFromAPI() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://run.mocky.io")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        retrofit.create(HouseService::class.java).also {
+            it.getHouseList()
+                .enqueue(object : Callback<HouseDto> {
+
+                    override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
+                        if (response.isSuccessful.not()) {
+                            return
+                        }
+
+                        response.body()?.let { dto ->
+                            updateMarker(dto.items)
+                        }
+                    }
+
+                    override fun onFailure(call: Call<HouseDto>, t: Throwable) {
+                    }
+
+                })
+        }
+    }
+
+    private fun updateMarker(houses: List<HouseModel>) {
+        houses.forEach { houseModel ->
+            val marker = Marker()
+            marker.position = LatLng(houseModel.lat, houseModel.lng)
+            marker.map = naverMap
+            marker.tag = houseModel.id
+            marker.icon = MarkerIcons.BLACK
+            marker.iconTintColor = Color.RED
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -105,6 +144,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        private const val TAG = "MainActivity"
     }
 
 }
