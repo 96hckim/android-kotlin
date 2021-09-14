@@ -3,6 +3,9 @@ package com.hocheol.youtube
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.hocheol.youtube.adapter.VideoAdapter
 import com.hocheol.youtube.dto.VideoDto
 import com.hocheol.youtube.service.VideoService
 import retrofit2.Call
@@ -13,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var videoAdapter: VideoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +25,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, PlayerFragment())
             .commit()
+
+        videoAdapter = VideoAdapter()
+
+        findViewById<RecyclerView>(R.id.mainRecyclerView).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = videoAdapter
+        }
 
         getVideoList()
 
@@ -43,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         response.body()?.let { videoDto ->
-                            Log.d(TAG, videoDto.toString())
+                            videoAdapter.submitList(videoDto.videos)
                         }
                     }
 
