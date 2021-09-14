@@ -1,11 +1,18 @@
 package com.hocheol.airbnb
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.naver.maps.map.MapView
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private lateinit var naverMap: NaverMap
+    private lateinit var locationSource: FusedLocationSource
     private val mapView: MapView by lazy {
         findViewById(R.id.mapView)
     }
@@ -15,6 +22,49 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         mapView.onCreate(savedInstanceState)
 
+        mapView.getMapAsync(this)
+
+    }
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+
+        naverMap.maxZoom = 18.0
+        naverMap.minZoom = 10.0
+
+        val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.497915, 127.027559))
+        naverMap.moveCamera(cameraUpdate)
+
+        val uiSetting = naverMap.uiSettings
+        uiSetting.isLocationButtonEnabled = true
+
+        locationSource = FusedLocationSource(this@MainActivity, LOCATION_PERMISSION_REQUEST_CODE)
+        naverMap.locationSource = locationSource
+
+        val marker = Marker()
+        marker.position = LatLng(37.500835, 127.029694)
+        marker.map = naverMap
+        marker.icon = MarkerIcons.BLACK
+        marker.iconTintColor = Color.RED
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
+
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated) {
+                naverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
+        }
 
     }
 
@@ -51,6 +101,10 @@ class MainActivity : AppCompatActivity() {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
 }
