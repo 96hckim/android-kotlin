@@ -3,7 +3,6 @@ package com.hocheol.youtube
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.exoplayer2.MediaItem
@@ -105,19 +104,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
                     super.onIsPlayingChanged(isPlaying)
 
                     if (isPlaying) {
-                        it.bottomPlayerControlButton.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.ic_baseline_pause_24
-                            )
-                        )
+                        it.bottomPlayerControlButton.setImageResource(R.drawable.ic_baseline_pause_24)
                     } else {
-                        it.bottomPlayerControlButton.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.ic_baseline_play_arrow_24
-                            )
-                        )
+                        it.bottomPlayerControlButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                     }
                 }
 
