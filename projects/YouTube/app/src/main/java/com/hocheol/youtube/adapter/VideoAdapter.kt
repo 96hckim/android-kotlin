@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hocheol.youtube.R
-import com.hocheol.youtube.adapter.VideoAdapter.ViewHolder
 import com.hocheol.youtube.model.VideoModel
 
-class VideoAdapter : ListAdapter<VideoModel, ViewHolder>(diffUtil) {
+class VideoAdapter(val callback: (String, String) -> Unit) :
+    ListAdapter<VideoModel, VideoAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
@@ -28,6 +28,10 @@ class VideoAdapter : ListAdapter<VideoModel, ViewHolder>(diffUtil) {
             Glide.with(thumbnailImageView.context)
                 .load(videoModel.thumb)
                 .into(thumbnailImageView)
+
+            view.setOnClickListener {
+                callback(videoModel.sources, videoModel.title)
+            }
         }
 
     }
