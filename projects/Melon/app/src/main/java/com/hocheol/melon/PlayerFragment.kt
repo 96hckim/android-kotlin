@@ -19,8 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class PlayerFragment : Fragment(R.layout.fragment_player) {
 
+    private var model: PlayerModel = PlayerModel()
     private var binding: FragmentPlayerBinding? = null
-    private var isWatchingPlayListview = true
     private var player: SimpleExoPlayer? = null
     private lateinit var playListAdapter: PlayListAdapter
 
@@ -58,16 +58,26 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
                     }
                 }
 
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(mediaItem, reason)
+
+                    val newIndex = mediaItem?.mediaId ?: return
+                    model.currentPosition = newIndex.toInt()
+                    playListAdapter.submitList(model.getAdapterModels())
+                }
+
             })
         }
     }
 
     private fun initPlayListButton(fragmentPlayerBinding: FragmentPlayerBinding) {
         fragmentPlayerBinding.playListImageView.setOnClickListener {
-            fragmentPlayerBinding.playerViewGroup.isVisible = isWatchingPlayListview
-            fragmentPlayerBinding.playListViewGroup.isVisible = isWatchingPlayListview.not()
+            if (model.currentPosition == -1) return@setOnClickListener
 
-            isWatchingPlayListview = !isWatchingPlayListview
+            fragmentPlayerBinding.playerViewGroup.isVisible = model.isWatchingPlayListview
+            fragmentPlayerBinding.playListViewGroup.isVisible = model.isWatchingPlayListview.not()
+
+            model.isWatchingPlayListview = !model.isWatchingPlayListview
         }
     }
 
@@ -83,17 +93,19 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
         }
 
         fragmentPlayerBinding.skipNextImageView.setOnClickListener {
-
+            val nextMusic = model.nextMusic() ?: return@setOnClickListener
+            playMusic(nextMusic)
         }
 
         fragmentPlayerBinding.skipPrevImageView.setOnClickListener {
-
+            val prevMusic = model.prevMusic() ?: return@setOnClickListener
+            playMusic(prevMusic)
         }
     }
 
     private fun initRecyclerView(fragmentPlayerBinding: FragmentPlayerBinding) {
         playListAdapter = PlayListAdapter {
-
+            playMusic(it)
         }
 
         fragmentPlayerBinding.playListRecyclerView.apply {
@@ -122,12 +134,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
                             }
 
                             response.body()?.let { musicDto ->
-                                val modelList = musicDto.musics.mapIndexed { index, musicEntity ->
-                                    musicEntity.mapper(index.toLong())
-                                }
+                                model = musicDto.mapper()
 
-                                setMusicList(modelList)
-                                playListAdapter.submitList(modelList)
+                                setMusicList(model.getAdapterModels())
+                                playListAdapter.submitList(model.getAdapterModels())
                             }
                         }
 
@@ -147,8 +157,13 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
             })
 
             player?.prepare()
-            player?.play()
         }
+    }
+
+    private fun playMusic(musicModel: MusicModel) {
+        model.updateCurrentPosition(musicModel)
+        player?.seekTo(model.currentPosition, 0)
+        player?.play()
     }
 
     companion object {
