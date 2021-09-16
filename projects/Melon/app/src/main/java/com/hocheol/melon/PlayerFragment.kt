@@ -1,9 +1,10 @@
 package com.hocheol.melon
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.hocheol.melon.databinding.FragmentPlayerBinding
 import com.hocheol.melon.service.MusicDto
 import com.hocheol.melon.service.MusicService
 import retrofit2.Call
@@ -14,10 +15,27 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class PlayerFragment : Fragment(R.layout.fragment_player) {
 
+    private var binding: FragmentPlayerBinding? = null
+    private var isWatchingPlayListview = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val fragmentPlayerBinding = FragmentPlayerBinding.bind(view)
+        binding = fragmentPlayerBinding
+
+        initPlayListButton(fragmentPlayerBinding)
+
         getMusicListFromServer()
+    }
+
+    private fun initPlayListButton(fragmentPlayerBinding: FragmentPlayerBinding) {
+        fragmentPlayerBinding.playListImageView.setOnClickListener {
+            fragmentPlayerBinding.playerViewGroup.isVisible = isWatchingPlayListview
+            fragmentPlayerBinding.playListViewGroup.isVisible = isWatchingPlayListview.not()
+
+            isWatchingPlayListview = !isWatchingPlayListview
+        }
     }
 
     private fun getMusicListFromServer() {
@@ -40,7 +58,9 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
                             }
 
                             response.body()?.let { musicDto ->
-                                Log.d(TAG, musicDto.musics.toString())
+                                val modelList = musicDto.musics.mapIndexed { index, musicEntity ->
+                                    musicEntity.mapper(index.toLong())
+                                }
                             }
                         }
 
