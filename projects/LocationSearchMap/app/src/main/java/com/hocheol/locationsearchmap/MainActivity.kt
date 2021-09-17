@@ -1,6 +1,7 @@
 package com.hocheol.locationsearchmap
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.locationsearchmap.databinding.ActivityMainBinding
 import com.hocheol.locationsearchmap.model.LocationLatLngEntity
 import com.hocheol.locationsearchmap.model.SearchResultEntity
+import com.hocheol.locationsearchmap.utillity.RetrofitUtil
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope {
+
+    private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: SearchListAdapter
@@ -21,7 +30,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        job = Job()
+
         initViews()
+        bindViews()
         initAdapter()
         initData()
         setMockingData()
@@ -29,6 +41,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.emptyResultTextView.isVisible = false
+    }
+
+    private fun bindViews() = with(binding) {
+        searchButton.setOnClickListener {
+            searchKeyword(searchEditText.text.toString())
+        }
     }
 
     private fun initAdapter() {
@@ -64,6 +82,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.submitList(dataList)
+    }
+
+    private fun searchKeyword(keyword: String) {
+        launch(coroutineContext) {
+            try {
+                withContext(Dispatchers.IO) {
+                    val response = RetrofitUtil.apiService.getSearchLocation(
+                        keyword = keyword
+                    )
+                    if (response.isSuccessful) {
+                        val body = response.body()
+                        withContext(Dispatchers.Main) {
+                            Log.e("response", body.toString())
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, "검색하는 과정에서 오류가 발생했습니다. : ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }
