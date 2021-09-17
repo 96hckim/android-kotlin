@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hocheol.locationsearchmap.MapActivity.Companion.SEARCH_RESULT_EXTRA_KEY
 import com.hocheol.locationsearchmap.databinding.ActivityMainBinding
 import com.hocheol.locationsearchmap.model.LocationLatLngEntity
 import com.hocheol.locationsearchmap.model.SearchResultEntity
@@ -47,14 +48,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private fun initAdapter() {
         adapter = SearchListAdapter(searchResultCLickListener = {
-            Toast.makeText(
-                this,
-                "위치 : ${it.fullAddress}, 건물명 : ${it.name} 좌표 : ${it.locationLatLng.latitude}, ${it.locationLatLng.longitude}",
-                Toast.LENGTH_SHORT
-            ).show()
             startActivity(
                 Intent(this, MapActivity::class.java).apply {
-
+                    putExtra(SEARCH_RESULT_EXTRA_KEY, it)
                 }
             )
         })
