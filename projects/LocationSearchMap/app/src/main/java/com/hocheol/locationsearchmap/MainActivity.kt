@@ -2,9 +2,11 @@ package com.hocheol.locationsearchmap
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.locationsearchmap.MapActivity.Companion.SEARCH_RESULT_EXTRA_KEY
@@ -40,8 +42,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private fun bindViews() = with(binding) {
         searchButton.setOnClickListener {
-            searchEditText.text.toString()?.also {
-                searchKeyword(it)
+            if (TextUtils.isEmpty(searchEditText.text?.trim())) {
+                Toast.makeText(this@MainActivity, "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            searchEditText.text.also {
+                searchKeyword(it.toString())
             }
         }
     }
@@ -69,17 +76,28 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                     val response = RetrofitUtil.apiService.getSearchLocation(
                         keyword = keyword
                     )
+
                     if (response.isSuccessful) {
                         val body = response.body()
+
                         withContext(Dispatchers.Main) {
-                            body?.let {
-                                setData(it)
+                            if (body == null) {
+                                binding.emptyResultTextView.isVisible = true
+                                adapter.submitList(emptyList())
+                            } else {
+                                binding.emptyResultTextView.isVisible = false
+                                setData(body)
                             }
                         }
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(applicationContext, "검색하는 과정에서 오류가 발생했습니다. : ${e.message}", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+                Toast.makeText(
+                    applicationContext,
+                    "검색하는 과정에서 오류가 발생했습니다. : ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

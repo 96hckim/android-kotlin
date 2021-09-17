@@ -14,22 +14,22 @@ object RetrofitUtil {
         getRetrofit().create(ApiService::class.java)
     }
 
-    private fun getRetrofit(): Retrofit {
-
-        return Retrofit.Builder()
+    private fun getRetrofit(): Retrofit =
+        Retrofit.Builder()
             .baseUrl(Url.TMAP_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(buildOkHttpClient())
             .build()
-    }
 
     private fun buildOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
+
         if (BuildConfig.DEBUG) {
             interceptor.level = HttpLoggingInterceptor.Level.BODY
         } else {
             interceptor.level = HttpLoggingInterceptor.Level.NONE
         }
+
         return OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(interceptor)

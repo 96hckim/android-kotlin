@@ -8,7 +8,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -57,10 +56,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
 
         if (::searchResult.isInitialized.not()) {
             intent?.let {
-                searchResult = intent.getParcelableExtra(SEARCH_RESULT_EXTRA_KEY) ?: throw Exception("데이터가 존재하지 않습니다.")
+                searchResult = intent.getParcelableExtra(SEARCH_RESULT_EXTRA_KEY)
+                    ?: throw Exception("데이터가 존재하지 않습니다.")
                 setupGoogleMap()
             }
         }
+
         bindViews()
     }
 
@@ -71,14 +72,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
     }
 
     private fun setupGoogleMap() {
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        val mapFragment =
+            supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+
         mapFragment.getMapAsync(this)
     }
 
     override fun onMapReady(map: GoogleMap) {
         this.map = map
-        currentSelectMarker = setupMarker(searchResult)
 
+        currentSelectMarker = setupMarker(searchResult)
         currentSelectMarker?.showInfoWindow()
     }
 
@@ -87,11 +90,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
             searchResult.locationLatLng.latitude.toDouble(),
             searchResult.locationLatLng.longitude.toDouble()
         )
+
         val markerOption = MarkerOptions().apply {
             position(positionLatLng)
             title(searchResult.name)
             snippet(searchResult.fullAddress)
         }
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(positionLatLng, CAMERA_ZOOM_LEVEL))
 
         return map.addMarker(markerOption)
@@ -101,7 +106,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
         if (::locationManager.isInitialized.not()) {
             locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }
+
         val isGpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
         if (isGpsEnable) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -130,14 +137,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
     private fun setMyLocationListener() {
         val minTime: Long = 1500
         val minDistance = 100f
+
         if (::myLocationListener.isInitialized.not()) {
             myLocationListener = MyLocationListener()
         }
+
         with(locationManager) {
             requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 minTime, minDistance, myLocationListener
             )
+
             requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
                 minTime, minDistance, myLocationListener
@@ -155,6 +165,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
                 CAMERA_ZOOM_LEVEL
             )
         )
+
         loadReverseGeoInformation(locationEntity)
         removeLocationListener()
     }
@@ -167,10 +178,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
                         lat = locationEntity.latitude.toDouble(),
                         lon = locationEntity.longitude.toDouble()
                     )
+
                     if (response.isSuccessful) {
                         val body = response.body()
+
                         withContext(Dispatchers.Main) {
-                            Log.e("list", body.toString())
                             body?.let {
                                 currentSelectMarker = setupMarker(
                                     SearchResultEntity(
@@ -179,6 +191,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
                                         locationLatLng = locationEntity
                                     )
                                 )
+
                                 currentSelectMarker?.showInfoWindow()
                             }
                         }
@@ -186,7 +199,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@MapActivity, "검색하는 과정에서 에러가 발생했습니다. : ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MapActivity,
+                    "검색하는 과정에서 에러가 발생했습니다. : ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -203,6 +220,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                 && grantResults[1] == PackageManager.PERMISSION_GRANTED
@@ -221,6 +239,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
                 location.latitude.toFloat(),
                 location.longitude.toFloat()
             )
+
             onCurrentLocationChanged(locationLatLngEntity)
         }
 
