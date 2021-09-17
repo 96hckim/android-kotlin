@@ -1,7 +1,6 @@
 package com.hocheol.locationsearchmap
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.locationsearchmap.databinding.ActivityMainBinding
 import com.hocheol.locationsearchmap.model.LocationLatLngEntity
 import com.hocheol.locationsearchmap.model.SearchResultEntity
+import com.hocheol.locationsearchmap.response.search.Poi
+import com.hocheol.locationsearchmap.response.search.SearchResponse
 import com.hocheol.locationsearchmap.utillity.RetrofitUtil
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -32,20 +33,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         job = Job()
 
-        initViews()
         bindViews()
         initAdapter()
-        initData()
-        setMockingData()
-    }
-
-    private fun initViews() {
-        binding.emptyResultTextView.isVisible = false
     }
 
     private fun bindViews() = with(binding) {
         searchButton.setOnClickListener {
-            searchKeyword(searchEditText.text.toString())
+            searchEditText.text.toString()?.also {
+                searchKeyword(it)
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 
@@ -53,7 +50,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         adapter = SearchListAdapter(searchResultCLickListener = {
             Toast.makeText(
                 this,
-                "위치 : ${it.fullAddress}, 건물명 : ${it.name}\n 좌표 : ${it.locationLatLng.latitude}, ${it.locationLatLng.longitude}",
+                "위치 : ${it.fullAddress}, 건물명 : ${it.name} 좌표 : ${it.locationLatLng.latitude}, ${it.locationLatLng.longitude}",
                 Toast.LENGTH_SHORT
             ).show()
         })
@@ -63,25 +60,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         val decoration = DividerItemDecoration(applicationContext, VERTICAL)
         binding.recyclerView.addItemDecoration(decoration)
-    }
-
-    private fun initData() {
-        adapter.notifyDataSetChanged()
-    }
-
-    private fun setMockingData() {
-        val dataList = (0..10).map {
-            SearchResultEntity(
-                name = "빌딩 $it",
-                fullAddress = "주소 $it",
-                locationLatLng = LocationLatLngEntity(
-                    latitude = it.toFloat(),
-                    longitude = it.toFloat()
-                )
-            )
-        }
-
-        adapter.submitList(dataList)
     }
 
     private fun searchKeyword(keyword: String) {
@@ -94,7 +72,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                     if (response.isSuccessful) {
                         val body = response.body()
                         withContext(Dispatchers.Main) {
-                            Log.e("response", body.toString())
+                            body?.let {
+                                setData(it)
+                            }
                         }
                     }
                 }
@@ -103,5 +83,36 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             }
         }
     }
+
+    private fun setData(searchResponse: SearchResponse) {
+        val dataList = searchResponse.searchPoiInfo.pois.poi.map {
+            SearchResultEntity(
+                name = it.name ?: "빌딩명 없음",
+                fullAddress = makeMainAddress(it),
+                locationLatLng = LocationLatLngEntity(
+                    latitude = it.noorLat,
+                    longitude = it.noorLon
+                )
+            )
+        }
+
+        adapter.submitList(dataList)
+    }
+
+    private fun makeMainAddress(poi: Poi): String =
+        if (poi.secondNo?.trim().isNullOrEmpty()) {
+            (poi.upperAddrName?.trim() ?: "") + " " +
+                    (poi.middleAddrName?.trim() ?: "") + " " +
+                    (poi.lowerAddrName?.trim() ?: "") + " " +
+                    (poi.detailAddrName?.trim() ?: "") + " " +
+                    poi.firstNo?.trim()
+        } else {
+            (poi.upperAddrName?.trim() ?: "") + " " +
+                    (poi.middleAddrName?.trim() ?: "") + " " +
+                    (poi.lowerAddrName?.trim() ?: "") + " " +
+                    (poi.detailAddrName?.trim() ?: "") + " " +
+                    (poi.firstNo?.trim() ?: "") + " " +
+                    poi.secondNo?.trim()
+        }
 
 }
