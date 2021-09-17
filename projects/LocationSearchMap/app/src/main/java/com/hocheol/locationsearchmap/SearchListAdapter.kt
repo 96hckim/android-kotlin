@@ -6,18 +6,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.locationsearchmap.databinding.ItemSearchBinding
+import com.hocheol.locationsearchmap.model.SearchResultEntity
 
 class SearchListAdapter(
-    private val searchResultCLickListener: (Any) -> Unit
-) : ListAdapter<Any, SearchListAdapter.ViewHolder>(diffUtil) {
+    private val searchResultCLickListener: (SearchResultEntity) -> Unit
+) : ListAdapter<SearchResultEntity, SearchListAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(private val binding: ItemSearchBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Any) = with(binding) {
-            binding.root.setOnClickListener {
+        fun bind(item: SearchResultEntity) = with(binding) {
+            root.setOnClickListener {
                 searchResultCLickListener(item)
             }
+
+            locationTextView.text = item.fullAddress
+            buildingTextView.text = item.name
         }
 
     }
@@ -33,17 +37,17 @@ class SearchListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(currentList)
+        holder.bind(currentList[position])
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<Any>() {
+        val diffUtil = object : DiffUtil.ItemCallback<SearchResultEntity>() {
 
-            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+            override fun areItemsTheSame(oldItem: SearchResultEntity, newItem: SearchResultEntity): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+            override fun areContentsTheSame(oldItem: SearchResultEntity, newItem: SearchResultEntity): Boolean {
                 return oldItem == newItem
             }
 
