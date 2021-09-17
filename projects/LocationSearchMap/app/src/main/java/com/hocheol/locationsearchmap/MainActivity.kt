@@ -1,10 +1,10 @@
 package com.hocheol.locationsearchmap
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.locationsearchmap.databinding.ActivityMainBinding
@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         searchButton.setOnClickListener {
             searchEditText.text.toString()?.also {
                 searchKeyword(it)
-                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -53,6 +52,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 "위치 : ${it.fullAddress}, 건물명 : ${it.name} 좌표 : ${it.locationLatLng.latitude}, ${it.locationLatLng.longitude}",
                 Toast.LENGTH_SHORT
             ).show()
+            startActivity(
+                Intent(this, MapActivity::class.java).apply {
+
+                }
+            )
         })
 
         binding.recyclerView.adapter = adapter
