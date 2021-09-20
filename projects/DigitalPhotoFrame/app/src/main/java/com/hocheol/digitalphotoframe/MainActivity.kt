@@ -1,6 +1,5 @@
 package com.hocheol.digitalphotoframe
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -8,6 +7,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -35,6 +36,23 @@ class MainActivity : AppCompatActivity() {
 
     private val imageUriList: MutableList<Uri> = mutableListOf()
 
+    private val activityLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val selectedImageUri: Uri? = it.data?.data
+
+            if (selectedImageUri != null) {
+                if (imageUriList.size == 6) {
+                    Toast.makeText(this, "이미 사진이 꽉 찼습니다.", Toast.LENGTH_SHORT).show()
+                    return@registerForActivityResult
+                }
+
+                imageUriList.add(selectedImageUri)
+                imageViewList[imageUriList.size - 1].setImageURI(selectedImageUri)
+            } else {
+                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -58,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     requestPermissions(
                         arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                        1000
+                        PERMISSION_REQUEST_CODE
                     )
                 }
             }
@@ -84,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            1000 -> {
+            PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     navigatePhotos()
                 } else {
@@ -100,37 +118,7 @@ class MainActivity : AppCompatActivity() {
     private fun navigatePhotos() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        startActivityForResult(intent, 2000)
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-
-        when (requestCode) {
-            2000 -> {
-                val selectedImageUri: Uri? = data?.data
-
-                if (selectedImageUri != null) {
-                    if (imageUriList.size == 6) {
-                        Toast.makeText(this, "이미 사진이 꽉 찼습니다.", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-
-                    imageUriList.add(selectedImageUri)
-                    imageViewList[imageUriList.size - 1].setImageURI(selectedImageUri)
-                } else {
-                    Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else -> {
-                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
+        activityLauncher.launch(intent)
     }
 
     private fun showPermissionContextPopup() {
@@ -140,12 +128,16 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("동의하기") { _, _ ->
                 requestPermissions(
                     arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    1000
+                    PERMISSION_REQUEST_CODE
                 )
             }
             .setNegativeButton("거절하기") { _, _ -> }
             .create()
             .show()
+    }
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 1000
     }
 
 }

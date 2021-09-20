@@ -32,7 +32,8 @@ class PhotoFrameActivity : AppCompatActivity() {
 
     private fun getPhotoUriFromIntent() {
         val size = intent.getIntExtra("photoListSize", 0)
-        for (i in 0..size) {
+
+        for (i in 0 until size) {
             intent.getStringExtra("photo$i")?.let {
                 photoList.add(Uri.parse(it))
             }
