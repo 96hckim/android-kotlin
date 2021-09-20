@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity() {
             webView.loadUrl(DEFAULT_URL)
         }
 
-        addressBar.setOnEditorActionListener { textView, i, keyEvent ->
-            if (i == EditorInfo.IME_ACTION_DONE) {
+        addressBar.setOnEditorActionListener { textView, action, keyEvent ->
+            if (action == EditorInfo.IME_ACTION_DONE) {
                 val loadingUrl = textView.text.toString()
 
                 if (URLUtil.isNetworkUrl(loadingUrl)) {
