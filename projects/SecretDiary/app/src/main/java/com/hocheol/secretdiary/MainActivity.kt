@@ -2,6 +2,7 @@ package com.hocheol.secretdiary
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.NumberPicker
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var changePasswordMode = false
+    private lateinit var passwordPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,14 @@ class MainActivity : AppCompatActivity() {
         numberPicker2
         numberPicker3
 
+        passwordPreferences = getSharedPreferences("password", Context.MODE_PRIVATE) // 앱 간 공유 X
+
+        initOpenButton()
+        initChangePasswordButton()
+
+    }
+
+    private fun initOpenButton() {
         openButton.setOnClickListener {
 
             if (changePasswordMode) {
@@ -59,7 +69,6 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val passwordPreferences = getSharedPreferences("password", Context.MODE_PRIVATE) // 앱 간 공유 X
             val passwordFromUser = "${numberPicker1.value}${numberPicker2.value}${numberPicker3.value}"
 
             if (passwordPreferences.getString("password", "000").equals(passwordFromUser)) {
@@ -69,10 +78,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
 
+    private fun initChangePasswordButton() {
         changePasswordButton.setOnClickListener {
 
-            val passwordPreferences = getSharedPreferences("password", Context.MODE_PRIVATE)
             val passwordFromUser = "${numberPicker1.value}${numberPicker2.value}${numberPicker3.value}"
 
             if (changePasswordMode) {
@@ -101,7 +111,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
     }
 
     private fun showErrorAlertDialog() {

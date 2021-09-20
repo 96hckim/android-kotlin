@@ -26,7 +26,7 @@ class DiaryActivity : AppCompatActivity() {
         diaryEditText.setText(detailPreferences.getString("detail", ""))
 
         val runnable = Runnable {
-            getSharedPreferences("diary", Context.MODE_PRIVATE).edit {
+            detailPreferences.edit {
                 putString("detail", diaryEditText.text.toString())
             }
         }
