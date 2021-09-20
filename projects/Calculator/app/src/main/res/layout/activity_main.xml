@@ -278,7 +278,6 @@
                 android:src="@drawable/ic_baseline_access_time_24"
                 android:stateListAnimator="@null"
                 android:textColor="@color/textColor"
-
                 android:textSize="24sp" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -329,8 +328,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/layout_keypad"
-        tools:visibility="visible">
+        app:layout_constraintTop_toTopOf="@id/layout_keypad">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_close"

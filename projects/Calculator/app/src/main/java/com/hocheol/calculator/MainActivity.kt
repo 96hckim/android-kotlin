@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         isOperator = false
 
         val expressionText = tvExpression.text.split(" ")
+
         if (expressionText.isNotEmpty() && expressionText.last().length >= 15) {
             Toast.makeText(this, "15자리 까지만 사용할 수 있습니다.", Toast.LENGTH_SHORT).show()
             return
