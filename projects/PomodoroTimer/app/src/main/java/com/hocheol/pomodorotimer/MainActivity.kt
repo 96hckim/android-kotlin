@@ -37,16 +37,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         soundPool.autoResume()
     }
 
     override fun onPause() {
         super.onPause()
+
         soundPool.autoPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         soundPool.release()
     }
 
@@ -126,8 +129,8 @@ class MainActivity : AppCompatActivity() {
     private fun updateRemainTime(remainMillis: Long) {
         val remainSeconds = remainMillis / 1000
 
-        remainMinutesTextView.text = "%02d'".format(remainSeconds / 60)
-        remainSecondsTextView.text = "%02d".format(remainSeconds % 60)
+        remainMinutesTextView.text = String.format("%02d'", remainSeconds / 60)
+        remainSecondsTextView.text = String.format("%02d", remainSeconds % 60)
     }
 
     private fun updateSeekBar(remainMillis: Long) {
