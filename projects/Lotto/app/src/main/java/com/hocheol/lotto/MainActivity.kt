@@ -61,14 +61,14 @@ class MainActivity : AppCompatActivity() {
 
             didRun = true
 
-            list.forEachIndexed { index, i ->
+            list.forEachIndexed { index, number ->
                 val tvNumber = tvNumberList[index]
 
                 tvNumber.isVisible = true
-                tvNumber.text = i.toString()
+                tvNumber.text = number.toString()
 
 
-                tvNumber.background = setNumberBackground(i)
+                tvNumber.background = setNumberBackground(number)
             }
         }
     }
@@ -121,13 +121,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setNumberBackground(number: Int): Drawable? {
-        return when (number) {
-            in 1..10 -> ContextCompat.getDrawable(this, R.drawable.circle_yellow)
-            in 11..20 -> ContextCompat.getDrawable(this, R.drawable.circle_blue)
-            in 21..30 -> ContextCompat.getDrawable(this, R.drawable.circle_red)
-            in 31..40 -> ContextCompat.getDrawable(this, R.drawable.circle_gray)
-            else -> ContextCompat.getDrawable(this, R.drawable.circle_green)
+        val background = when (number) {
+            in 1..10 -> R.drawable.circle_yellow
+            in 11..20 -> R.drawable.circle_blue
+            in 21..30 -> R.drawable.circle_red
+            in 31..40 -> R.drawable.circle_gray
+            else -> R.drawable.circle_green
         }
+
+        return ContextCompat.getDrawable(this, background)
     }
 
     private fun initClearButton() {
