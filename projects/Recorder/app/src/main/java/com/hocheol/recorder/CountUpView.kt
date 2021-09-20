@@ -39,7 +39,7 @@ class CountUpView(
         val minutes = countTimeSeconds / 60
         val seconds = countTimeSeconds % 60
 
-        text = "%02d:%02d".format(minutes, seconds)
+        text = String.format("%02d:%02d", minutes, seconds)
     }
 
 }

@@ -62,7 +62,7 @@ class SoundVisualizerView(
                 }
             }
             .forEach {
-                val lineLength = it / MAX_AMPLITUDE * drawingHeight * 0.8F
+                val lineLength = it / MAX_AMPLITUDE * drawingHeight
 
                 offsetX -= LINE_SPACE
                 if (offsetX < 0) return@forEach
