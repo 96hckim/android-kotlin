@@ -1,5 +1,6 @@
 package com.hocheol.githubrepository
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +38,12 @@ class SearchActivity : AppCompatActivity(), CoroutineScope {
     private fun initAdapter() {
         adapter = RepositoryAdapter(
             searchResultItemClickListener = {
-
+                startActivity(
+                    Intent(this, RepositoryActivity::class.java).apply {
+                        putExtra(RepositoryActivity.REPOSITORY_OWNER_KEY, it.owner.login)
+                        putExtra(RepositoryActivity.REPOSITORY_NAME_KEY, it.name)
+                    }
+                )
             }
         )
     }

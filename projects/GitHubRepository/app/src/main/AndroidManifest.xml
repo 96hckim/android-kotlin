@@ -33,6 +33,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".RepositoryActivity" />
     </application>
 
 </manifest>
