@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
+import com.hocheol.githubrepository.data.database.DataBaseProvider
 import com.hocheol.githubrepository.data.entity.GithubRepoEntity
 import com.hocheol.githubrepository.databinding.ActivityRepositoryBinding
 import com.hocheol.githubrepository.extensions.loadCenterInside
@@ -19,6 +20,8 @@ class RepositoryActivity : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     private lateinit var binding: ActivityRepositoryBinding
+
+    private val repositoryDao by lazy { DataBaseProvider.provideDB(applicationContext).repositoryDao() }
 
     companion object {
         const val REPOSITORY_OWNER_KEY = "REPOSITORY_OWNER_KEY"
@@ -94,6 +97,46 @@ class RepositoryActivity : AppCompatActivity(), CoroutineScope {
         }
         descriptionTextView.text = githubRepoEntity.description
         updateTimeTextView.text = githubRepoEntity.updatedAt
+
+        setLikeState(githubRepoEntity)
+    }
+
+    private fun setLikeState(githubRepoEntity: GithubRepoEntity) = launch {
+        withContext(Dispatchers.IO) {
+            val repository = repositoryDao.getRepository(githubRepoEntity.fullName)
+            val isLike = repository != null
+
+            withContext(Dispatchers.Main) {
+                setLikeImage(isLike)
+                binding.likeButton.setOnClickListener {
+                    likeGithubRepository(githubRepoEntity, isLike)
+                }
+            }
+        }
+    }
+
+    private fun setLikeImage(isLike: Boolean) {
+        binding.likeButton.setImageResource(
+            if (isLike) {
+                R.drawable.ic_like
+            } else {
+                R.drawable.ic_dislike
+            }
+        )
+    }
+
+    private fun likeGithubRepository(githubRepoEntity: GithubRepoEntity, isLike: Boolean) = launch {
+        withContext(Dispatchers.IO) {
+            if (isLike) {
+                repositoryDao.remove(githubRepoEntity.fullName)
+            } else {
+                repositoryDao.insert(githubRepoEntity)
+            }
+
+            withContext(Dispatchers.Main) {
+                setLikeImage(isLike.not())
+            }
+        }
     }
 
     private fun showProgressBar(isShown: Boolean) = with(binding) {

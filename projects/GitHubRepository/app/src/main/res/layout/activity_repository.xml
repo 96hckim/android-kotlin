@@ -40,7 +40,7 @@
         app:layout_constraintStart_toEndOf="@id/ownerProfileImageView"
         app:layout_constraintTop_toTopOf="@id/ownerProfileImageView"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="soda1127/blahblah" />
+        tools:text="96hckim/blahblah" />
 
     <ImageView
         android:id="@+id/likeButton"
