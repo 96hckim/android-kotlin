@@ -1,5 +1,6 @@
 package com.hocheol.githubrepository
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -27,14 +28,22 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        launch {
-            addMockData()
-            val githubRepositories = loadGithubRepositories()
-            withContext(coroutineContext) {
-                Log.e("repositories", githubRepositories.toString())
-            }
-        }
+        initViews()
 
+//        launch {
+//            addMockData()
+//            val githubRepositories = loadGithubRepositories()
+//            withContext(coroutineContext) {
+//                // 목록
+//            }
+//        }
+
+    }
+
+    private fun initViews() = with(binding) {
+        searchButton.setOnClickListener {
+            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+        }
     }
 
     private suspend fun addMockData() = withContext(Dispatchers.IO) {

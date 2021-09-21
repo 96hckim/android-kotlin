@@ -47,11 +47,11 @@ class SignInActivity : AppCompatActivity(), CoroutineScope {
 
     private fun initViews() = with(binding) {
         loginButton.setOnClickListener {
-            loginGitHub()
+            loginGithub()
         }
     }
 
-    private fun loginGitHub() {
+    private fun loginGithub() {
         val loginUri = Uri.Builder().scheme("https").authority("github.com")
             .appendPath("login")
             .appendPath("oauth")

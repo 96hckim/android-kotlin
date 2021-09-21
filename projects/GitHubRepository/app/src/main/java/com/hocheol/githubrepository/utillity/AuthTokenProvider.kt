@@ -9,11 +9,10 @@ class AuthTokenProvider(private val context: Context) {
         private const val KEY_AUTH_TOKEN = "auth_token"
     }
 
-    fun updateToken(token: String) {
+    fun updateToken(token: String) =
         PreferenceManager.getDefaultSharedPreferences(context).edit()
             .putString(KEY_AUTH_TOKEN, token)
             .apply()
-    }
 
     val token: String?
         get() = PreferenceManager.getDefaultSharedPreferences(context)
