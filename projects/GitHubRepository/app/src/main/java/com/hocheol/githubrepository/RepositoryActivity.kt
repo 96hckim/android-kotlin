@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.hocheol.githubrepository.data.database.DataBaseProvider
 import com.hocheol.githubrepository.data.entity.GithubRepoEntity
 import com.hocheol.githubrepository.databinding.ActivityRepositoryBinding
@@ -140,7 +141,7 @@ class RepositoryActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun showProgressBar(isShown: Boolean) = with(binding) {
-        progressBar.isGone = isShown.not()
+        progressBar.isVisible = isShown
     }
 
     private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

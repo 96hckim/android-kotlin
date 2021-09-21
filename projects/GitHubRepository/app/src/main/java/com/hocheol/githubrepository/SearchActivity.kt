@@ -79,9 +79,7 @@ class SearchActivity : AppCompatActivity(), CoroutineScope {
                 withContext(Dispatchers.Main) {
                     body?.let {
                         adapter.submitList(it.items)
-                        if (it.totalCount == 0) {
-                            binding.emptyResultTextView.isVisible = true
-                        }
+                        binding.emptyResultTextView.isVisible = it.totalCount == 0
                     }
                 }
             }

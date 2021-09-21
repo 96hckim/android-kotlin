@@ -4,5 +4,6 @@
     <string name="search_hint">검색어를 입력해주세요.</string>
     <string name="search">검색</string>
     <string name="empty_result">검색 결과가 없습니다.</string>
-    <string name="empty_history_text">찜한 저장소가 없습니다.</string>
+    <string name="empty_like_text">찜한 저장소가 없습니다.</string>
+    <string name="github_login">GitHub Login</string>
 </resources>

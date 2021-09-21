@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.hocheol.githubrepository.databinding.ActivitySignInBinding
 import com.hocheol.githubrepository.utillity.AuthTokenProvider
 import com.hocheol.githubrepository.utillity.RetrofitUtil
@@ -32,7 +33,7 @@ class SignInActivity : AppCompatActivity(), CoroutineScope {
         if (checkAuthCodeExist()) {
             launchMainActivity()
         } else {
-            initViews()
+            bindViews()
         }
 
     }
@@ -45,7 +46,7 @@ class SignInActivity : AppCompatActivity(), CoroutineScope {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         })
 
-    private fun initViews() = with(binding) {
+    private fun bindViews() = with(binding) {
         loginButton.setOnClickListener {
             loginGithub()
         }
@@ -81,14 +82,14 @@ class SignInActivity : AppCompatActivity(), CoroutineScope {
 
     private suspend fun showProgress() = withContext(coroutineContext) {
         with(binding) {
-            loginButton.isGone = true
+            loginButton.isVisible = false
             progressBar.isGone = false
         }
     }
 
     private suspend fun dismissProgress() = withContext(coroutineContext) {
         with(binding) {
-            loginButton.isGone = false
+            loginButton.isVisible = true
             progressBar.isGone = true
         }
     }

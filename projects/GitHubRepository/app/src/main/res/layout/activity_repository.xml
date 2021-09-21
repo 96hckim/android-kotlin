@@ -82,7 +82,7 @@
         app:layout_constraintBottom_toBottomOf="@id/stargazersCountText"
         app:layout_constraintStart_toEndOf="@id/stargazersCountText"
         app:layout_constraintTop_toTopOf="@id/stargazersCountText"
-        tools:text="Java" />
+        tools:text="Kotlin" />
 
     <View
         android:id="@+id/dividerView"

@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private suspend fun loadLikedRepositoryList() = withContext(Dispatchers.IO) {
-        val repoList = repositoryDao.getHistory()
+        val repoList = repositoryDao.getRepositoryList()
 
         withContext(Dispatchers.Main) {
             setData(repoList)
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun bindViews() = with(binding) {
-        searchButton.setOnClickListener {
+        searchFloatingButton.setOnClickListener {
             startActivity(Intent(this@MainActivity, SearchActivity::class.java))
         }
     }
