@@ -97,7 +97,9 @@ class MainActivity : AppCompatActivity() {
                 scope.launch {
                     val monitoringStation = Repository.getNearbyMonitoringStation(location.latitude, location.longitude)
 
-                    binding.textView.text = monitoringStation?.stationName
+                    val measuredValue = monitoringStation?.stationName?.let { Repository.getLatestAirQualityData(it) }
+
+                    binding.textView.text = measuredValue.toString()
                 }
             }
     }

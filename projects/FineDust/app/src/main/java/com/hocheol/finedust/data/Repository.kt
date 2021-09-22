@@ -1,6 +1,7 @@
 package com.hocheol.finedust.data
 
 import com.hocheol.finedust.BuildConfig
+import com.hocheol.finedust.data.models.airquality.MeasuredValue
 import com.hocheol.finedust.data.models.monitoringstation.MonitoringStation
 import com.hocheol.finedust.data.services.AirKoreaApiService
 import com.hocheol.finedust.data.services.KakaoLocalApiService
@@ -32,6 +33,15 @@ object Repository {
                 ?.minByOrNull { it.tm ?: Double.MAX_VALUE }
         else null
     }
+
+    suspend fun getLatestAirQualityData(stationName: String): MeasuredValue? =
+        airKoreaApiService
+            .getRealtimeAirQualities(stationName)
+            .body()
+            ?.response
+            ?.body
+            ?.measuredValues
+            ?.firstOrNull()
 
     private val kakaoLocalApiService: KakaoLocalApiService by lazy {
         Retrofit.Builder()
