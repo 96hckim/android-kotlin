@@ -3,8 +3,10 @@ package com.hocheol.finedust
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -19,7 +21,6 @@ import com.hocheol.finedust.databinding.ActivityMainBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,13 +52,25 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         val locationPermissionGranted =
-            requestCode == LOCATION_PERMISSIONS_REQUEST_CODE &&
+            requestCode == FOREGROUND_LOCATION_PERMISSIONS_REQUEST_CODE &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
 
-        if (locationPermissionGranted) {
-            fetchAirQualityData()
+        val backgroundLocationPermissionGranted =
+            requestCode == BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (backgroundLocationPermissionGranted) {
+                fetchAirQualityData()
+            } else {
+                requestBackgroundLocationPermission()
+            }
         } else {
-            finish()
+            if (locationPermissionGranted) {
+                fetchAirQualityData()
+            } else {
+                finish()
+            }
         }
     }
 
@@ -93,7 +106,18 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ),
-            LOCATION_PERMISSIONS_REQUEST_CODE
+            FOREGROUND_LOCATION_PERMISSIONS_REQUEST_CODE
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun requestBackgroundLocationPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ),
+            BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE
         )
     }
 
@@ -172,7 +196,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     companion object {
-        private const val LOCATION_PERMISSIONS_REQUEST_CODE = 100
+        private const val FOREGROUND_LOCATION_PERMISSIONS_REQUEST_CODE = 100
+        private const val BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE = 101
     }
 
 }
