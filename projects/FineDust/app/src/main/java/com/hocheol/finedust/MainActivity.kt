@@ -11,12 +11,16 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.hocheol.finedust.databinding.ActivityMainBinding
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+    private val scope = MainScope()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var cancellationTokenSource: CancellationTokenSource? = null
@@ -33,6 +37,25 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
         cancellationTokenSource?.cancel()
+        scope.cancel()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        val locationPermissionGranted =
+            requestCode == LOCATION_PERMISSIONS_REQUEST_CODE &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+        if (locationPermissionGranted) {
+            fetchAirQualityData()
+        } else {
+            finish()
+        }
+    }
+
+    private fun initVariables() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun checkLocationPermission() {
@@ -46,26 +69,8 @@ class MainActivity : AppCompatActivity() {
         ) {
             requestLocationPermission()
         } else {
-            getCurrentLocation()
+            fetchAirQualityData()
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        val locationPermissionGranted =
-            requestCode == LOCATION_PERMISSIONS_REQUEST_CODE &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED
-
-        if (locationPermissionGranted) {
-            getCurrentLocation()
-        } else {
-            finish()
-        }
-    }
-
-    private fun initVariables() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun requestLocationPermission() {
@@ -80,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun getCurrentLocation() {
+    private fun fetchAirQualityData() {
         cancellationTokenSource = CancellationTokenSource()
 
         fusedLocationProviderClient
@@ -88,7 +93,9 @@ class MainActivity : AppCompatActivity() {
                 LocationRequest.PRIORITY_HIGH_ACCURACY,
                 cancellationTokenSource!!.token
             ).addOnSuccessListener { location ->
-                binding.textView.text = "${location.latitude}, ${location.longitude}"
+                scope.launch {
+
+                }
             }
     }
 
