@@ -23,15 +23,13 @@ object Repository {
         val tmX = tmCoordinates?.x
         val tmY = tmCoordinates?.y
 
-        return if (tmX != null && tmY != null)
-            airKoreaApiService
-                .getNearbyMonitoringStation(tmX, tmY)
-                .body()
-                ?.response
-                ?.body
-                ?.monitoringStations
-                ?.minByOrNull { it.tm ?: Double.MAX_VALUE }
-        else null
+        return airKoreaApiService
+            .getNearbyMonitoringStation(tmX!!, tmY!!)
+            .body()
+            ?.response
+            ?.body
+            ?.monitoringStations
+            ?.minByOrNull { it.tm ?: Double.MAX_VALUE }
     }
 
     suspend fun getLatestAirQualityData(stationName: String): MeasuredValue? =

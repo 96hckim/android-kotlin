@@ -14,7 +14,7 @@ enum class Grade(
     GOOD("좋음", "😊", R.color.blue),
 
     @SerializedName("2")
-    NORMAL("보통", "😀", R.color.green),
+    NORMAL("보통", "😐", R.color.green),
 
     @SerializedName("3")
     BAD("나쁨", "😟", R.color.yellow),
