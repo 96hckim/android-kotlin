@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.hocheol.unsplash.data.models.PhotoResponse
 import com.hocheol.unsplash.databinding.ItemPhotoBinding
 
@@ -42,13 +43,21 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
                     height = targetHeight
                 }
 
-
             Glide.with(binding.root)
                 .load(photo.urls?.regular)
+                .thumbnail(
+                    Glide.with(binding.root)
+                        .load(photo.urls?.thumb)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                )
+                .override(targetWidth, targetHeight)
                 .into(binding.photoImageView)
 
             Glide.with(binding.root)
                 .load(photo.user?.profileImageUrls?.small)
+                .placeholder(R.drawable.shape_profile_placeholder)
+                .circleCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.profileImageView)
 
             if (photo.user?.name.isNullOrBlank()) {
