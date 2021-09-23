@@ -75,7 +75,7 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
             }
 
 
-            if (photo.user?.name.isNullOrBlank()) {
+            if (photo.description.isNullOrBlank()) {
                 binding.descriptionTextView.visibility = View.GONE
             } else {
                 binding.descriptionTextView.text = photo.description

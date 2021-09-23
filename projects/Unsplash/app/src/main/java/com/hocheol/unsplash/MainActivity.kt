@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
 
                         val wallpaperManager = WallpaperManager.getInstance(this@MainActivity)
 
-                        val snackBar = Snackbar.make(binding.root, "다운로드 완료", Snackbar.LENGTH_SHORT)
+                        val snackBar = Snackbar.make(binding.root, "다운로드 완료", Snackbar.LENGTH_INDEFINITE)
 
                         if (wallpaperManager.isWallpaperSupported
                             && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
@@ -177,7 +177,6 @@ class MainActivity : AppCompatActivity() {
                                     Snackbar.make(binding.root, "배경화면 저장 실패", Snackbar.LENGTH_SHORT).show()
                                 }
                             }
-                            snackBar.duration = Snackbar.LENGTH_INDEFINITE
                         }
 
                         snackBar.show()
