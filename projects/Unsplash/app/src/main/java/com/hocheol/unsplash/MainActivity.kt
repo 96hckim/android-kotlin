@@ -61,13 +61,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchRandomPhotos(query: String? = null) = scope.launch {
-        Repository.getRandomPhotos(query)?.let { photos ->
-            (binding.recyclerView.adapter as? PhotoAdapter)?.apply {
-                this.photos = photos
-                notifyDataSetChanged()
-            }
+        try {
+            Repository.getRandomPhotos(query)?.let { photos ->
+                binding.errorTextView.visibility = View.GONE
 
-            binding.recyclerView.visibility = View.VISIBLE
+                (binding.recyclerView.adapter as? PhotoAdapter)?.apply {
+                    this.photos = photos
+                    notifyDataSetChanged()
+                }
+
+                binding.recyclerView.visibility = View.VISIBLE
+            }
+        } catch (e: Exception) {
+            binding.recyclerView.visibility = View.INVISIBLE
+            binding.errorTextView.visibility = View.VISIBLE
+        } finally {
             binding.shimmerLayout.visibility = View.GONE
             binding.refreshLayout.isRefreshing = false
         }
