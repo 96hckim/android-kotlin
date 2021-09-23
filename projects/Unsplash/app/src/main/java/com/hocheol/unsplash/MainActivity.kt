@@ -2,6 +2,7 @@ package com.hocheol.unsplash
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -66,6 +67,8 @@ class MainActivity : AppCompatActivity() {
                 notifyDataSetChanged()
             }
 
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.shimmerLayout.visibility = View.GONE
             binding.refreshLayout.isRefreshing = false
         }
     }
