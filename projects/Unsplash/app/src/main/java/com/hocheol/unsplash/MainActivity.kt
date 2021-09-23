@@ -53,6 +53,10 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
+
+        binding.refreshLayout.setOnRefreshListener {
+            fetchRandomPhotos(binding.searchEditText.text.toString())
+        }
     }
 
     private fun fetchRandomPhotos(query: String? = null) = scope.launch {
@@ -61,6 +65,8 @@ class MainActivity : AppCompatActivity() {
                 this.photos = photos
                 notifyDataSetChanged()
             }
+
+            binding.refreshLayout.isRefreshing = false
         }
     }
 
