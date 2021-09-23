@@ -1,6 +1,9 @@
 package com.hocheol.unsplash
 
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViews()
+        bindViews()
         fetchRandomPhotos()
     }
 
@@ -32,6 +36,23 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         binding.recyclerView.adapter = PhotoAdapter()
+    }
+
+    private fun bindViews() {
+        binding.searchEditText.setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                currentFocus?.let { view ->
+                    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
+
+                    view.clearFocus()
+                }
+
+                fetchRandomPhotos(textView.text.toString())
+            }
+
+            true
+        }
     }
 
     private fun fetchRandomPhotos(query: String? = null) = scope.launch {
