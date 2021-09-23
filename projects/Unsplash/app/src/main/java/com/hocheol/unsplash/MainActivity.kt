@@ -1,6 +1,7 @@
 package com.hocheol.unsplash
 
 import android.Manifest
+import android.app.WallpaperManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -40,12 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
         bindViews()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            fetchRandomPhotos()
-        } else {
-            requestWriteStoragePermission()
-        }
+        fetchRandomPhotos()
     }
 
     override fun onDestroy() {
@@ -92,7 +88,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         (binding.recyclerView.adapter as? PhotoAdapter)?.onClickPhoto = { photo ->
-            showDownloadPhotoConfirmationDialog(photo)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    requestWriteStoragePermission()
+                } else {
+                    showDownloadPhotoConfirmationDialog(photo)
+                }
+            } else {
+                showDownloadPhotoConfirmationDialog(photo)
+            }
         }
     }
 
@@ -153,6 +161,26 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         saveBitmapToMediaStore(resource)
+
+                        val wallpaperManager = WallpaperManager.getInstance(this@MainActivity)
+
+                        val snackBar = Snackbar.make(binding.root, "다운로드 완료", Snackbar.LENGTH_SHORT)
+
+                        if (wallpaperManager.isWallpaperSupported
+                            && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                                    && wallpaperManager.isSetWallpaperAllowed)
+                        ) {
+                            snackBar.setAction("배경 화면으로 저장") {
+                                try {
+                                    wallpaperManager.setBitmap(resource)
+                                } catch (e: java.lang.Exception) {
+                                    Snackbar.make(binding.root, "배경화면 저장 실패", Snackbar.LENGTH_SHORT).show()
+                                }
+                            }
+                            snackBar.duration = Snackbar.LENGTH_INDEFINITE
+                        }
+
+                        snackBar.show()
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {}
@@ -161,7 +189,6 @@ class MainActivity : AppCompatActivity() {
                         super.onLoadFailed(errorDrawable)
 
                         Snackbar.make(binding.root, "다운로드 실패", Snackbar.LENGTH_SHORT).show()
-
                     }
 
                     override fun onLoadStarted(placeholder: Drawable?) {
@@ -207,8 +234,6 @@ class MainActivity : AppCompatActivity() {
             imageDetails.put(MediaStore.Images.Media.IS_PENDING, 0)
             resolver.update(imageUri, imageDetails, null, null)
         }
-
-        Snackbar.make(binding.root, "다운로드 완료", Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
