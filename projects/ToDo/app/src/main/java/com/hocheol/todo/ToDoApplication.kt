@@ -11,7 +11,7 @@ class ToDoApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // TODO Koin Trigger
+
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@ToDoApplication)
