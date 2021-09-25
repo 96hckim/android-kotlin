@@ -94,14 +94,10 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
                     && snapshot.child(LIKED_BY).child(DIS_LIKE).hasChild(getCurrentUserID()).not()
                 ) {
                     val userId = snapshot.child(USER_ID).value.toString()
-                    var name = "undecided"
-                    if (snapshot.child(NAME).value != null) {
-                        name = snapshot.child(NAME).value.toString()
-                    }
+                    val name = snapshot.child(NAME).value?.toString() ?: "undecided"
 
                     cardItems.add(CardItem(userId, name))
                     adapter.submitList(cardItems)
-                    adapter.notifyDataSetChanged()
                 }
             }
 
@@ -111,7 +107,6 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
                 }
 
                 adapter.submitList(cardItems)
-                adapter.notifyDataSetChanged()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {}
@@ -221,14 +216,13 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
 
     override fun onCardDragging(direction: Direction?, ratio: Float) {}
 
-    override fun onCardSwiped(direction: Direction?) {
+    override fun onCardSwiped(direction: Direction?) =
         when (direction) {
             Direction.Right -> like()
             Direction.Left -> disLike()
             else -> {
             }
         }
-    }
 
     override fun onCardRewound() {}
 

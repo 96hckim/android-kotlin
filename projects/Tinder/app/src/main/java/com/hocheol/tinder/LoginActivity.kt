@@ -127,13 +127,11 @@ class LoginActivity : AppCompatActivity() {
             })
     }
 
-    private fun getInputEmail(): String {
-        return findViewById<EditText>(R.id.emailEditText).text.toString()
-    }
+    private fun getInputEmail(): String =
+        findViewById<EditText>(R.id.emailEditText).text.toString()
 
-    private fun getInputPassword(): String {
-        return findViewById<EditText>(R.id.passwordEditText).text.toString()
-    }
+    private fun getInputPassword(): String =
+        findViewById<EditText>(R.id.passwordEditText).text.toString()
 
     private fun handleSuccessLogin() {
         if (auth.currentUser == null) {
