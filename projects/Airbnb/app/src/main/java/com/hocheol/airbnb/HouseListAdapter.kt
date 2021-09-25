@@ -50,13 +50,12 @@ class HouseListAdapter :
         holder.bind(currentList[position])
     }
 
-    private fun dpToPx(context: Context, dp: Int): Int {
-        return TypedValue.applyDimension(
+    private fun dpToPx(context: Context, dp: Int) =
+        TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp.toFloat(),
             context.resources.displayMetrics
         ).toInt()
-    }
 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<HouseModel>() {

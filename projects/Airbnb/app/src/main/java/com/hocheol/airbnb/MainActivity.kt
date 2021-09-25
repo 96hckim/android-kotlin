@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
         }
         startActivity(Intent.createChooser(intent, null))
     })
+
     private val recyclerViewAdapter = HouseListAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -218,7 +219,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-        private const val TAG = "MainActivity"
     }
 
 }
