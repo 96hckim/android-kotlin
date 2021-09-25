@@ -36,6 +36,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             articleList.add(articleModel)
             articleAdapter.submitList(articleList)
+            articleAdapter.notifyDataSetChanged()
         }
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -62,6 +63,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         articleList.clear()
         userDB = Firebase.database.reference.child(DB_USERS)
         articleDB = Firebase.database.reference.child(DB_ARTICLES)
+
         articleAdapter = ArticleAdapter(onItemClicked = { articleModel ->
             if (auth.currentUser != null) {
                 if (auth.currentUser!!.uid != articleModel.sellerId) {
@@ -86,7 +88,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     Snackbar.make(view, "채팅방이 생성되었습니다. 채팅탭에서 확인해주세요.", Snackbar.LENGTH_SHORT).show()
 
                 } else {
-                    Snackbar.make(view, "내가 올린 아이텝입니다.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, "내가 올린 물품입니다.", Snackbar.LENGTH_SHORT).show()
                 }
             } else {
                 Snackbar.make(view, "로그인 후 사용해주세요.", Snackbar.LENGTH_SHORT).show()
