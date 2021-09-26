@@ -41,10 +41,12 @@ class SignInActivity : AppCompatActivity(), CoroutineScope {
     private fun checkAuthCodeExist(): Boolean = authTokenProvider.token.isNullOrEmpty().not()
 
     private fun launchMainActivity() =
-        startActivity(Intent(this, MainActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        })
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
 
     private fun bindViews() = with(binding) {
         loginButton.setOnClickListener {

@@ -10,7 +10,9 @@ import retrofit2.http.Query
 interface GithubApiService {
 
     @GET("search/repositories")
-    suspend fun searchRepositories(@Query("q") query: String): Response<GithubRepoSearchResponse>
+    suspend fun searchRepositories(
+        @Query("q") query: String
+    ): Response<GithubRepoSearchResponse>
 
     @GET("repos/{owner}/{name}")
     suspend fun getRepository(
