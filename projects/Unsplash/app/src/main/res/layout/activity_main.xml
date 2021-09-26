@@ -15,7 +15,7 @@
         android:drawableStart="@drawable/ic_baseline_search_24"
         android:drawablePadding="6dp"
         android:elevation="8dp"
-        android:hint="이미지를 검색해보세요."
+        android:hint="@string/input_hint"
         android:imeOptions="actionSearch"
         android:importantForAutofill="no"
         android:inputType="text"
@@ -47,7 +47,7 @@
                 android:layout_gravity="center"
                 android:drawablePadding="6dp"
                 android:gravity="center"
-                android:text="문제가 생겼어요!\n아래로 당겨 새로고침 해주세요."
+                android:text="@string/error"
                 android:visibility="gone"
                 app:drawableTopCompat="@drawable/ic_baseline_refresh_24" />
 
