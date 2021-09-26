@@ -40,7 +40,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
     private lateinit var locationManager: LocationManager
     private lateinit var myLocationListener: MyLocationListener
 
-    private lateinit var job: Job
+    private val job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -51,8 +51,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        job = Job()
 
         if (::searchResult.isInitialized.not()) {
             intent?.let {
@@ -72,8 +70,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, CoroutineScope {
     }
 
     private fun setupGoogleMap() {
-        val mapFragment =
-            supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
 
         mapFragment.getMapAsync(this)
     }

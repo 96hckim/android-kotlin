@@ -13,7 +13,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="제목" />
+        tools:text="주소" />
 
     <TextView
         android:id="@+id/buildingTextView"
@@ -23,6 +23,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/locationTextView"
         app:layout_constraintTop_toBottomOf="@id/locationTextView"
-        tools:text="부제목" />
+        tools:text="건물" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

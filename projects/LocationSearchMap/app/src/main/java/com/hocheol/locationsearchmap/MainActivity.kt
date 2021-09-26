@@ -21,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), CoroutineScope {
 
-    private lateinit var job: Job
+    private val job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        job = Job()
 
         bindViews()
         initAdapter()
@@ -54,13 +52,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun initAdapter() {
-        adapter = SearchListAdapter(searchResultCLickListener = {
-            startActivity(
-                Intent(this, MapActivity::class.java).apply {
-                    putExtra(SEARCH_RESULT_EXTRA_KEY, it)
-                }
-            )
-        })
+        adapter = SearchListAdapter(
+            searchResultCLickListener = {
+                startActivity(
+                    Intent(this, MapActivity::class.java).apply {
+                        putExtra(SEARCH_RESULT_EXTRA_KEY, it)
+                    }
+                )
+            }
+        )
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
