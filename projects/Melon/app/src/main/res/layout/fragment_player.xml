@@ -86,8 +86,8 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="36dp"
         android:translationY="50dp"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="10dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="@id/topBackgroundView"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,16 +110,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
-
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/playerView"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:alpha="0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:use_controller="false" />
 
     <SeekBar
         android:id="@+id/playerSeekBar"
@@ -159,6 +149,16 @@
         app:layout_constraintEnd_toEndOf="@id/playerSeekBar"
         app:layout_constraintTop_toBottomOf="@id/playerSeekBar"
         tools:text="0:00" />
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:use_controller="false" />
 
     <SeekBar
         android:id="@+id/playListSeekBar"

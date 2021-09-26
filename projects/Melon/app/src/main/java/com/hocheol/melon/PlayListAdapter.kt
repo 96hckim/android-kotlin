@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hocheol.melon.databinding.ItemMusicBinding
 
-class PlayListAdapter(private val callback: (MusicModel) -> Unit) :
-    ListAdapter<MusicModel, PlayListAdapter.ViewHolder>(diffUtil) {
+class PlayListAdapter(
+    private val callback: (MusicModel) -> Unit
+) : ListAdapter<MusicModel, PlayListAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(private val binding: ItemMusicBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -36,15 +37,14 @@ class PlayListAdapter(private val callback: (MusicModel) -> Unit) :
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             ItemMusicBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
         )
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])

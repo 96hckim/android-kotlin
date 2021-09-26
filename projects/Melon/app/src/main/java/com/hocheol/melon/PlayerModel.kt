@@ -6,14 +6,13 @@ data class PlayerModel(
     var isWatchingPlayListview: Boolean = true
 ) {
 
-    fun getAdapterModels(): List<MusicModel> {
-        return playMusicList.mapIndexed { index, musicModel ->
+    fun getAdapterModels(): List<MusicModel> =
+        playMusicList.mapIndexed { index, musicModel ->
             val newItem = musicModel.copy(
                 isPlaying = index == currentPosition
             )
             newItem
         }
-    }
 
     fun updateCurrentPosition(musicModel: MusicModel) {
         currentPosition = playMusicList.indexOf(musicModel)
@@ -22,8 +21,7 @@ data class PlayerModel(
     fun nextMusic(): MusicModel? {
         if (playMusicList.isEmpty()) return null
 
-        currentPosition =
-            if ((currentPosition + 1) == playMusicList.size) 0 else currentPosition + 1
+        currentPosition = if ((currentPosition + 1) == playMusicList.size) 0 else currentPosition + 1
 
         return playMusicList[currentPosition]
     }
@@ -31,15 +29,12 @@ data class PlayerModel(
     fun prevMusic(): MusicModel? {
         if (playMusicList.isEmpty()) return null
 
-        currentPosition =
-            if ((currentPosition - 1) < 0) playMusicList.lastIndex else currentPosition - 1
+        currentPosition = if ((currentPosition - 1) < 0) playMusicList.lastIndex else currentPosition - 1
 
         return playMusicList[currentPosition]
     }
 
-    fun currentMusicModel(): MusicModel? {
-        if (playMusicList.isEmpty()) return null
-        return playMusicList[currentPosition]
-    }
+    fun currentMusicModel(): MusicModel? =
+        if (playMusicList.isEmpty()) null else playMusicList[currentPosition]
 
 }

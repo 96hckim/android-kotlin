@@ -172,20 +172,21 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
             false
         }
 
-        fragmentPlayerBinding.playerSeekBar.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
+        fragmentPlayerBinding.playerSeekBar.setOnSeekBarChangeListener(
+            object : SeekBar.OnSeekBarChangeListener {
 
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    player?.seekTo((seekBar.progress * 1000).toLong())
+                }
+
             }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                player?.seekTo((seekBar.progress * 1000).toLong())
-            }
-
-        })
+        )
     }
 
     private fun initRecyclerView(fragmentPlayerBinding: FragmentPlayerBinding) {
@@ -267,9 +268,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
     }
 
     companion object {
-        fun newInstance(): PlayerFragment {
-            return PlayerFragment()
-        }
+        fun newInstance() = PlayerFragment()
     }
 
 }
