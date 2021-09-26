@@ -8,8 +8,10 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
 
-class CustomMotionLayout(context: Context, attributeSet: AttributeSet? = null) :
-    MotionLayout(context, attributeSet) {
+class CustomMotionLayout(
+    context: Context,
+    attributeSet: AttributeSet? = null
+) : MotionLayout(context, attributeSet) {
 
     private var motionTouchStarted = false
     private val mainContainerView by lazy {
@@ -18,7 +20,7 @@ class CustomMotionLayout(context: Context, attributeSet: AttributeSet? = null) :
     private val hitRect = Rect()
 
     init {
-        setTransitionListener(object : TransitionListener{
+        setTransitionListener(object : TransitionListener {
 
             override fun onTransitionStarted(
                 motionLayout: MotionLayout?,

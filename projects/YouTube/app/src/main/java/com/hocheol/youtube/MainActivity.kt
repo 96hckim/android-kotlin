@@ -1,7 +1,6 @@
 package com.hocheol.youtube
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,11 +25,13 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragmentContainer, PlayerFragment())
             .commit()
 
-        videoAdapter = VideoAdapter(callback = { url, title ->
-            supportFragmentManager.fragments.find { it is PlayerFragment }?.let {
-                (it as PlayerFragment).play(url, title)
+        videoAdapter = VideoAdapter(
+            callback = { url, title ->
+                supportFragmentManager.fragments.find { it is PlayerFragment }?.let {
+                    (it as PlayerFragment).play(url, title)
+                }
             }
-        })
+        )
 
         findViewById<RecyclerView>(R.id.mainRecyclerView).apply {
             layoutManager = LinearLayoutManager(context)

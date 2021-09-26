@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layoutDescription="@xml/fragment_player_scene">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <View
         android:id="@+id/mainContainerLayout"
         android:layout_width="0dp"
         android:layout_height="250dp"

@@ -1,5 +1,6 @@
 package com.hocheol.youtube
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -43,47 +44,48 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
     }
 
     private fun initMotionLayoutEvent(fragmentPlayerBinding: FragmentPlayerBinding) {
-        fragmentPlayerBinding.playerMotionLayout.setTransitionListener(object :
-            MotionLayout.TransitionListener {
+        fragmentPlayerBinding.playerMotionLayout.setTransitionListener(
+            object : MotionLayout.TransitionListener {
 
-            override fun onTransitionStarted(
-                motionLayout: MotionLayout?,
-                startId: Int,
-                endId: Int
-            ) {
-            }
+                override fun onTransitionStarted(
+                    motionLayout: MotionLayout?,
+                    startId: Int,
+                    endId: Int
+                ) {
+                }
 
-            override fun onTransitionChange(
-                motionLayout: MotionLayout?,
-                startId: Int,
-                endId: Int,
-                progress: Float
-            ) {
-                binding?.let {
-                    (activity as MainActivity).also { mainActivity ->
-                        mainActivity.findViewById<MotionLayout>(R.id.mainMotionLayout).progress =
-                            abs(progress)
+                override fun onTransitionChange(
+                    motionLayout: MotionLayout?,
+                    startId: Int,
+                    endId: Int,
+                    progress: Float
+                ) {
+                    binding?.let {
+                        (activity as MainActivity).also { mainActivity ->
+                            mainActivity.findViewById<MotionLayout>(R.id.mainMotionLayout).progress = abs(progress)
+                        }
                     }
                 }
-            }
 
-            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {}
+                override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {}
 
-            override fun onTransitionTrigger(
-                motionLayout: MotionLayout?,
-                triggerId: Int,
-                positive: Boolean,
-                progress: Float
-            ) {
-            }
+                override fun onTransitionTrigger(
+                    motionLayout: MotionLayout?,
+                    triggerId: Int,
+                    positive: Boolean,
+                    progress: Float
+                ) {
+                }
 
-        })
+            })
     }
 
     private fun initRecyclerView(fragmentPlayerBinding: FragmentPlayerBinding) {
-        videoAdapter = VideoAdapter(callback = { url, title ->
-            play(url, title)
-        })
+        videoAdapter = VideoAdapter(
+            callback = { url, title ->
+                play(url, title)
+            }
+        )
 
         fragmentPlayerBinding.fragmentRecyclerView.apply {
             adapter = videoAdapter
@@ -113,8 +115,6 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
             })
         }
     }
-
-    private val TAG = "PlayerFragment"
 
     private fun initControlButton(fragmentPlayerBinding: FragmentPlayerBinding) {
         fragmentPlayerBinding.bottomPlayerControlButton.setOnClickListener {
@@ -159,7 +159,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
         context?.let {
             val dataSourceFactory = DefaultDataSourceFactory(it)
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(url))
+                .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
 
             player?.setMediaSource(mediaSource)
             player?.prepare()
