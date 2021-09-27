@@ -9,6 +9,9 @@ import com.hocheol.subway.data.preference.PreferenceManager
 import com.hocheol.subway.data.preference.SharedPreferenceManager
 import com.hocheol.subway.data.repository.StationRepository
 import com.hocheol.subway.data.repository.StationRepositoryImpl
+import com.hocheol.subway.presentation.stations.StationsContract
+import com.hocheol.subway.presentation.stations.StationsFragment
+import com.hocheol.subway.presentation.stations.StationsPresenter
 import fastcampus.aop.part5.chapter05.data.db.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
@@ -32,5 +35,10 @@ val appModule = module {
 
     // Repository
     single<StationRepository> { StationRepositoryImpl(get(), get(), get(), get()) }
+
+    // Presentation
+    scope<StationsFragment> {
+        scoped<StationsContract.Presenter> { StationsPresenter(getSource(), get()) }
+    }
 
 }
