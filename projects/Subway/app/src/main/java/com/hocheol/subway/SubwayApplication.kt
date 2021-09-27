@@ -15,7 +15,7 @@ class SubwayApplication : Application() {
         startKoin {
             androidLogger(
                 if (BuildConfig.DEBUG) {
-                    Level.DEBUG
+                    Level.ERROR
                 } else {
                     Level.NONE
                 }

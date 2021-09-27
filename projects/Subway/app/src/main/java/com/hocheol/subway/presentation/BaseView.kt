@@ -1,4 +1,4 @@
-package com.hocheol.subway.presenter
+package com.hocheol.subway.presentation
 
 interface BaseView<PresenterT : BasePresenter> {
 

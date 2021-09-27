@@ -1,4 +1,4 @@
-package com.hocheol.subway.presenter
+package com.hocheol.subway.presentation
 
 import androidx.annotation.CallSuper
 import kotlinx.coroutines.CoroutineScope
