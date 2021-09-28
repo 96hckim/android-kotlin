@@ -7,8 +7,9 @@ import retrofit2.http.Path
 
 interface StationArrivalsApi {
 
-    //    @GET("api/subway/${BuildConfig.SEOUL_API_ACCESS_KEY}/json/realtimeStationArrival/0/100/{stationName}")
+//    @GET("api/subway/${BuildConfig.SEOUL_API_ACCESS_KEY}/json/realtimeStationArrival/0/100/{stationName}")
+//    suspend fun getRealtimeStationArrivals(@Path("stationName") stationName: String): Response<RealtimeStationArrivals>
     @GET("api/subway/sample/json/realtimeStationArrival/1/5/오금")
-    suspend fun getRealtimeStationArrivals(@Path("stationName") stationName: String): Response<RealtimeStationArrivals>
+    suspend fun getRealtimeStationArrivals(stationName: String): Response<RealtimeStationArrivals>
 
 }

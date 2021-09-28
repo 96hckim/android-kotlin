@@ -8,6 +8,7 @@ import com.hocheol.subway.R
 import com.hocheol.subway.databinding.ActivityMainBinding
 import com.hocheol.subway.extension.toGone
 import com.hocheol.subway.extension.toVisible
+import com.hocheol.subway.presentation.stationarrivals.StationArrivalsFragmentArgs
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,9 +35,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
-        navigationController.addOnDestinationChangedListener { _, destination, _ ->
+        navigationController.addOnDestinationChangedListener { _, destination, argument ->
             if (destination.id == R.id.station_arrivals_dest) {
-//                title = StationArrivalsFragmentArgs.fromBundle(argument!!).station.name
+                title = StationArrivalsFragmentArgs.fromBundle(argument!!).station.name
                 binding.toolBar.toVisible()
             } else {
                 binding.toolBar.toGone()

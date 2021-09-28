@@ -12,6 +12,9 @@ import com.hocheol.subway.data.preference.PreferenceManager
 import com.hocheol.subway.data.preference.SharedPreferenceManager
 import com.hocheol.subway.data.repository.StationRepository
 import com.hocheol.subway.data.repository.StationRepositoryImpl
+import com.hocheol.subway.presentation.stationarrivals.StationArrivalsContract
+import com.hocheol.subway.presentation.stationarrivals.StationArrivalsFragment
+import com.hocheol.subway.presentation.stationarrivals.StationArrivalsPresenter
 import com.hocheol.subway.presentation.stations.StationsContract
 import com.hocheol.subway.presentation.stations.StationsFragment
 import com.hocheol.subway.presentation.stations.StationsPresenter
@@ -69,6 +72,9 @@ val appModule = module {
     // Presentation
     scope<StationsFragment> {
         scoped<StationsContract.Presenter> { StationsPresenter(getSource(), get()) }
+    }
+    scope<StationArrivalsFragment> {
+        scoped<StationArrivalsContract.Presenter> { StationArrivalsPresenter(getSource(), get(), get()) }
     }
 
 }
