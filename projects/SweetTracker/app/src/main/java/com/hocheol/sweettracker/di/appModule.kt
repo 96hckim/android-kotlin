@@ -5,7 +5,10 @@ import com.hocheol.sweettracker.data.api.SweetTrackerApi
 import com.hocheol.sweettracker.data.api.Url
 import com.hocheol.sweettracker.data.db.AppDatabase
 import com.hocheol.sweettracker.data.repository.TrackingItemRepository
-import com.hocheol.sweettracker.data.repository.TrackingItemRepositoryImpl
+import com.hocheol.sweettracker.data.repository.TrackingItemRepositoryStub
+import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsContract
+import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsFragment
+import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsPresenter
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -48,6 +51,12 @@ val appModule = module {
     }
 
     // Repository
-    single<TrackingItemRepository> { TrackingItemRepositoryImpl(get(), get(), get()) }
+//    single<TrackingItemRepository> { TrackingItemRepositoryImpl(get(), get(), get()) }
+    single<TrackingItemRepository> { TrackingItemRepositoryStub() }
+
+    // Presentation
+    scope<TrackingItemsFragment> {
+        scoped<TrackingItemsContract.Presenter> { TrackingItemsPresenter(getSource(), get()) }
+    }
 
 }

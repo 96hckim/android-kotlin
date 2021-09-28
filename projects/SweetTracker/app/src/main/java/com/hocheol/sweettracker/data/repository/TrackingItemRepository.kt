@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrackingItemRepository {
 
-//    val trackingItems: Flow<List<TrackingItem>>
+    val trackingItems: Flow<List<TrackingItem>>
 
     suspend fun getTrackingItemInformation(): List<Pair<TrackingItem, TrackingInformation>>
 

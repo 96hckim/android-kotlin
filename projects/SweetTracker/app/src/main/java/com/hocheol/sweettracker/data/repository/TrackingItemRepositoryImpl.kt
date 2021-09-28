@@ -5,6 +5,9 @@ import com.hocheol.sweettracker.data.db.TrackingItemDao
 import com.hocheol.sweettracker.data.entity.TrackingInformation
 import com.hocheol.sweettracker.data.entity.TrackingItem
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class TrackingItemRepositoryImpl(
@@ -13,10 +16,10 @@ class TrackingItemRepositoryImpl(
     private val dispatcher: CoroutineDispatcher
 ) : TrackingItemRepository {
 
-//    override val trackingItems: Flow<List<TrackingItem>> =
-//        trackingItemDao.allTrackingItems()
-//            .distinctUntilChanged()
-//            .flowOn(dispatcher)
+    override val trackingItems: Flow<List<TrackingItem>> =
+        trackingItemDao.allTrackingItems()
+            .distinctUntilChanged()
+            .flowOn(dispatcher)
 
     override suspend fun getTrackingItemInformation(): List<Pair<TrackingItem, TrackingInformation>> =
         withContext(dispatcher) {
