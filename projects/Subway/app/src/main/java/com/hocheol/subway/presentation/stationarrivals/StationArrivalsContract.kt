@@ -15,13 +15,15 @@ interface StationArrivalsContract {
         fun showErrorDescription(message: String)
 
         fun showStationArrivals(arrivalInformation: List<ArrivalInformation>)
+
     }
 
     interface Presenter : BasePresenter {
 
         fun fetchStationArrivals()
 
-//        fun toggleStationFavorite()
+        fun toggleStationFavorite()
+
     }
 
 }

@@ -20,6 +20,8 @@ interface StationsContract {
 
         fun filterStations(query: String)
 
+        fun toggleStationFavorite(station: Station)
+
     }
 
 }
