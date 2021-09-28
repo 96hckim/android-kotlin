@@ -1,6 +1,7 @@
 package com.hocheol.sweettracker.data.api
 
 import com.hocheol.sweettracker.BuildConfig
+import com.hocheol.sweettracker.data.entity.ShippingCompanies
 import com.hocheol.sweettracker.data.entity.TrackingInformation
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,8 +15,8 @@ interface SweetTrackerApi {
         @Query("t_invoice") invoice: String
     ): Response<TrackingInformation>
 
-//    @GET("api/v1/companylist?t_key=${BuildConfig.SWEET_TRACKER_API_KEY}")
-//    suspend fun getShippingCompanies(): Response<ShippingCompanies>
+    @GET("api/v1/companylist?t_key=${BuildConfig.SWEET_TRACKER_API_KEY}")
+    suspend fun getShippingCompanies(): Response<ShippingCompanies>
 
 //    @GET("api/v1/recommend?t_key=${BuildConfig.SWEET_TRACKER_API_KEY}")
 //    suspend fun getRecommendShippingCompanies(

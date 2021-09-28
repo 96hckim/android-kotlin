@@ -1,9 +1,14 @@
 package com.hocheol.sweettracker.di
 
+import android.app.Activity
 import com.hocheol.sweettracker.BuildConfig
 import com.hocheol.sweettracker.data.api.SweetTrackerApi
 import com.hocheol.sweettracker.data.api.Url
 import com.hocheol.sweettracker.data.db.AppDatabase
+import com.hocheol.sweettracker.data.preference.PreferenceManager
+import com.hocheol.sweettracker.data.preference.SharedPreferenceManager
+import com.hocheol.sweettracker.data.repository.ShippingCompanyRepository
+import com.hocheol.sweettracker.data.repository.ShippingCompanyRepositoryImpl
 import com.hocheol.sweettracker.data.repository.TrackingItemRepository
 import com.hocheol.sweettracker.data.repository.TrackingItemRepositoryStub
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsContract
@@ -13,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -50,9 +56,14 @@ val appModule = module {
             .create()
     }
 
+    // Preference
+    single { androidContext().getSharedPreferences("preference", Activity.MODE_PRIVATE) }
+    single<PreferenceManager> { SharedPreferenceManager(get()) }
+
     // Repository
-//    single<TrackingItemRepository> { TrackingItemRepositoryImpl(get(), get(), get()) }
     single<TrackingItemRepository> { TrackingItemRepositoryStub() }
+//    single<TrackingItemRepository> { TrackingItemRepositoryImpl(get(), get(), get()) }
+    single<ShippingCompanyRepository> { ShippingCompanyRepositoryImpl(get(), get(), get(), get()) }
 
     // Presentation
     scope<TrackingItemsFragment> {
