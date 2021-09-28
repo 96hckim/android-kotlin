@@ -94,8 +94,13 @@ class TrackingItemsFragment : ScopeFragment(), TrackingItemsContract.View {
         }
 
         (binding?.recyclerView?.adapter as? TrackingItemsAdapter)?.onClickItemListener = { item, information ->
-//            findNavController()
-//                .navigate(TrackingItemsFragmentDirections.toTrackingHistory(item, information))
+            findNavController()
+                .navigate(
+                    TrackingItemsFragmentDirections.actionTrackingItemsDestToTrackingHistoryDest(
+                        item,
+                        information
+                    )
+                )
         }
     }
 

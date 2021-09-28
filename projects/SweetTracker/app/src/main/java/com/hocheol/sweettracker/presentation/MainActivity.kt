@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
             (supportFragmentManager.findFragmentById(R.id.mainNavigationHostFragment) as NavHostFragment).navController
 
         binding.toolbar.setupWithNavController(navigationController)
+        setSupportActionBar(binding.toolbar)
     }
 
 }

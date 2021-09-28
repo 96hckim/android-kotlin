@@ -5,6 +5,8 @@ import com.hocheol.sweettracker.BuildConfig
 import com.hocheol.sweettracker.data.api.SweetTrackerApi
 import com.hocheol.sweettracker.data.api.Url
 import com.hocheol.sweettracker.data.db.AppDatabase
+import com.hocheol.sweettracker.data.entity.TrackingInformation
+import com.hocheol.sweettracker.data.entity.TrackingItem
 import com.hocheol.sweettracker.data.preference.PreferenceManager
 import com.hocheol.sweettracker.data.preference.SharedPreferenceManager
 import com.hocheol.sweettracker.data.repository.ShippingCompanyRepository
@@ -14,6 +16,9 @@ import com.hocheol.sweettracker.data.repository.TrackingItemRepositoryImpl
 import com.hocheol.sweettracker.presentation.addtrackingitem.AddTrackingItemFragment
 import com.hocheol.sweettracker.presentation.addtrackingitem.AddTrackingItemPresenter
 import com.hocheol.sweettracker.presentation.addtrackingitem.AddTrackingItemsContract
+import com.hocheol.sweettracker.presentation.trackinghistory.TrackingHistoryContract
+import com.hocheol.sweettracker.presentation.trackinghistory.TrackingHistoryFragment
+import com.hocheol.sweettracker.presentation.trackinghistory.TrackingHistoryPresenter
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsContract
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsFragment
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsPresenter
@@ -76,6 +81,11 @@ val appModule = module {
     scope<AddTrackingItemFragment> {
         scoped<AddTrackingItemsContract.Presenter> {
             AddTrackingItemPresenter(getSource(), get(), get())
+        }
+    }
+    scope<TrackingHistoryFragment> {
+        scoped<TrackingHistoryContract.Presenter> { (trackingItem: TrackingItem, trackingInformation: TrackingInformation) ->
+            TrackingHistoryPresenter(getSource(), get(), trackingItem, trackingInformation)
         }
     }
 
