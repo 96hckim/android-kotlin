@@ -10,7 +10,10 @@ import com.hocheol.sweettracker.data.preference.SharedPreferenceManager
 import com.hocheol.sweettracker.data.repository.ShippingCompanyRepository
 import com.hocheol.sweettracker.data.repository.ShippingCompanyRepositoryImpl
 import com.hocheol.sweettracker.data.repository.TrackingItemRepository
-import com.hocheol.sweettracker.data.repository.TrackingItemRepositoryStub
+import com.hocheol.sweettracker.data.repository.TrackingItemRepositoryImpl
+import com.hocheol.sweettracker.presentation.addtrackingitem.AddTrackingItemFragment
+import com.hocheol.sweettracker.presentation.addtrackingitem.AddTrackingItemPresenter
+import com.hocheol.sweettracker.presentation.addtrackingitem.AddTrackingItemsContract
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsContract
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsFragment
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsPresenter
@@ -31,6 +34,7 @@ val appModule = module {
     // Database
     single { AppDatabase.build(androidApplication()) }
     single { get<AppDatabase>().trackingItemDao() }
+    single { get<AppDatabase>().shippingCompanyDao() }
 
     // Api
     single {
@@ -61,13 +65,18 @@ val appModule = module {
     single<PreferenceManager> { SharedPreferenceManager(get()) }
 
     // Repository
-    single<TrackingItemRepository> { TrackingItemRepositoryStub() }
-//    single<TrackingItemRepository> { TrackingItemRepositoryImpl(get(), get(), get()) }
+//    single<TrackingItemRepository> { TrackingItemRepositoryStub() }
+    single<TrackingItemRepository> { TrackingItemRepositoryImpl(get(), get(), get()) }
     single<ShippingCompanyRepository> { ShippingCompanyRepositoryImpl(get(), get(), get(), get()) }
 
     // Presentation
     scope<TrackingItemsFragment> {
         scoped<TrackingItemsContract.Presenter> { TrackingItemsPresenter(getSource(), get()) }
+    }
+    scope<AddTrackingItemFragment> {
+        scoped<AddTrackingItemsContract.Presenter> {
+            AddTrackingItemPresenter(getSource(), get(), get())
+        }
     }
 
 }
