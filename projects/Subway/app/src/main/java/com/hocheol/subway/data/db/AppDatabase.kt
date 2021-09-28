@@ -1,10 +1,9 @@
-package fastcampus.aop.part5.chapter05.data.db
+package com.hocheol.subway.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.hocheol.subway.data.db.StationDao
 import com.hocheol.subway.data.db.entity.StationEntity
 import com.hocheol.subway.data.db.entity.StationSubwayCrossRefEntity
 import com.hocheol.subway.data.db.entity.SubwayEntity

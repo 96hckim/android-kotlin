@@ -18,7 +18,7 @@ import com.hocheol.subway.presentation.stationarrivals.StationArrivalsPresenter
 import com.hocheol.subway.presentation.stations.StationsContract
 import com.hocheol.subway.presentation.stations.StationsFragment
 import com.hocheol.subway.presentation.stations.StationsPresenter
-import fastcampus.aop.part5.chapter05.data.db.AppDatabase
+import com.hocheol.subway.data.db.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

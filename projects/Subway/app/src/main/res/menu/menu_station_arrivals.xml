@@ -6,7 +6,7 @@
     <item
         android:id="@+id/refreshAction"
         android:icon="@drawable/ic_baseline_refresh_24"
-        android:title="Favorite"
+        android:title="Refresh"
         app:showAsAction="ifRoom"
         tools:ignore="HardcodedText" />
 

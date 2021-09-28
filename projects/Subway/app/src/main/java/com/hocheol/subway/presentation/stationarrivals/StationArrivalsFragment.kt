@@ -79,9 +79,9 @@ class StationArrivalsFragment : ScopeFragment(), StationArrivalsContract.View {
                 item.isChecked = !item.isChecked
                 item.setIcon(
                     if (item.isChecked) {
-                        R.drawable.ic_star
+                        R.drawable.ic_baseline_star_24
                     } else {
-                        R.drawable.ic_star_empty
+                        R.drawable.ic_baseline_star_border_24
                     }
                 )
                 presenter.toggleStationFavorite()
