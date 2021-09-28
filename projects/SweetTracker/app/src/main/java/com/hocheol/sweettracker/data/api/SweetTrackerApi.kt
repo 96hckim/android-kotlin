@@ -18,9 +18,9 @@ interface SweetTrackerApi {
     @GET("api/v1/companylist?t_key=${BuildConfig.SWEET_TRACKER_API_KEY}")
     suspend fun getShippingCompanies(): Response<ShippingCompanies>
 
-//    @GET("api/v1/recommend?t_key=${BuildConfig.SWEET_TRACKER_API_KEY}")
-//    suspend fun getRecommendShippingCompanies(
-//        @Query("t_invoice") invoice: String
-//    ): Response<ShippingCompanies>
+    @GET("api/v1/recommend?t_key=${BuildConfig.SWEET_TRACKER_API_KEY}")
+    suspend fun getRecommendShippingCompanies(
+        @Query("t_invoice") invoice: String
+    ): Response<ShippingCompanies>
 
 }

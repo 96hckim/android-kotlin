@@ -55,8 +55,8 @@ class TrackingItemRepositoryImpl(
             trackingItem.invoice
         ).body()
 
-        if (!trackingInformation!!.errorMessage.isNullOrBlank()) {
-            throw RuntimeException(trackingInformation.errorMessage)
+        if (!trackingInformation!!.errorMessage.isNullOrBlank() || trackingInformation.result.equals("N")) {
+            throw RuntimeException(trackingInformation.errorMessage ?: "다시 입력바랍니다.")
         }
 
         trackingItemDao.insert(trackingItem)

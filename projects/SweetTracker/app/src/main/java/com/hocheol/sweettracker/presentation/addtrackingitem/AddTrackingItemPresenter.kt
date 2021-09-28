@@ -38,13 +38,13 @@ class AddTrackingItemPresenter(
         }
     }
 
-//    override fun fetchRecommendShippingCompany() {
-//        scope.launch {
-//            view.showRecommendCompanyLoadingIndicator()
-//            shippingCompanyRepository.getRecommendShippingCompany(invoice!!)?.let { view.showRecommendCompany(it) }
-//            view.hideRecommendCompanyLoadingIndicator()
-//        }
-//    }
+    override fun fetchRecommendShippingCompany() {
+        scope.launch {
+            view.showRecommendCompanyLoadingIndicator()
+            shippingCompanyRepository.getRecommendShippingCompany(invoice!!)?.let { view.showRecommendCompany(it) }
+            view.hideRecommendCompanyLoadingIndicator()
+        }
+    }
 
     override fun changeSelectedShippingCompany(companyName: String) {
         selectedShippingCompany = shippingCompanies?.find { it.name == companyName }
