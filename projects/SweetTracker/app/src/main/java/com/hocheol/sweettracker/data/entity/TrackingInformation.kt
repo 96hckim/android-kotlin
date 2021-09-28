@@ -47,6 +47,7 @@ data class TrackingInformation(
     val trackingDetails: List<TrackingDetail>? = null,
     @SerializedName("zipCode")
     val zipCode: String? = null,
+
     @SerializedName("msg")
     val errorMessage: String? = null
 ) : Parcelable

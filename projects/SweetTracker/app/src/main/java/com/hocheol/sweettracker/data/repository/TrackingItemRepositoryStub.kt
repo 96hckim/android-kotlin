@@ -40,9 +40,9 @@ class TrackingItemRepositoryStub() : TrackingItemRepository {
         )
 
 //    override suspend fun getTrackingInformation(companyCode: String, invoice: String): TrackingInformation? = null
-//
-//    override suspend fun saveTrackingItem(trackingItem: TrackingItem) = Unit
-//
+
+    override suspend fun saveTrackingItem(trackingItem: TrackingItem) = Unit
+
 //    override suspend fun deleteTrackingItem(trackingItem: TrackingItem) = Unit
 
 }

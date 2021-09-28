@@ -48,20 +48,20 @@ class TrackingItemRepositoryImpl(
 //        trackerApi.getTrackingInformation(companyCode, invoice)
 //            .body()
 //            ?.sortTrackingDetailsByTimeDescending()
-//
-//    override suspend fun saveTrackingItem(trackingItem: TrackingItem) = withContext(dispatcher) {
-//        val trackingInformation = trackerApi.getTrackingInformation(
-//            trackingItem.company.code,
-//            trackingItem.invoice
-//        ).body()
-//
-//        if (!trackingInformation!!.errorMessage.isNullOrBlank()) {
-//            throw RuntimeException(trackingInformation.errorMessage)
-//        }
-//
-//        trackingItemDao.insert(trackingItem)
-//    }
-//
+
+    override suspend fun saveTrackingItem(trackingItem: TrackingItem) = withContext(dispatcher) {
+        val trackingInformation = trackerApi.getTrackingInformation(
+            trackingItem.company.code,
+            trackingItem.invoice
+        ).body()
+
+        if (!trackingInformation!!.errorMessage.isNullOrBlank()) {
+            throw RuntimeException(trackingInformation.errorMessage)
+        }
+
+        trackingItemDao.insert(trackingItem)
+    }
+
 //    override suspend fun deleteTrackingItem(trackingItem: TrackingItem) {
 //        trackingItemDao.delete(trackingItem)
 //    }
