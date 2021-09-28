@@ -10,8 +10,8 @@ interface StationRepository {
 
     suspend fun refreshStations()
 
-//    suspend fun getStationArrivals(stationName: String): List<ArrivalInformation>
-//
-//    suspend fun updateStation(station: Station)
+    suspend fun getStationArrivals(stationName: String): List<ArrivalInformation>
+
+    suspend fun updateStation(station: Station)
 
 }
