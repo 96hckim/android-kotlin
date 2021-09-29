@@ -14,6 +14,7 @@
         <action
             android:id="@+id/action_tracking_items_dest_to_add_tracking_item_dest"
             app:destination="@id/add_tracking_item_dest" />
+
         <action
             android:id="@+id/action_tracking_items_dest_to_tracking_history_dest"
             app:destination="@id/tracking_history_dest" />

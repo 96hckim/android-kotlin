@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val navigationController by lazy {
+        (supportFragmentManager.findFragmentById(R.id.mainNavigationHostFragment) as NavHostFragment).navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +26,13 @@ class MainActivity : AppCompatActivity() {
         initWorker()
     }
 
-    private fun initView() {
-        val navigationController =
-            (supportFragmentManager.findFragmentById(R.id.mainNavigationHostFragment) as NavHostFragment).navController
+    override fun onSupportNavigateUp(): Boolean {
+        return navigationController.navigateUp() || super.onSupportNavigateUp()
+    }
 
-        binding.toolbar.setupWithNavController(navigationController)
+    private fun initView() {
         setSupportActionBar(binding.toolbar)
+        binding.toolbar.setupWithNavController(navigationController)
     }
 
     private fun initWorker() {
