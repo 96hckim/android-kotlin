@@ -23,6 +23,8 @@ class MovieReviewApplication : Application() {
             androidContext(this@MovieReviewApplication)
             modules(module)
         }
+
+//        MovieDataGenerator().generate()
     }
 
 }
