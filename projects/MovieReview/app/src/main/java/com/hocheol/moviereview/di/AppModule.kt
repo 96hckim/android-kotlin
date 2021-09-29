@@ -11,10 +11,11 @@ import com.hocheol.moviereview.data.repository.MovieRepositoryImpl
 import com.hocheol.moviereview.data.repository.ReviewRepository
 import com.hocheol.moviereview.data.repository.ReviewRepositoryImpl
 import com.hocheol.moviereview.domain.usecase.GetAllMoviesUseCase
+import com.hocheol.moviereview.domain.usecase.GetAllReviewsUseCase
 import com.hocheol.moviereview.domain.usecase.GetRandomFeaturedMovieUseCase
 import com.hocheol.moviereview.presentation.home.HomeContract
-import com.hocheol.moviereview.presentation.home.HomePresenter
 import com.hocheol.moviereview.presentation.home.HomeFragment
+import com.hocheol.moviereview.presentation.home.HomePresenter
 import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
 
@@ -40,6 +41,7 @@ val dataModule = module {
 val domainModule = module {
     factory { GetRandomFeaturedMovieUseCase(get(), get()) }
     factory { GetAllMoviesUseCase(get()) }
+    factory { GetAllReviewsUseCase(get()) }
 //    factory { GetAllMovieReviewsUseCase(get(), get()) }
 //    factory { GetMyReviewedMoviesUseCase(get(), get(), get()) }
 //    factory { SubmitReviewUseCase(get(), get()) }
