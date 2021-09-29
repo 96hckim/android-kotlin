@@ -22,6 +22,7 @@ import com.hocheol.sweettracker.presentation.trackinghistory.TrackingHistoryPres
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsContract
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsFragment
 import com.hocheol.sweettracker.presentation.trackingitems.TrackingItemsPresenter
+import com.hocheol.sweettracker.work.AppWorkerFactory
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -64,6 +65,9 @@ val appModule = module {
             .build()
             .create()
     }
+
+    // Work
+    single { AppWorkerFactory(get(), get()) }
 
     // Preference
     single { androidContext().getSharedPreferences("preference", Activity.MODE_PRIVATE) }

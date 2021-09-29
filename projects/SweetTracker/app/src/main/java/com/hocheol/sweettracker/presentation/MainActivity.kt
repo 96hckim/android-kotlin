@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.hocheol.sweettracker.R
 import com.hocheol.sweettracker.databinding.ActivityMainBinding
+import com.hocheol.sweettracker.work.TrackingCheckWorker
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initView()
+        initWorker()
     }
 
     private fun initView() {
@@ -24,6 +29,28 @@ class MainActivity : AppCompatActivity() {
 
         binding.toolbar.setupWithNavController(navigationController)
         setSupportActionBar(binding.toolbar)
+    }
+
+    private fun initWorker() {
+        val workerStartTime = Calendar.getInstance()
+        workerStartTime.set(Calendar.HOUR_OF_DAY, 16)
+        val initialDelay = workerStartTime.timeInMillis - System.currentTimeMillis()
+        val dailyTrackingCheckRequest =
+            PeriodicWorkRequestBuilder<TrackingCheckWorker>(1, TimeUnit.DAYS)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setBackoffCriteria(
+                    BackoffPolicy.LINEAR,
+                    PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                    TimeUnit.MILLISECONDS
+                )
+                .build()
+
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                "DailyTrackingCheck",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                dailyTrackingCheckRequest
+            )
     }
 
 }
