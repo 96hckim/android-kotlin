@@ -1,7 +1,7 @@
 package com.hocheol.moviereview
 
 import android.app.Application
-import com.hocheol.moviereview.di.module
+import com.hocheol.moviereview.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -21,7 +21,7 @@ class MovieReviewApplication : Application() {
                 }
             )
             androidContext(this@MovieReviewApplication)
-            modules(module)
+            modules(appModule + dataModule + domainModule + presenterModule)
         }
 
 //        MovieDataGenerator().generate()
