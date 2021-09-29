@@ -4,14 +4,17 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hocheol.moviereview.data.api.MovieApi
 import com.hocheol.moviereview.data.api.MovieFirestoreApi
-import com.hocheol.moviereview.data.repository.MovieRepository
-import com.hocheol.moviereview.data.repository.MovieRepositoryImpl
-import com.hocheol.moviereview.domain.usecase.GetAllMoviesUseCase
-import com.hocheol.moviereview.domain.usecase.GetRandomFeaturedMovieUseCase
 import com.hocheol.moviereview.data.api.ReviewApi
 import com.hocheol.moviereview.data.api.ReviewFirestoreApi
+import com.hocheol.moviereview.data.repository.MovieRepository
+import com.hocheol.moviereview.data.repository.MovieRepositoryImpl
 import com.hocheol.moviereview.data.repository.ReviewRepository
 import com.hocheol.moviereview.data.repository.ReviewRepositoryImpl
+import com.hocheol.moviereview.domain.usecase.GetAllMoviesUseCase
+import com.hocheol.moviereview.domain.usecase.GetRandomFeaturedMovieUseCase
+import com.hocheol.moviereview.presentation.home.HomeContract
+import com.hocheol.moviereview.presentation.home.HomePresenter
+import com.hocheol.moviereview.presentation.home.HomeFragment
 import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
 
@@ -44,9 +47,9 @@ val domainModule = module {
 }
 
 val presenterModule = module {
-//    scope<HomeFragment> {
-//        scoped<HomeContract.Presenter> { HomePresenter(getSource(), get(), get()) }
-//    }
+    scope<HomeFragment> {
+        scoped<HomeContract.Presenter> { HomePresenter(getSource(), get(), get()) }
+    }
 //    scope<MovieReviewsFragment> {
 //        scoped<MovieReviewsContract.Presenter> { (movie: Movie) ->
 //            MovieReviewsPresenter(movie, getSource(), get(), get(), get())
