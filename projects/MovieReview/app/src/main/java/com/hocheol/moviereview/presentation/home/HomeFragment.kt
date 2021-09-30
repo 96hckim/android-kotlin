@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.moviereview.databinding.FragmentHomeBinding
@@ -77,8 +78,8 @@ class HomeFragment : ScopeFragment(), HomeContract.View {
     private fun bindView() {
         (binding?.recyclerView?.adapter as? HomeAdapter)?.apply {
             onMovieClickListener = { movie ->
-//                val action = HomeFragmentDirections.toMovieReviewsAction(movie)
-//                findNavController().navigate(action)
+                val action = HomeFragmentDirections.actionHomeDestToMovieReviewsDest(movie)
+                findNavController().navigate(action)
             }
         }
     }

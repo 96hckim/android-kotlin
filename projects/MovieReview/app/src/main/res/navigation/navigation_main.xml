@@ -35,6 +35,10 @@
         android:label="영화 상세"
         tools:layout="@layout/fragment_movie_reviews">
 
+        <argument
+            android:name="movie"
+            app:argType="com.hocheol.moviereview.domain.model.Movie" />
+
     </fragment>
 
 

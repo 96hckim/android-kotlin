@@ -41,8 +41,8 @@ android {
 dependencies {
 
     // Jetpack Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0-alpha09'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.0-alpha09'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:27.1.0')

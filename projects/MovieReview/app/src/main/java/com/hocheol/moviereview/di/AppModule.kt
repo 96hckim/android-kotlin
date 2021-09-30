@@ -10,12 +10,16 @@ import com.hocheol.moviereview.data.repository.MovieRepository
 import com.hocheol.moviereview.data.repository.MovieRepositoryImpl
 import com.hocheol.moviereview.data.repository.ReviewRepository
 import com.hocheol.moviereview.data.repository.ReviewRepositoryImpl
+import com.hocheol.moviereview.domain.model.Movie
 import com.hocheol.moviereview.domain.usecase.GetAllMoviesUseCase
 import com.hocheol.moviereview.domain.usecase.GetAllReviewsUseCase
 import com.hocheol.moviereview.domain.usecase.GetRandomFeaturedMovieUseCase
 import com.hocheol.moviereview.presentation.home.HomeContract
 import com.hocheol.moviereview.presentation.home.HomeFragment
 import com.hocheol.moviereview.presentation.home.HomePresenter
+import com.hocheol.moviereview.presentation.reviews.MovieReviewsContract
+import com.hocheol.moviereview.presentation.reviews.MovieReviewsPresenter
+import com.hocheol.moviereview.presentation.reviews.MovieReviewsFragment
 import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
 
@@ -52,11 +56,12 @@ val presenterModule = module {
     scope<HomeFragment> {
         scoped<HomeContract.Presenter> { HomePresenter(getSource(), get(), get()) }
     }
-//    scope<MovieReviewsFragment> {
-//        scoped<MovieReviewsContract.Presenter> { (movie: Movie) ->
+    scope<MovieReviewsFragment> {
+        scoped<MovieReviewsContract.Presenter> { (movie: Movie) ->
 //            MovieReviewsPresenter(movie, getSource(), get(), get(), get())
-//        }
-//    }
+            MovieReviewsPresenter(movie, getSource(), get())
+        }
+    }
 //    scope<MyPageFragment> {
 //        scoped<MyPageContract.Presenter> { MyPagePresenter(getSource(), get()) }
 //    }

@@ -1,6 +1,120 @@
 package com.hocheol.moviereview.presentation.reviews
 
-import androidx.fragment.app.Fragment
+import android.app.Activity
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.hocheol.moviereview.databinding.FragmentMovieReviewsBinding
+import com.hocheol.moviereview.domain.model.Movie
+import com.hocheol.moviereview.domain.model.Review
+import com.hocheol.moviereview.extension.toGone
+import com.hocheol.moviereview.extension.toVisible
+import org.koin.android.scope.ScopeFragment
+import org.koin.core.parameter.parametersOf
 
-class MovieReviewsFragment : Fragment() {
+class MovieReviewsFragment : ScopeFragment(), MovieReviewsContract.View {
+
+    override val presenter: MovieReviewsContract.Presenter by inject { parametersOf(arguments.movie) }
+
+    private val arguments: MovieReviewsFragmentArgs by navArgs()
+    private var binding: FragmentMovieReviewsBinding? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = FragmentMovieReviewsBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViews()
+        presenter.onViewCreated()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+    }
+
+    override fun showLoadingIndicator() {
+        binding?.progressBar?.toVisible()
+    }
+
+    override fun hideLoadingIndicator() {
+        binding?.progressBar?.toGone()
+    }
+
+    override fun showErrorDescription(message: String) {
+        binding?.recyclerView?.toGone()
+        binding?.errorDescriptionTextView?.toVisible()
+        binding?.errorDescriptionTextView?.text = message
+    }
+
+    override fun showMovieInformation(movie: Movie) {
+        binding?.recyclerView?.adapter = MovieReviewsAdapter(movie).apply {
+            onReviewSubmitButtonClickListener = { content, score ->
+//                presenter.requestAddReview(content, score)
+//                hideKeyboard()
+            }
+            onReviewDeleteButtonClickListener = { review ->
+//                showDeleteConfirmDialog(review)
+            }
+        }
+    }
+
+//    private fun showDeleteConfirmDialog(review: Review) {
+//        AlertDialog.Builder(requireContext())
+//            .setMessage("정말로 리뷰를 삭제하시겠어요?")
+//            .setPositiveButton("삭제할래요") { _, _ ->
+//                presenter.requestRemoveReview(review)
+//            }
+//            .setNegativeButton("안할래요") { _, _ -> }
+//            .show()
+//    }
+
+//    override fun showReviews(reviews: MovieReviews) {
+//        binding?.recyclerView?.isVisible = true
+//        binding?.errorDescriptionTextView?.isVisible = false
+//        (binding?.recyclerView?.adapter as? MovieReviewsAdapter)?.apply {
+//            this.myReview = reviews.myReview
+//            this.reviews = reviews.othersReview
+//            notifyDataSetChanged()
+//        }
+//    }
+    override fun showReviews(reviews: List<Review>) {
+        binding?.recyclerView?.toVisible()
+        binding?.errorDescriptionTextView?.toGone()
+        (binding?.recyclerView?.adapter as? MovieReviewsAdapter)?.apply {
+            this.reviews = reviews
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun showErrorToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun initViews() {
+        binding?.recyclerView?.apply {
+            layoutManager = LinearLayoutManager(
+                this.context,
+                RecyclerView.VERTICAL,
+                false
+            )
+        }
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+    }
+
 }

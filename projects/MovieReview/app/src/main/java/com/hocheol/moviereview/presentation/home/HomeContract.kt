@@ -19,6 +19,7 @@ interface HomeContract {
             featuredMovie: FeaturedMovie?,
             movies: List<Movie>
         )
+
     }
 
     interface Presenter : BasePresenter
