@@ -3,11 +3,14 @@ package com.hocheol.moviereview.presentation.reviews
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.hocheol.moviereview.databinding.ItemMovieInfromationBinding
+import com.hocheol.moviereview.databinding.ItemMyReviewBinding
 import com.hocheol.moviereview.databinding.ItemReviewBinding
+import com.hocheol.moviereview.databinding.ItemReviewFormBinding
 import com.hocheol.moviereview.domain.model.Movie
 import com.hocheol.moviereview.domain.model.Review
 import com.hocheol.moviereview.extension.toAbbreviatedString
@@ -32,23 +35,22 @@ class MovieReviewsAdapter(private val movie: Movie) : RecyclerView.Adapter<Recyc
             ITEM_VIEW_TYPE_ITEM -> {
                 ReviewViewHolder(parent)
             }
-//            ITEM_VIEW_TYPE_REVIEW_FORM -> {
-//                ReviewFormViewHolder(
-//                    ItemReviewFormBinding
-//                        .inflate(LayoutInflater.from(parent.context), parent, false)
-//                )
-//            }
-//            ITEM_VIEW_TYPE_MY_REVIEW -> {
-//                MyReviewViewHolder(
-//                    ItemMyReviewBinding
-//                        .inflate(LayoutInflater.from(parent.context), parent, false)
-//                )
-//            }
+            ITEM_VIEW_TYPE_REVIEW_FORM -> {
+                ReviewFormViewHolder(
+                    ItemReviewFormBinding
+                        .inflate(LayoutInflater.from(parent.context), parent, false)
+                )
+            }
+            ITEM_VIEW_TYPE_MY_REVIEW -> {
+                MyReviewViewHolder(
+                    ItemMyReviewBinding
+                        .inflate(LayoutInflater.from(parent.context), parent, false)
+                )
+            }
             else -> throw RuntimeException("알 수 없는 ViewType 입니다.")
         }
 
-    //    override fun getItemCount(): Int = 2 + reviews.size
-    override fun getItemCount(): Int = 1 + reviews.size
+    override fun getItemCount(): Int = 2 + reviews.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -56,14 +58,13 @@ class MovieReviewsAdapter(private val movie: Movie) : RecyclerView.Adapter<Recyc
                 holder.bind(movie)
             }
             is ReviewViewHolder -> {
-//                holder.bind(reviews[position - 2])
-                holder.bind(reviews[position - 1])
+                holder.bind(reviews[position - 2])
             }
-//            is MyReviewViewHolder -> {
-//                myReview ?: return
-//                holder.bind(myReview!!)
-//            }
-//            is ReviewFormViewHolder -> Unit
+            is MyReviewViewHolder -> {
+                myReview ?: return
+                holder.bind(myReview!!)
+            }
+            is ReviewFormViewHolder -> Unit
             else -> throw RuntimeException("알 수 없는 ViewHolder 입니다.")
         }
     }
@@ -71,13 +72,13 @@ class MovieReviewsAdapter(private val movie: Movie) : RecyclerView.Adapter<Recyc
     override fun getItemViewType(position: Int): Int =
         when (position) {
             0 -> ITEM_VIEW_TYPE_HEADER
-//            1 -> {
-//                if (myReview == null) {
-//                    ITEM_VIEW_TYPE_REVIEW_FORM
-//                } else {
-//                    ITEM_VIEW_TYPE_MY_REVIEW
-//                }
-//            }
+            1 -> {
+                if (myReview == null) {
+                    ITEM_VIEW_TYPE_REVIEW_FORM
+                } else {
+                    ITEM_VIEW_TYPE_MY_REVIEW
+                }
+            }
             else -> ITEM_VIEW_TYPE_ITEM
         }
 
@@ -128,40 +129,40 @@ class MovieReviewsAdapter(private val movie: Movie) : RecyclerView.Adapter<Recyc
         }
     }
 
-//    @SuppressLint("SetTextI18n")
-//    inner class ReviewFormViewHolder(private val binding: ItemReviewFormBinding) :
-//        RecyclerView.ViewHolder(binding.root) {
-//
-//        init {
-//            binding.submitButton.setOnClickListener {
-//                onReviewSubmitButtonClickListener?.invoke(
-//                    binding.reviewFieldEditText.text.toString(),
-//                    binding.ratingBar.rating
-//                )
-//            }
-//            binding.reviewFieldEditText.addTextChangedListener { editable ->
-//                binding.contentLimitTextView.text = "(${editable?.length ?: 0}/50)"
-//                binding.submitButton.isEnabled = (editable?.length ?: 0) >= 5
-//            }
-//        }
-//    }
-//
-//    inner class MyReviewViewHolder(private val binding: ItemMyReviewBinding) : RecyclerView.ViewHolder(binding.root) {
-//
-//        init {
-//            binding.deleteButton.setOnClickListener {
-//                onReviewDeleteButtonClickListener?.invoke(myReview!!)
-//            }
-//        }
-//
-//        @SuppressLint("SetTextI18n")
-//        fun bind(item: Review) {
-//            item.let {
-//                binding.scoreTextView.text = it.score?.toDecimalFormatString("0.0")
-//                binding.contentsTextView.text = "\"${it.content}\""
-//            }
-//        }
-//    }
+    @SuppressLint("SetTextI18n")
+    inner class ReviewFormViewHolder(private val binding: ItemReviewFormBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.submitButton.setOnClickListener {
+                onReviewSubmitButtonClickListener?.invoke(
+                    binding.reviewFieldEditText.text.toString(),
+                    binding.ratingBar.rating
+                )
+            }
+            binding.reviewFieldEditText.addTextChangedListener { editable ->
+                binding.contentLimitTextView.text = "(${editable?.length ?: 0}/50)"
+                binding.submitButton.isEnabled = (editable?.length ?: 0) >= 5
+            }
+        }
+    }
+
+    inner class MyReviewViewHolder(private val binding: ItemMyReviewBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.deleteButton.setOnClickListener {
+                onReviewDeleteButtonClickListener?.invoke(myReview!!)
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        fun bind(item: Review) {
+            item.let {
+                binding.scoreTextView.text = it.score?.toDecimalFormatString("0.0")
+                binding.contentsTextView.text = "\"${it.content}\""
+            }
+        }
+    }
 
     companion object {
         const val ITEM_VIEW_TYPE_HEADER = 0

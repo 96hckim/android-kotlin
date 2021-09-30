@@ -8,10 +8,7 @@ import com.hocheol.moviereview.data.preference.PreferenceManager
 import com.hocheol.moviereview.data.preference.SharedPreferenceManager
 import com.hocheol.moviereview.data.repository.*
 import com.hocheol.moviereview.domain.model.Movie
-import com.hocheol.moviereview.domain.usecase.GetAllMovieReviewsUseCase
-import com.hocheol.moviereview.domain.usecase.GetAllMoviesUseCase
-import com.hocheol.moviereview.domain.usecase.GetMyReviewedMoviesUseCase
-import com.hocheol.moviereview.domain.usecase.GetRandomFeaturedMovieUseCase
+import com.hocheol.moviereview.domain.usecase.*
 import com.hocheol.moviereview.presentation.home.HomeContract
 import com.hocheol.moviereview.presentation.home.HomeFragment
 import com.hocheol.moviereview.presentation.home.HomePresenter
@@ -49,8 +46,8 @@ val domainModule = module {
     factory { GetAllMoviesUseCase(get()) }
     factory { GetAllMovieReviewsUseCase(get(), get()) }
     factory { GetMyReviewedMoviesUseCase(get(), get(), get()) }
-//    factory { SubmitReviewUseCase(get(), get()) }
-//    factory { DeleteReviewUseCase(get()) }
+    factory { SubmitReviewUseCase(get(), get()) }
+    factory { DeleteReviewUseCase(get()) }
 }
 
 val presenterModule = module {
@@ -59,8 +56,7 @@ val presenterModule = module {
     }
     scope<MovieReviewsFragment> {
         scoped<MovieReviewsContract.Presenter> { (movie: Movie) ->
-//            MovieReviewsPresenter(movie, getSource(), get(), get(), get())
-            MovieReviewsPresenter(movie, getSource(), get())
+            MovieReviewsPresenter(movie, getSource(), get(), get(), get())
         }
     }
     scope<MyPageFragment> {

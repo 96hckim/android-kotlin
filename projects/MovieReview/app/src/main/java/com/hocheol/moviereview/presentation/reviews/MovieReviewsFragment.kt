@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.moviereview.databinding.FragmentMovieReviewsBinding
 import com.hocheol.moviereview.domain.model.Movie
+import com.hocheol.moviereview.domain.model.MovieReviews
 import com.hocheol.moviereview.domain.model.Review
 import com.hocheol.moviereview.extension.toGone
 import com.hocheol.moviereview.extension.toVisible
@@ -61,39 +63,31 @@ class MovieReviewsFragment : ScopeFragment(), MovieReviewsContract.View {
     override fun showMovieInformation(movie: Movie) {
         binding?.recyclerView?.adapter = MovieReviewsAdapter(movie).apply {
             onReviewSubmitButtonClickListener = { content, score ->
-//                presenter.requestAddReview(content, score)
-//                hideKeyboard()
+                presenter.requestAddReview(content, score)
+                hideKeyboard()
             }
             onReviewDeleteButtonClickListener = { review ->
-//                showDeleteConfirmDialog(review)
+                showDeleteConfirmDialog(review)
             }
         }
     }
 
-//    private fun showDeleteConfirmDialog(review: Review) {
-//        AlertDialog.Builder(requireContext())
-//            .setMessage("정말로 리뷰를 삭제하시겠어요?")
-//            .setPositiveButton("삭제할래요") { _, _ ->
-//                presenter.requestRemoveReview(review)
-//            }
-//            .setNegativeButton("안할래요") { _, _ -> }
-//            .show()
-//    }
+    private fun showDeleteConfirmDialog(review: Review) {
+        AlertDialog.Builder(requireContext())
+            .setMessage("정말로 리뷰를 삭제하시겠어요?")
+            .setPositiveButton("삭제할래요") { _, _ ->
+                presenter.requestRemoveReview(review)
+            }
+            .setNegativeButton("안할래요") { _, _ -> }
+            .show()
+    }
 
-//    override fun showReviews(reviews: MovieReviews) {
-//        binding?.recyclerView?.isVisible = true
-//        binding?.errorDescriptionTextView?.isVisible = false
-//        (binding?.recyclerView?.adapter as? MovieReviewsAdapter)?.apply {
-//            this.myReview = reviews.myReview
-//            this.reviews = reviews.othersReview
-//            notifyDataSetChanged()
-//        }
-//    }
-    override fun showReviews(reviews: List<Review>) {
+    override fun showReviews(reviews: MovieReviews) {
         binding?.recyclerView?.toVisible()
         binding?.errorDescriptionTextView?.toGone()
         (binding?.recyclerView?.adapter as? MovieReviewsAdapter)?.apply {
-            this.reviews = reviews
+            this.myReview = reviews.myReview
+            this.reviews = reviews.othersReview
             notifyDataSetChanged()
         }
     }
