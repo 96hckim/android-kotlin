@@ -4,18 +4,31 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.display.DisplayManager
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
+import androidx.camera.core.impl.ImageOutputConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hocheol.camerax.databinding.ActivityMainBinding
-import java.lang.Exception
+import com.hocheol.camerax.extensions.loadCenterCrop
+import com.hocheol.camerax.util.PathUtil
+import java.io.File
+import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +48,11 @@ class MainActivity : AppCompatActivity() {
 
     private var displayId: Int = -1
 
-    private var camera:Camera? = null
+    private var camera: Camera? = null
+
+    private var root: View? = null
+
+    private var isCapturing: Boolean = false
 
     private val displayListener = object : DisplayManager.DisplayListener {
 
@@ -45,15 +62,20 @@ class MainActivity : AppCompatActivity() {
 
         override fun onDisplayChanged(displayId: Int) {
             if (this@MainActivity.displayId == displayId) {
-
+                if (::imageCapture.isInitialized && root != null) {
+                    imageCapture.targetRotation = root?.display?.rotation ?: ImageOutputConfig.INVALID_ROTATION
+                }
             }
         }
 
     }
 
+    private var uriList = mutableListOf<Uri>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        root = binding.root
         setContentView(binding.root)
 
         // Request camera permissions
@@ -87,14 +109,14 @@ class MainActivity : AppCompatActivity() {
         val cameraSelector = CameraSelector.Builder().requireLensFacing(LENS_FACING).build() // 카메라 설정(후면)
 
         cameraProviderFeature.addListener({
-            val cameraProvider : ProcessCameraProvider = cameraProviderFeature.get()
+            val cameraProvider: ProcessCameraProvider = cameraProviderFeature.get()
             val preview = Preview.Builder().apply {
                 setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 setTargetRotation(rotation)
             }.build()
 
             val imageCaptureBuilder = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY) // 지연 최소화
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .setTargetRotation(rotation)
                 .setFlashMode(ImageCapture.FLASH_MODE_AUTO)
@@ -107,10 +129,67 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity, cameraSelector, preview, imageCapture
                 )
                 preview.setSurfaceProvider(viewFinder.surfaceProvider)
-            } catch (e:Exception) {
+                bindCaptureListener()
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }, cameraMainExecutor)
+    }
+
+    private fun bindCaptureListener() = with(binding) {
+        captureButton.setOnClickListener {
+            if (isCapturing.not()) {
+                isCapturing = true
+                captureCamera()
+            }
+        }
+    }
+
+    private fun updateSavedImageContent() {
+        contentUri?.let {
+            isCapturing = try {
+                val file = File(PathUtil.getPath(this, it) ?: throw FileNotFoundException())
+                MediaScannerConnection.scanFile(this, arrayOf(file.path), arrayOf("image/jpeg"), null)
+                Handler(Looper.getMainLooper()).post {
+                    binding.previewImageVIew.loadCenterCrop(url = it.toString(), corner = 4f)
+                }
+                uriList.add(it)
+                false
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "파일이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+                false
+            }
+        }
+    }
+
+    private var contentUri: Uri? = null
+
+    private fun captureCamera() {
+        if (!::imageCapture.isInitialized) return
+
+        val photoFile = File(
+            PathUtil.getOutputDirectory(this),
+            SimpleDateFormat(
+                FILENAME_FORMAT, Locale.KOREA
+            ).format(System.currentTimeMillis()) + ".jpg"
+        )
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        imageCapture.takePicture(outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
+
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                val savedUri = outputFileResults.savedUri ?: Uri.fromFile(photoFile)
+                contentUri = savedUri
+                updateSavedImageContent()
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                exception.printStackTrace()
+                isCapturing = false
+            }
+
+        })
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -126,6 +205,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private val LENS_FACING: Int = CameraSelector.LENS_FACING_BACK

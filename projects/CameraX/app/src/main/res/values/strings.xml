@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CameraX</string>
+    <string name="image_preview">이미지 미리보기</string>
+    <string name="capture">촬영</string>
 </resources>
