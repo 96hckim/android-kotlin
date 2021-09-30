@@ -20,6 +20,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.hocheol.camerax.databinding.ActivityMainBinding
 import com.hocheol.camerax.extensions.loadCenterCrop
 import com.hocheol.camerax.util.PathUtil
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
     private var root: View? = null
 
     private var isCapturing: Boolean = false
+
+    private var isFlashEnabled: Boolean = false
 
     private val displayListener = object : DisplayManager.DisplayListener {
 
@@ -131,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                 preview.setSurfaceProvider(viewFinder.surfaceProvider)
                 bindCaptureListener()
                 bindZoomListener()
+                initFlashAndAddListener()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -165,6 +169,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initFlashAndAddListener() = with(binding) {
+        val hasFlash = camera?.cameraInfo?.hasFlashUnit() ?: false
+        flashSwitch.isVisible = hasFlash
+        if (hasFlash) {
+            flashSwitch.setOnCheckedChangeListener { compoundButton, b ->
+                isFlashEnabled = b
+            }
+        } else {
+            isFlashEnabled = false
+            flashSwitch.setOnCheckedChangeListener(null)
+        }
+    }
+
     private fun updateSavedImageContent() {
         contentUri?.let {
             isCapturing = try {
@@ -174,10 +191,12 @@ class MainActivity : AppCompatActivity() {
                     binding.previewImageVIew.loadCenterCrop(url = it.toString(), corner = 4f)
                 }
                 uriList.add(it)
+                flashLight(false)
                 false
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this, "파일이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+                flashLight(false)
                 false
             }
         }
@@ -196,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        if (isFlashEnabled) flashLight(true)
         imageCapture.takePicture(outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
@@ -207,9 +227,17 @@ class MainActivity : AppCompatActivity() {
             override fun onError(exception: ImageCaptureException) {
                 exception.printStackTrace()
                 isCapturing = false
+                flashLight(false)
             }
 
         })
+    }
+
+    private fun flashLight(light: Boolean) {
+        val hasFlash = camera?.cameraInfo?.hasFlashUnit() ?: false
+        if (hasFlash) {
+            camera?.cameraControl?.enableTorch(light)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
