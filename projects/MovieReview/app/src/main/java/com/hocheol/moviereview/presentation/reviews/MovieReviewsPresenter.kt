@@ -1,7 +1,7 @@
 package com.hocheol.moviereview.presentation.reviews
 
 import com.hocheol.moviereview.domain.model.Movie
-import com.hocheol.moviereview.domain.usecase.GetAllReviewsUseCase
+import com.hocheol.moviereview.domain.usecase.GetAllMovieReviewsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -9,8 +9,7 @@ import kotlinx.coroutines.launch
 class MovieReviewsPresenter(
     override val movie: Movie,
     private val view: MovieReviewsContract.View,
-    private val getAllReviews: GetAllReviewsUseCase
-//    private val getAllReviews: GetAllMovieReviewsUseCase,
+    private val getAllReviews: GetAllMovieReviewsUseCase,
 //    private val submitReview: SubmitReviewUseCase,
 //    private val deleteReview: DeleteReviewUseCase
 ) : MovieReviewsContract.Presenter {
@@ -61,7 +60,6 @@ class MovieReviewsPresenter(
             view.showLoadingIndicator()
 //            movieReviews = getAllReviews(movie.id!!)
 //            view.showReviews(movieReviews)
-            view.showReviews(getAllReviews(movie.id!!))
         } catch (exception: Exception) {
             exception.printStackTrace()
             view.showErrorDescription("에러가 발생했어요 😢")

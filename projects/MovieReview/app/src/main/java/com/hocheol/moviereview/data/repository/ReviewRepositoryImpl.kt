@@ -14,18 +14,14 @@ class ReviewRepositoryImpl(
         reviewApi.getLatestReview(movieId)
     }
 
-    override suspend fun getAllReviews(movieId: String): List<Review> = withContext(dispatchers) {
-        reviewApi.getAllReviews(movieId)
+    override suspend fun getAllMovieReviews(movieId: String): List<Review> = withContext(dispatchers) {
+        reviewApi.getAllMovieReviews(movieId)
     }
 
-//    override suspend fun getAllMovieReviews(movieId: String): List<Review> = withContext(dispatchers) {
-//        reviewApi.getAllMovieReviews(movieId)
-//    }
-//
-//    override suspend fun getAllUserReviews(userId: String): List<Review> = withContext(dispatchers) {
-//        reviewApi.getAllUserReviews(userId)
-//    }
-//
+    override suspend fun getAllUserReviews(userId: String): List<Review> = withContext(dispatchers) {
+        reviewApi.getAllUserReviews(userId)
+    }
+
 //    override suspend fun addReview(review: Review): Review = withContext(dispatchers) {
 //        reviewApi.addReview(review)
 //    }
