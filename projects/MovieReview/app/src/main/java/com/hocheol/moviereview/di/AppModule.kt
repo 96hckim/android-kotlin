@@ -15,6 +15,9 @@ import com.hocheol.moviereview.domain.usecase.GetRandomFeaturedMovieUseCase
 import com.hocheol.moviereview.presentation.home.HomeContract
 import com.hocheol.moviereview.presentation.home.HomeFragment
 import com.hocheol.moviereview.presentation.home.HomePresenter
+import com.hocheol.moviereview.presentation.mypage.MyPageContract
+import com.hocheol.moviereview.presentation.mypage.MyPageFragment
+import com.hocheol.moviereview.presentation.mypage.MyPagePresenter
 import com.hocheol.moviereview.presentation.reviews.MovieReviewsContract
 import com.hocheol.moviereview.presentation.reviews.MovieReviewsFragment
 import com.hocheol.moviereview.presentation.reviews.MovieReviewsPresenter
@@ -60,7 +63,7 @@ val presenterModule = module {
             MovieReviewsPresenter(movie, getSource(), get())
         }
     }
-//    scope<MyPageFragment> {
-//        scoped<MyPageContract.Presenter> { MyPagePresenter(getSource(), get()) }
-//    }
+    scope<MyPageFragment> {
+        scoped<MyPageContract.Presenter> { MyPagePresenter(getSource(), get()) }
+    }
 }
