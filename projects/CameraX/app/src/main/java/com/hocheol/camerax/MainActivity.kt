@@ -135,6 +135,7 @@ class MainActivity : AppCompatActivity() {
                 bindCaptureListener()
                 bindZoomListener()
                 initFlashAndAddListener()
+                bindPreviewImageViewClickListener()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -188,7 +189,7 @@ class MainActivity : AppCompatActivity() {
                 val file = File(PathUtil.getPath(this, it) ?: throw FileNotFoundException())
                 MediaScannerConnection.scanFile(this, arrayOf(file.path), arrayOf("image/jpeg"), null)
                 Handler(Looper.getMainLooper()).post {
-                    binding.previewImageVIew.loadCenterCrop(url = it.toString(), corner = 4f)
+                    binding.previewImageView.loadCenterCrop(url = it.toString(), corner = 4f)
                 }
                 uriList.add(it)
                 flashLight(false)
@@ -237,6 +238,14 @@ class MainActivity : AppCompatActivity() {
         val hasFlash = camera?.cameraInfo?.hasFlashUnit() ?: false
         if (hasFlash) {
             camera?.cameraControl?.enableTorch(light)
+        }
+    }
+
+    private fun bindPreviewImageViewClickListener() = with(binding) {
+        previewImageView.setOnClickListener {
+            startActivity(
+                ImageListActivity.newIntent(this@MainActivity, uriList)
+            )
         }
     }
 
