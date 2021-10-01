@@ -77,10 +77,10 @@ class AddArticleActivity : AppCompatActivity() {
 
         binding.submitButton.setOnClickListener {
             val title = binding.titleEditText.text.toString()
-            val price = binding.priceEditText.text.toString()
+            val content = binding.contentEditText.text.toString()
 
-            if (TextUtils.isEmpty(title) && TextUtils.isEmpty(price)) {
-                Toast.makeText(this, "제목과 가격을 입력해주세요.", Toast.LENGTH_SHORT).show()
+            if (TextUtils.isEmpty(title) && TextUtils.isEmpty(content)) {
+                Toast.makeText(this, "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -93,7 +93,7 @@ class AddArticleActivity : AppCompatActivity() {
                 uploadPhoto(
                     photoUri,
                     successHandler = { uri ->
-                        uploadArticle(sellerId, title, price, uri)
+                        uploadArticle(sellerId, title, content, uri)
                     },
                     errorHandler = {
                         Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
@@ -101,7 +101,7 @@ class AddArticleActivity : AppCompatActivity() {
                     }
                 )
             } else {
-                uploadArticle(sellerId, title, price, "")
+                uploadArticle(sellerId, title, content, "")
             }
         }
 
@@ -126,8 +126,8 @@ class AddArticleActivity : AppCompatActivity() {
             }
     }
 
-    private fun uploadArticle(sellerId: String, title: String, price: String, imageUrl: String) {
-        val model = ArticleModel(sellerId, title, System.currentTimeMillis(), "$price 원", imageUrl)
+    private fun uploadArticle(sellerId: String, title: String, content: String, imageUrl: String) {
+        val model = ArticleModel(sellerId, title, System.currentTimeMillis(), content, imageUrl)
         articleDB.push().setValue(model)
 
         hideProgress()
