@@ -1,18 +1,14 @@
 package com.hocheol.camerax.util
 
-import android.annotation.TargetApi
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import com.hocheol.camerax.R
 import java.io.File
-import java.io.FileOutputStream
 
 object PathUtil {
 
@@ -34,14 +30,11 @@ object PathUtil {
             } else if (isMediaDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":").toTypedArray()
-                val type = split[0]
-                var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                val contentUri: Uri? = when (split[0]) {
+                    "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    else -> null
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(
@@ -72,8 +65,8 @@ object PathUtil {
                 null
             )
             if (cursor != null && cursor.moveToFirst()) {
-                val column_index = cursor.getColumnIndexOrThrow(column)
-                return cursor.getString(column_index)
+                val columnIndex = cursor.getColumnIndexOrThrow(column)
+                return cursor.getString(columnIndex)
             }
         } finally {
             cursor?.close()
@@ -91,17 +84,6 @@ object PathUtil {
 
     private fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
-    }
-
-    @TargetApi(Build.VERSION_CODES.Q)
-    fun getOutputDirectoryAndWrite(
-        resolver: ContentResolver,
-        uri: Uri,
-        write: (FileOutputStream) -> Unit
-    ) {
-        resolver.openFileDescriptor(uri, "w")?.use {
-            write(FileOutputStream(it.fileDescriptor))
-        }
     }
 
     fun getOutputDirectory(activity: Activity): File = with(activity) {

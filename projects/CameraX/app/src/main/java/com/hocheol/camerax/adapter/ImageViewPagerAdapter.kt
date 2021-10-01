@@ -8,7 +8,7 @@ import com.hocheol.camerax.databinding.ViewholderImageBinding
 import com.hocheol.camerax.extensions.loadCenterCrop
 
 class ImageViewPagerAdapter(
-    private val uriList: List<Uri>
+    var uriList: MutableList<Uri>
 ) : RecyclerView.Adapter<ImageViewPagerAdapter.ImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
