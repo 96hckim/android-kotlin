@@ -39,7 +39,6 @@ class StationArrivalsFragment : ScopeFragment(), StationArrivalsContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        bindViews()
         presenter.onViewCreated()
     }
 
@@ -120,5 +119,4 @@ class StationArrivalsFragment : ScopeFragment(), StationArrivalsContract.View {
         }
     }
 
-    private fun bindViews() {}
 }
