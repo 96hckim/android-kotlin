@@ -21,6 +21,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.hocheol.usedtrade.DBKey.Companion.DB_ARTICLES
 import com.hocheol.usedtrade.databinding.ActivityAddArticleBinding
+import com.hocheol.usedtrade.photo.CameraActivity
+import com.hocheol.usedtrade.photo.ImageListActivity
 
 class AddArticleActivity : AppCompatActivity() {
 
@@ -36,7 +38,7 @@ class AddArticleActivity : AppCompatActivity() {
     }
 
     private var selectedUri: Uri? = null
-    private var resultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+    private var galleryLauncher = registerForActivityResult(StartActivityForResult()) { result ->
 
         if (result.resultCode == Activity.RESULT_OK) {
             val uri = result.data?.data
@@ -50,29 +52,30 @@ class AddArticleActivity : AppCompatActivity() {
 
     }
 
+    private val cameraLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let {
+                val uriList = it.getParcelableArrayListExtra<Uri>(ImageListActivity.URI_LIST_KEY)
+                uriList?.let { uri ->
+
+                }
+            }
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddArticleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initViews()
+    }
+
+    private fun initViews() {
         binding.imageAddButton.setOnClickListener {
-            when {
-                ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    startContentProvider()
-                }
-                shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                    showPermissionContextPopup()
-                }
-                else -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                        PERMISSION_REQUEST_CODE
-                    )
-                }
-            }
+            showPictureUploadDialog()
         }
 
         binding.submitButton.setOnClickListener {
@@ -104,7 +107,6 @@ class AddArticleActivity : AppCompatActivity() {
                 uploadArticle(sellerId, title, content, "")
             }
         }
-
     }
 
     private fun uploadPhoto(uri: Uri, successHandler: (String) -> Unit, errorHandler: () -> Unit) {
@@ -144,17 +146,22 @@ class AddArticleActivity : AppCompatActivity() {
         when (requestCode) {
             PERMISSION_REQUEST_CODE ->
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startContentProvider()
+                    startGalleryScreen()
                 } else {
                     Toast.makeText(this, "권한을 거부하셨습니다.", Toast.LENGTH_SHORT).show()
                 }
         }
     }
 
-    private fun startContentProvider() {
+    private fun startGalleryScreen() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        resultLauncher.launch(intent)
+        galleryLauncher.launch(intent)
+    }
+
+    private fun startCameraScreen() {
+        val intent = Intent(this, CameraActivity::class.java)
+        cameraLauncher.launch(intent)
     }
 
     private fun showPermissionContextPopup() {
@@ -170,6 +177,43 @@ class AddArticleActivity : AppCompatActivity() {
             .create()
             .show()
     }
+
+    private fun showPictureUploadDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("사진첨부")
+            .setMessage("사진첨부할 방식을 선택하세요")
+            .setPositiveButton("카메라") { _, _ ->
+                startCameraScreen()
+            }
+            .setNegativeButton("갤러리") { _, _ ->
+                checkExternalStoragePermission {
+                    startGalleryScreen()
+                }
+            }
+            .create()
+            .show()
+    }
+
+    private fun checkExternalStoragePermission(uploadFunction: () -> Unit) {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                uploadFunction()
+            }
+            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                showPermissionContextPopup()
+            }
+            else -> {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+    }
+
 
     private fun showProgress() {
         binding.progressBar.isVisible = true
