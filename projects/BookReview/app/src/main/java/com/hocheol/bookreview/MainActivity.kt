@@ -1,10 +1,13 @@
 package com.hocheol.bookreview
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -49,6 +52,11 @@ class MainActivity : AppCompatActivity() {
 
         bookService = retrofit.create(BookService::class.java)
 
+        getBestSellerBooks()
+
+    }
+
+    private fun getBestSellerBooks() {
         bookService.getBestSellerBooks(getString(R.string.interparkAPIKey))
             .enqueue(object : Callback<BestSellerDto> {
 
@@ -72,6 +80,7 @@ class MainActivity : AppCompatActivity() {
 
             })
 
+        hideHistoryView()
     }
 
     private fun initBookRecyclerView() {
@@ -99,10 +108,16 @@ class MainActivity : AppCompatActivity() {
         binding.historyRecyclerView.adapter = historyAdapter
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initSearchEditText() {
         binding.searchEditText.setOnKeyListener { view, keyCode, keyEvent ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == MotionEvent.ACTION_DOWN) {
-                search(binding.searchEditText.text.toString())
+                if (binding.searchEditText.text.isNullOrBlank()) {
+                    getBestSellerBooks()
+                } else {
+                    search(binding.searchEditText.text.toString())
+                }
+                hideKeyboard()
                 return@setOnKeyListener true
             }
 
@@ -118,6 +133,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun hideKeyboard() {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+    }
+
     private fun search(keyword: String, isClickKeyword: Boolean = false) {
         bookService.getBooksByName(getString(R.string.interparkAPIKey), keyword)
             .enqueue(object : Callback<SearchBookDto> {
@@ -127,7 +147,6 @@ class MainActivity : AppCompatActivity() {
                     response: Response<SearchBookDto>
                 ) {
 
-                    hideHistoryView()
                     if (isClickKeyword.not()) {
                         saveSearchKeyword(keyword)
                     }
@@ -146,11 +165,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SearchBookDto>, t: Throwable) {
-                    hideHistoryView()
                     Log.e(TAG, t.toString())
                 }
 
             })
+
+        hideHistoryView()
     }
 
     private fun showHistoryView() {
