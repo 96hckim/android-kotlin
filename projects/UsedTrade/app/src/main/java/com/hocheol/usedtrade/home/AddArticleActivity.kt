@@ -23,10 +23,12 @@ import com.hocheol.usedtrade.DBKey.Companion.DB_ARTICLES
 import com.hocheol.usedtrade.databinding.ActivityAddArticleBinding
 import com.hocheol.usedtrade.photo.CameraActivity
 import com.hocheol.usedtrade.photo.ImageListActivity
+import com.hocheol.usedtrade.photo.PhotoListAdapter
 
 class AddArticleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddArticleBinding
+
     private val auth: FirebaseAuth by lazy {
         Firebase.auth
     }
@@ -37,14 +39,17 @@ class AddArticleActivity : AppCompatActivity() {
         Firebase.database.reference.child(DB_ARTICLES)
     }
 
-    private var selectedUri: Uri? = null
+    private val photoListAdapter = PhotoListAdapter { uri -> removePhoto(uri) }
+
+    private var imageUriList: ArrayList<Uri> = arrayListOf()
+
     private var galleryLauncher = registerForActivityResult(StartActivityForResult()) { result ->
 
         if (result.resultCode == Activity.RESULT_OK) {
             val uri = result.data?.data
             if (uri != null) {
-                binding.photoImageView.setImageURI(uri)
-                selectedUri = uri
+                imageUriList.add(uri)
+                photoListAdapter.setPhotoList(imageUriList)
             } else {
                 Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
@@ -57,8 +62,9 @@ class AddArticleActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.let {
                 val uriList = it.getParcelableArrayListExtra<Uri>(ImageListActivity.URI_LIST_KEY)
-                uriList?.let { uri ->
-
+                uriList?.let { list ->
+                    imageUriList.addAll(list)
+                    photoListAdapter.setPhotoList(imageUriList)
                 }
             }
         }
@@ -74,6 +80,8 @@ class AddArticleActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        binding.photoRecyclerView.adapter = photoListAdapter
+
         binding.imageAddButton.setOnClickListener {
             showPictureUploadDialog()
         }
@@ -91,10 +99,9 @@ class AddArticleActivity : AppCompatActivity() {
 
             showProgress()
 
-            if (selectedUri != null) {
-                val photoUri = selectedUri ?: return@setOnClickListener
+            if (imageUriList.isNotEmpty()) {
                 uploadPhoto(
-                    photoUri,
+                    imageUriList.first(),
                     successHandler = { uri ->
                         uploadArticle(sellerId, title, content, uri)
                     },
@@ -214,6 +221,10 @@ class AddArticleActivity : AppCompatActivity() {
         }
     }
 
+    private fun removePhoto(uri: Uri) {
+        imageUriList.remove(uri)
+        photoListAdapter.setPhotoList(imageUriList)
+    }
 
     private fun showProgress() {
         binding.progressBar.isVisible = true
