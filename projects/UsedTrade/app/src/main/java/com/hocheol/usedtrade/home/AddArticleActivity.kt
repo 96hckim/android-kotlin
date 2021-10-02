@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -24,6 +25,9 @@ import com.hocheol.usedtrade.databinding.ActivityAddArticleBinding
 import com.hocheol.usedtrade.photo.CameraActivity
 import com.hocheol.usedtrade.photo.ImageListActivity
 import com.hocheol.usedtrade.photo.PhotoListAdapter
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class AddArticleActivity : AppCompatActivity() {
 
@@ -100,43 +104,53 @@ class AddArticleActivity : AppCompatActivity() {
             showProgress()
 
             if (imageUriList.isNotEmpty()) {
-                uploadPhoto(
-                    imageUriList.first(),
-                    successHandler = { uri ->
-                        uploadArticle(sellerId, title, content, uri)
-                    },
-                    errorHandler = {
-                        Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                        hideProgress()
-                    }
-                )
+                lifecycleScope.launch {
+                    val results = uploadPhoto(imageUriList)
+                    uploadArticle(sellerId, title, content, results.filterIsInstance<String>())
+                }
+//                uploadPhoto(
+//                    imageUriList.first(),
+//                    successHandler = { uri ->
+//                        uploadArticle(sellerId, title, content, uri)
+//                    },
+//                    errorHandler = {
+//                        Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                        hideProgress()
+//                    }
+//                )
             } else {
-                uploadArticle(sellerId, title, content, "")
+                uploadArticle(sellerId, title, content, listOf())
             }
         }
     }
 
-    private fun uploadPhoto(uri: Uri, successHandler: (String) -> Unit, errorHandler: () -> Unit) {
-        val fileName = "${System.currentTimeMillis()}.png"
-        storage.reference.child("article/photo").child(fileName)
-            .putFile(uri)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    storage.reference.child("article/photo").child(fileName)
+    private suspend fun uploadPhoto(uriList: List<Uri>) = withContext(Dispatchers.IO) {
+        val uploadDeferred: List<Deferred<Any>> = uriList.mapIndexed { index, uri ->
+            lifecycleScope.async {
+                try {
+                    val fileName = "image_${index}.png"
+                    return@async storage
+                        .reference
+                        .child("article/photo")
+                        .child(fileName)
+                        .putFile(uri)
+                        .await()
+                        .storage
                         .downloadUrl
-                        .addOnSuccessListener { uri ->
-                            successHandler(uri.toString())
-                        }.addOnFailureListener {
-                            errorHandler()
-                        }
-                } else {
-                    errorHandler()
+                        .await()
+                        .toString()
+                } catch (e:Exception) {
+                    e.printStackTrace()
+                    return@async Pair(uri, e)
                 }
             }
+        }
+
+        return@withContext uploadDeferred.awaitAll()
     }
 
-    private fun uploadArticle(sellerId: String, title: String, content: String, imageUrl: String) {
-        val model = ArticleModel(sellerId, title, System.currentTimeMillis(), content, imageUrl)
+    private fun uploadArticle(sellerId: String, title: String, content: String, imageUrlList: List<String>) {
+        val model = ArticleModel(sellerId, title, System.currentTimeMillis(), content, imageUrlList)
         articleDB.push().setValue(model)
 
         hideProgress()
