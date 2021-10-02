@@ -28,9 +28,7 @@
         <activity android:name=".chatdetail.ChatRoomActivity" />
         <activity android:name=".photo.CameraActivity" />
         <activity android:name=".photo.ImageListActivity" />
-        <activity
-            android:name=".gallery.GalleryActivity"
-            android:exported="true" />
+        <activity android:name=".gallery.GalleryActivity" />
     </application>
 
 </manifest>

@@ -1,18 +1,14 @@
 package com.hocheol.usedtrade.util
 
-import android.annotation.TargetApi
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import com.hocheol.usedtrade.R
 import java.io.File
-import java.io.FileOutputStream
 
 object PathUtil {
 
@@ -88,17 +84,6 @@ object PathUtil {
 
     private fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
-    }
-
-    @TargetApi(Build.VERSION_CODES.Q)
-    fun getOutputDirectoryAndWrite(
-        resolver: ContentResolver,
-        uri: Uri,
-        write: (FileOutputStream) -> Unit
-    ) {
-        resolver.openFileDescriptor(uri, "w")?.use {
-            write(FileOutputStream(it.fileDescriptor))
-        }
     }
 
     fun getOutputDirectory(activity: Activity): File = with(activity) {

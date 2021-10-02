@@ -1,4 +1,4 @@
-package com.hocheol.usedtrade.photo
+package com.hocheol.usedtrade.home
 
 import android.net.Uri
 import android.view.LayoutInflater

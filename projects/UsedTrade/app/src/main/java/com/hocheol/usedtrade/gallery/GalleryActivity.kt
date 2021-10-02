@@ -2,11 +2,10 @@ package com.hocheol.usedtrade.gallery
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.usedtrade.R
 import com.hocheol.usedtrade.databinding.ActivityGalleryBinding
 import com.hocheol.usedtrade.photo.ImageListActivity
@@ -41,13 +40,13 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     private fun handleLoading() = with(binding) {
-        progressBar.isVisible = true
-        recyclerView.isGone = true
+        progressBar.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
     }
 
     private fun handleSuccess(state: GalleryState.Success) = with(binding) {
-        progressBar.isGone = true
-        recyclerView.isVisible = true
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
         adapter.setPhotoList(state.photoList)
     }
 

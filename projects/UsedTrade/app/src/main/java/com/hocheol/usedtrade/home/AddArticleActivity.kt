@@ -25,7 +25,6 @@ import com.hocheol.usedtrade.databinding.ActivityAddArticleBinding
 import com.hocheol.usedtrade.gallery.GalleryActivity
 import com.hocheol.usedtrade.photo.CameraActivity
 import com.hocheol.usedtrade.photo.ImageListActivity
-import com.hocheol.usedtrade.photo.PhotoListAdapter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
@@ -233,9 +232,7 @@ class AddArticleActivity : AppCompatActivity() {
                 startCameraScreen()
             }
             .setNegativeButton("갤러리") { _, _ ->
-                checkExternalStoragePermission {
-                    startGalleryScreen()
-                }
+                checkExternalStoragePermission()
             }
             .create()
             .show()
@@ -266,13 +263,13 @@ class AddArticleActivity : AppCompatActivity() {
 
     }
 
-    private fun checkExternalStoragePermission(uploadFunction: () -> Unit) {
+    private fun checkExternalStoragePermission() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED -> {
-                uploadFunction()
+                startGalleryScreen()
             }
             shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
                 showPermissionContextPopup()
