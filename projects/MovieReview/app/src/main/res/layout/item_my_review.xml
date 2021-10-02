@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="12dp">
 
     <TextView
         android:id="@+id/authorIdTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -24,15 +24,12 @@
         android:id="@+id/contentsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="20dp"
         android:background="@drawable/shape_review_content"
         android:paddingHorizontal="10dp"
         android:paddingTop="30dp"
         android:paddingBottom="10dp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="parent"
