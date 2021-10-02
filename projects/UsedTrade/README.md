@@ -25,3 +25,16 @@
  * Firebase Realtime Database
  * Firebase Authentication
  * FloatingActionButton
+
+# Update
+UI 수정 | 사진첨부 방식 두가지 제공(갤러리, 카메라) | 카메라 촬영 후 첨부
+:---: | :---: | :---:
+<img src="https://user-images.githubusercontent.com/74343321/135703474-e622500d-95d1-4fcc-98dd-ffc0fcbada03.png"/> | <img src="https://user-images.githubusercontent.com/74343321/135703475-1fcb5583-28d5-4b10-94b7-69b73c9d168e.png"/> | <img src="https://user-images.githubusercontent.com/74343321/135703476-af70f7dd-8726-49d7-9b3d-67ecf7d2fa24.png"/>
+**갤러리 이미지 선택 후 첨부** | **복수의 이미지 동시 업로드** | **업로드 중 에러 발생 대응**
+<img src="https://user-images.githubusercontent.com/74343321/135703477-9e0aaa51-ba77-425c-8ce1-01b4658166ea.png"/> | <img src="https://user-images.githubusercontent.com/74343321/135703478-59ef62f5-1377-4172-9c3a-92ba1e9ffb80.png"/> | <img src="https://user-images.githubusercontent.com/74343321/135703479-69f53220-a9bb-43c6-8e54-84f4ee931751.png"/>
+  
+# Skill
+  * CameraX
+  * ViewPager2
+  * Circle Indicator
+  * Coroutine
