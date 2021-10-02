@@ -1,7 +1,7 @@
 package com.hocheol.usedtrade.home
 
 data class ArticleModel(
-    val sellerId: String,
+    val userId: String,
     val title: String,
     val createAt: Long,
     val content: String,
