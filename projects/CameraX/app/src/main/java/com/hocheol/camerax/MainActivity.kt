@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.display.DisplayManager
 import android.media.MediaScannerConnection
@@ -15,6 +14,7 @@ import android.os.Looper
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
@@ -25,7 +25,6 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.hocheol.camerax.ImageListActivity.Companion.IMAGE_LIST_REQUEST_CODE
 import com.hocheol.camerax.databinding.ActivityMainBinding
 import com.hocheol.camerax.extensions.clear
 import com.hocheol.camerax.extensions.loadCenterCrop
@@ -72,6 +71,19 @@ class MainActivity : AppCompatActivity() {
                 if (::imageCapture.isInitialized && root != null) {
                     imageCapture.targetRotation = root?.display?.rotation ?: ImageOutputConfig.INVALID_ROTATION
                 }
+            }
+        }
+
+    }
+
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+        if (result.resultCode == Activity.RESULT_OK) {
+            uriList = result.data?.getParcelableArrayListExtra(ImageListActivity.URI_LIST_KEY) ?: uriList
+            if (uriList.isNotEmpty()) {
+                binding.previewImageView.loadCenterCrop(url = uriList.first().toString(), corner = 4f)
+            } else {
+                binding.previewImageView.clear()
             }
         }
 
@@ -150,13 +162,16 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun bindZoomListener() = with(binding) {
         val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
             override fun onScale(detector: ScaleGestureDetector): Boolean {
                 val currentZoomRatio = camera?.cameraInfo?.zoomState?.value?.zoomRatio ?: 1f
                 val delta = detector.scaleFactor
                 camera?.cameraControl?.setZoomRatio(currentZoomRatio * delta)
                 return true
             }
+
         }
+
         val scaleGestureDetector = ScaleGestureDetector(this@MainActivity, listener)
 
         viewFinder.setOnTouchListener { _, event ->
@@ -188,10 +203,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun bindPreviewImageViewClickListener() = with(binding) {
         previewImageView.setOnClickListener {
-            startActivityForResult(
-                ImageListActivity.newIntent(this@MainActivity, uriList),
-                IMAGE_LIST_REQUEST_CODE
-            )
+            launcher.launch(ImageListActivity.newIntent(this@MainActivity, uriList))
         }
     }
 
@@ -199,6 +211,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun captureCamera() {
         if (!::imageCapture.isInitialized) return
+
         val photoFile = File(
             PathUtil.getOutputDirectory(this),
             SimpleDateFormat(
@@ -227,6 +240,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun flashLight(light: Boolean) {
         val hasFlash = camera?.cameraInfo?.hasFlashUnit() ?: false
+
         if (hasFlash) {
             camera?.cameraControl?.enableTorch(light)
         }
@@ -236,11 +250,15 @@ class MainActivity : AppCompatActivity() {
         contentUri?.let {
             isCapturing = try {
                 val file = File(PathUtil.getPath(this, it) ?: throw FileNotFoundException())
+
                 MediaScannerConnection.scanFile(this, arrayOf(file.path), arrayOf("image/jpeg"), null)
+
                 Handler(Looper.getMainLooper()).post {
                     binding.previewImageView.loadCenterCrop(url = it.toString(), corner = 4f)
                 }
+
                 if (isFlashEnabled) flashLight(false)
+
                 uriList.add(it)
                 false
             } catch (e: FileNotFoundException) {
@@ -259,20 +277,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
                 finish()
-            }
-        }
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == IMAGE_LIST_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            uriList = data?.getParcelableArrayListExtra(ImageListActivity.URI_LIST_KEY) ?: uriList
-            if (uriList.isNotEmpty()) {
-                binding.previewImageView.loadCenterCrop(url = uriList.first().toString(), corner = 4f)
-            } else {
-                binding.previewImageView.clear()
             }
         }
 

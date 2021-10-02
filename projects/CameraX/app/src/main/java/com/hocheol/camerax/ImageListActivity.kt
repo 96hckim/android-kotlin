@@ -19,8 +19,6 @@ class ImageListActivity : AppCompatActivity() {
     companion object {
         const val URI_LIST_KEY = "uriList"
 
-        const val IMAGE_LIST_REQUEST_CODE = 100
-
         fun newIntent(activity: Activity, uriList: List<Uri>) =
             Intent(activity, ImageListActivity::class.java).apply {
                 putExtra(URI_LIST_KEY, ArrayList<Uri>().apply { uriList.forEach { add(it) } })
@@ -50,6 +48,7 @@ class ImageListActivity : AppCompatActivity() {
         if (::imageViewPagerAdapter.isInitialized.not()) {
             imageViewPagerAdapter = ImageViewPagerAdapter(uriList.toMutableList())
         }
+
         imageViewPager.adapter = imageViewPagerAdapter
         indicator.setViewPager(imageViewPager)
         imageViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -67,6 +66,7 @@ class ImageListActivity : AppCompatActivity() {
             }
 
         })
+
         deleteButton.setOnClickListener {
             currentUri?.let { uri ->
                 removeImage(uri)
