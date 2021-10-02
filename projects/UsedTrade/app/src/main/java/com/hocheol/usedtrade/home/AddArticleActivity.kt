@@ -22,6 +22,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.hocheol.usedtrade.DBKey.Companion.DB_ARTICLES
 import com.hocheol.usedtrade.databinding.ActivityAddArticleBinding
+import com.hocheol.usedtrade.gallery.GalleryActivity
 import com.hocheol.usedtrade.photo.CameraActivity
 import com.hocheol.usedtrade.photo.ImageListActivity
 import com.hocheol.usedtrade.photo.PhotoListAdapter
@@ -49,11 +50,23 @@ class AddArticleActivity : AppCompatActivity() {
     private var galleryLauncher = registerForActivityResult(StartActivityForResult()) { result ->
 
         if (result.resultCode == Activity.RESULT_OK) {
-            val uri = result.data?.data
-            if (uri != null) {
-                imageUriList.add(uri)
-                photoListAdapter.setPhotoList(imageUriList)
-            } else {
+            // 변경 전
+//            val uri = result.data?.data
+//            if (uri != null) {
+//                imageUriList.add(uri)
+//                photoListAdapter.setPhotoList(imageUriList)
+//            } else {
+//                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
+//            }
+
+            // 변경 후
+            result.data?.let {
+                val uriList = it.getParcelableArrayListExtra<Uri>(ImageListActivity.URI_LIST_KEY)
+                uriList?.let { list ->
+                    imageUriList.addAll(list)
+                    photoListAdapter.setPhotoList(imageUriList)
+                }
+            } ?: kotlin.run {
                 Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -69,6 +82,8 @@ class AddArticleActivity : AppCompatActivity() {
                     imageUriList.addAll(list)
                     photoListAdapter.setPhotoList(imageUriList)
                 }
+            } ?: kotlin.run {
+                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -117,21 +132,17 @@ class AddArticleActivity : AppCompatActivity() {
         val uploadDeferred: List<Deferred<Any>> = uriList.mapIndexed { index, uri ->
             lifecycleScope.async {
                 try {
-                    if (index == 0) {
-                        throw Exception()
-                    } else {
-                        val fileName = "${System.currentTimeMillis()}_${index}.png"
-                        return@async storage
-                            .reference
-                            .child("article/photo")
-                            .child(fileName)
-                            .putFile(uri)
-                            .await()
-                            .storage
-                            .downloadUrl
-                            .await()
-                            .toString()
-                    }
+                    val fileName = "${System.currentTimeMillis()}_${index}.png"
+                    return@async storage
+                        .reference
+                        .child("article/photo")
+                        .child(fileName)
+                        .putFile(uri)
+                        .await()
+                        .storage
+                        .downloadUrl
+                        .await()
+                        .toString()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     return@async Pair(uri, e)
@@ -185,8 +196,13 @@ class AddArticleActivity : AppCompatActivity() {
     }
 
     private fun startGalleryScreen() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
+        // 변경 전
+//        val intent = Intent(Intent.ACTION_GET_CONTENT)
+//        intent.type = "image/*"
+//        galleryLauncher.launch(intent)
+
+        // 변경 후
+        val intent = Intent(this, GalleryActivity::class.java)
         galleryLauncher.launch(intent)
     }
 
