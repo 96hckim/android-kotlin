@@ -30,7 +30,7 @@ class TrackingItemRepositoryImpl(
                         trackingItem.invoice
                     ).body()?.sortTrackingDetailsByTimeDescending()
 
-                    if (!relatedTrackingInfo!!.errorMessage.isNullOrBlank()) {
+                    if (relatedTrackingInfo!!.errorMessage.isNullOrBlank().not()) {
                         null
                     } else {
                         trackingItem to relatedTrackingInfo

@@ -144,7 +144,7 @@ class AddTrackingItemFragment : ScopeFragment(), AddTrackingItemsContract.View {
     private fun changeInvoiceIfAvailable() {
         val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val invoice = clipboard.plainTextClip()
-        if (!invoice.isNullOrBlank()) {
+        if (invoice.isNullOrBlank().not()) {
             AlertDialog.Builder(requireActivity())
                 .setTitle("클립 보드에 있는 $invoice 를 운송장 번호로 추가하시겠습니까?")
                 .setPositiveButton("추가할래요") { _, _ ->

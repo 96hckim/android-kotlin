@@ -76,7 +76,7 @@ class AddTrackingItemPresenter(
     }
 
     private fun enableSaveButtonIfAvailable() {
-        if (!invoice.isNullOrBlank() && selectedShippingCompany != null) {
+        if (invoice.isNullOrBlank().not() && selectedShippingCompany != null) {
             view.enableSaveButton()
         } else {
             view.disableSaveButton()
