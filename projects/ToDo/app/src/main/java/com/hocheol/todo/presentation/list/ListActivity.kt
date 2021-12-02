@@ -1,5 +1,7 @@
 package com.hocheol.todo.presentation.list
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.todo.R
 import com.hocheol.todo.databinding.ActivityListBinding
 import com.hocheol.todo.presentation.BaseActivity
+import com.hocheol.todo.presentation.detail.DetailActivity
+import com.hocheol.todo.presentation.detail.DetailMode
 import com.hocheol.todo.presentation.view.ToDoAdapter
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
@@ -40,10 +44,10 @@ internal class ListActivity : BaseActivity<ListViewModel>(), CoroutineScope {
         }
 
         addToDoButton.setOnClickListener {
-//            startActivityForResult(
-//                DetailActivity.getIntent(this@ListActivity, DetailMode.WRITE),
-//                DetailActivity.FETCH_REQUEST_CODE
-//            )
+            startActivityForResult(
+                DetailActivity.getIntent(this@ListActivity, DetailMode.WRITE),
+                DetailActivity.FETCH_REQUEST_CODE
+            )
         }
     }
 
@@ -83,10 +87,10 @@ internal class ListActivity : BaseActivity<ListViewModel>(), CoroutineScope {
             adapter.setToDoList(
                 state.toDoList,
                 toDoItemClickListener = {
-//                    startActivityForResult(
-//                        DetailActivity.getIntent(this@ListActivity, it.id, DetailMode.DETAIL),
-//                        DetailActivity.FETCH_REQUEST_CODE
-//                    )
+                    startActivityForResult(
+                        DetailActivity.getIntent(this@ListActivity, it.id, DetailMode.DETAIL),
+                        DetailActivity.FETCH_REQUEST_CODE
+                    )
                 }, toDoCheckListener = {
                     viewModel.updateEntity(it)
                 }
@@ -94,12 +98,12 @@ internal class ListActivity : BaseActivity<ListViewModel>(), CoroutineScope {
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == DetailActivity.FETCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            viewModel.fetchData()
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DetailActivity.FETCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            viewModel.fetchData()
+        }
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
