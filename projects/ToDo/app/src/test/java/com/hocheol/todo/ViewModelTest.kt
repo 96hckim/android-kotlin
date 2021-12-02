@@ -7,9 +7,7 @@ import com.hocheol.todo.di.appTestModule
 import com.hocheol.todo.livedata.LiveDataTestObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -33,7 +31,7 @@ internal abstract class ViewModelTest : KoinTest {
     @Mock
     private lateinit var context: Application
 
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {

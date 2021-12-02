@@ -6,6 +6,7 @@ import com.hocheol.todo.domain.todo.InsertToDoListUseCase
 import com.hocheol.todo.presentation.list.ListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.koin.test.inject
@@ -45,13 +46,13 @@ internal class ListViewModelTest : ViewModelTest() {
         initData()
     }
 
-    private fun initData() = runBlockingTest {
+    private fun initData() = runTest {
         insertToDoListUseCase(mockList)
     }
 
     // Test : 입력된 데이터를 불러와서 검증한다.
     @Test
-    fun `test viewModel fetch`(): Unit = runBlockingTest {
+    fun `test viewModel fetch`(): Unit = runTest {
         val testObservable = viewModel.toDoListLiveData.test()
         viewModel.fetchData()
         testObservable.assertValueSequence(
