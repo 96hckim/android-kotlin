@@ -1,4 +1,4 @@
-package com.hocheol.todo
+package com.hocheol.todo.viewmodel
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule

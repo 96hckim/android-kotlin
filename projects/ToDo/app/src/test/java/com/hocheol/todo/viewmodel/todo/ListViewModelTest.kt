@@ -1,6 +1,6 @@
 package com.hocheol.todo.viewmodel.todo
 
-import com.hocheol.todo.ViewModelTest
+import com.hocheol.todo.viewmodel.ViewModelTest
 import com.hocheol.todo.data.entity.ToDoEntity
 import com.hocheol.todo.domain.todo.GetToDoItemUseCase
 import com.hocheol.todo.domain.todo.InsertToDoListUseCase
