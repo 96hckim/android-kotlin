@@ -10,12 +10,13 @@ class TestToDoRepository : ToDoRepository {
         return toDoList
     }
 
-    override suspend fun insertToDoItem(toDoItem: ToDoEntity) {
+    override suspend fun insertToDoItem(toDoItem: ToDoEntity): Long {
         this.toDoList.add(toDoItem)
+        return toDoItem.id
     }
 
     override suspend fun insertToDoList(toDoList: List<ToDoEntity>) {
-        this.toDoList.addAll(toDoList);
+        this.toDoList.addAll(toDoList)
     }
 
     override suspend fun updateToDoItem(toDoItem: ToDoEntity): Boolean {

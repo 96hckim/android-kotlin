@@ -8,7 +8,7 @@ internal class InsertToDoItemUseCase(
     private val toDoRepository: ToDoRepository
 ) : UseCase {
 
-    suspend operator fun invoke(toDoItem: ToDoEntity) {
+    suspend operator fun invoke(toDoItem: ToDoEntity): Long {
         return toDoRepository.insertToDoItem(toDoItem)
     }
 

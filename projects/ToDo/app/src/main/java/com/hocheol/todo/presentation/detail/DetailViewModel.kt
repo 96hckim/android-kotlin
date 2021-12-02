@@ -3,8 +3,10 @@ package com.hocheol.todo.presentation.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.hocheol.todo.data.entity.ToDoEntity
 import com.hocheol.todo.domain.todo.DeleteToDoItemUseCase
 import com.hocheol.todo.domain.todo.GetToDoItemUseCase
+import com.hocheol.todo.domain.todo.InsertToDoItemUseCase
 import com.hocheol.todo.domain.todo.UpdateToDoUseCase
 import com.hocheol.todo.presentation.BaseViewModel
 import kotlinx.coroutines.Job
@@ -15,7 +17,8 @@ internal class DetailViewModel(
     var id: Long = -1,
     private val getToDoItemUseCase: GetToDoItemUseCase,
     private val deleteToDoItemUseCase: DeleteToDoItemUseCase,
-    private val updateToDoUseCase: UpdateToDoUseCase
+    private val updateToDoUseCase: UpdateToDoUseCase,
+    private val insertToDoItemUseCase: InsertToDoItemUseCase
 ) : BaseViewModel() {
 
     private var _toDoDetailLiveData = MutableLiveData<ToDoDetailState>(ToDoDetailState.UnInitialized)
@@ -24,7 +27,7 @@ internal class DetailViewModel(
     override fun fetchData(): Job = viewModelScope.launch {
         when (detailMode) {
             DetailMode.WRITE -> {
-                // TODO 나중에 작성모드로 상세화면 진입 로직 처리
+                _toDoDetailLiveData.postValue(ToDoDetailState.Write)
             }
             DetailMode.DETAIL -> {
                 _toDoDetailLiveData.postValue(ToDoDetailState.Loading)
@@ -60,7 +63,18 @@ internal class DetailViewModel(
         _toDoDetailLiveData.postValue(ToDoDetailState.Loading)
         when (detailMode) {
             DetailMode.WRITE -> {
-                // TODO 나중에 작성모드로 작성 처리
+                try {
+                    val toDoEntity = ToDoEntity(
+                        title = title,
+                        description = description
+                    )
+                    id = insertToDoItemUseCase(toDoEntity)
+                    _toDoDetailLiveData.postValue(ToDoDetailState.Success(toDoEntity))
+                    detailMode = DetailMode.DETAIL
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    _toDoDetailLiveData.postValue(ToDoDetailState.Error)
+                }
             }
             DetailMode.DETAIL -> {
                 try {
