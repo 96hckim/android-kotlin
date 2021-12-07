@@ -7,7 +7,11 @@ import com.hocheol.shopping.data.network.provideProductRetrofit
 import com.hocheol.shopping.data.repository.DefaultProductRepository
 import com.hocheol.shopping.data.repository.ProductRepository
 import com.hocheol.shopping.domain.product.GetProductItemUseCase
+import com.hocheol.shopping.presentation.list.ProductListViewModel
+import com.hocheol.shopping.presentation.main.MainViewModel
+import com.hocheol.shopping.presentation.profile.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
@@ -27,5 +31,10 @@ val appModule = module {
 
     // UseCases
     factory { GetProductItemUseCase(get()) }
+
+    // ViewModels
+    viewModel { MainViewModel() }
+    viewModel { ProductListViewModel() }
+    viewModel { ProfileViewModel() }
 
 }
