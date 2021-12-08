@@ -6,6 +6,7 @@ import com.hocheol.shopping.data.network.buildOkHttpClient
 import com.hocheol.shopping.data.network.provideGsonConverterFactory
 import com.hocheol.shopping.data.network.provideProductApiService
 import com.hocheol.shopping.data.network.provideProductRetrofit
+import com.hocheol.shopping.data.preference.PreferenceManager
 import com.hocheol.shopping.data.repository.DefaultProductRepository
 import com.hocheol.shopping.data.repository.ProductRepository
 import com.hocheol.shopping.domain.product.GetProductItemUseCase
@@ -17,6 +18,7 @@ import com.hocheol.shopping.presentation.main.MainViewModel
 import com.hocheol.shopping.presentation.profile.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -43,11 +45,14 @@ val appModule = module {
     // ViewModels
     viewModel { MainViewModel() }
     viewModel { ProductListViewModel(get()) }
-    viewModel { ProfileViewModel() }
+    viewModel { ProfileViewModel(get()) }
     viewModel { (productId: Long) -> ProductDetailViewModel(productId, get(), get()) }
 
     // Database
     single { provideDB(androidApplication()) }
     single { provideProductDao(get()) }
+
+    // PreferenceManager
+    single { PreferenceManager(androidContext()) }
 
 }
