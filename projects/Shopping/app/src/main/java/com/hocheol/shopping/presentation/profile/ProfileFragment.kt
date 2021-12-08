@@ -9,8 +9,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.hocheol.shopping.R
 import com.hocheol.shopping.databinding.FragmentProfileBinding
+import com.hocheol.shopping.extensions.loadCenterCrop
 import com.hocheol.shopping.extensions.toast
 import com.hocheol.shopping.presentation.BaseFragment
 import org.koin.android.ext.android.inject
@@ -42,7 +44,7 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
             try {
                 task.getResult(ApiException::class.java)?.let { account ->
                     Log.d(TAG, "firebaseAuthWithGoogle: ${account.id}")
-                    // TODO saveToken
+                    viewModel.saveToken(account.idToken ?: throw Exception())
                 } ?: throw Exception()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -61,7 +63,7 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
                     handleLoadingState()
                 }
                 is ProfileState.Login -> {
-                    // TODO handleLogin
+                    handleLoginState(it)
                 }
                 is ProfileState.Success -> {
                     handleSuccessState(it)
@@ -92,16 +94,45 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
         loginRequiredGroup.isGone = true
     }
 
+    private fun handleLoginState(state: ProfileState.Login) = with(binding) {
+        val credential = GoogleAuthProvider.getCredential(state.idToken, null)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    viewModel.setUserInfo(user)
+                } else {
+                    viewModel.setUserInfo(null)
+                }
+            }
+    }
+
     private fun handleSuccessState(state: ProfileState.Success) = with(binding) {
         progressBar.isVisible = false
         when (state) {
             is ProfileState.Success.Registered -> {
-                // TODO Registered 구현
+                handleRegisteredState(state)
             }
             is ProfileState.Success.NotRegistered -> {
                 profileGroup.isGone = true
                 loginRequiredGroup.isVisible = true
             }
+        }
+    }
+
+    private fun handleRegisteredState(state: ProfileState.Success.Registered) = with(binding) {
+        profileGroup.isVisible = true
+        loginRequiredGroup.isGone = true
+
+        profileImageView.loadCenterCrop(state.profileImgUri.toString(), 60f)
+        userNameTextView.text = state.userName
+
+        if (state.productList.isEmpty()) {
+            emptyResultTextView.isGone = false
+            recyclerView.isGone = true
+        } else {
+            emptyResultTextView.isGone = true
+            recyclerView.isGone = false
         }
     }
 
