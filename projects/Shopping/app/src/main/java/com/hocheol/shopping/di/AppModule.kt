@@ -7,6 +7,7 @@ import com.hocheol.shopping.data.network.provideProductRetrofit
 import com.hocheol.shopping.data.repository.DefaultProductRepository
 import com.hocheol.shopping.data.repository.ProductRepository
 import com.hocheol.shopping.domain.product.GetProductItemUseCase
+import com.hocheol.shopping.domain.product.GetProductListUseCase
 import com.hocheol.shopping.presentation.list.ProductListViewModel
 import com.hocheol.shopping.presentation.main.MainViewModel
 import com.hocheol.shopping.presentation.profile.ProfileViewModel
@@ -31,10 +32,11 @@ val appModule = module {
 
     // UseCases
     factory { GetProductItemUseCase(get()) }
+    factory { GetProductListUseCase(get()) }
 
     // ViewModels
     viewModel { MainViewModel() }
-    viewModel { ProductListViewModel() }
+    viewModel { ProductListViewModel(get()) }
     viewModel { ProfileViewModel() }
 
 }
