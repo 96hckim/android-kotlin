@@ -7,6 +7,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.hocheol.shopping.R
 import com.hocheol.shopping.databinding.ActivityMainBinding
 import com.hocheol.shopping.presentation.BaseActivity
+import com.hocheol.shopping.presentation.BaseFragment
 import com.hocheol.shopping.presentation.list.ProductListFragment
 import com.hocheol.shopping.presentation.profile.ProfileFragment
 import org.koin.android.ext.android.inject
@@ -57,11 +58,11 @@ internal class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>()
     }
 
     override fun observeData() = viewModel.mainStateLiveData.observe(this) {
-        when(it) {
+        when (it) {
             is MainState.RefreshOrderList -> {
                 binding.bottomNav.selectedItemId = R.id.menu_profile
                 val fragment = supportFragmentManager.findFragmentByTag(ProfileFragment.TAG)
-                // TODO fragment BaseFragment 타입 캐스팅 fetchData()
+                (fragment as? BaseFragment<*, *>)?.viewModel?.fetchData()
             }
         }
     }

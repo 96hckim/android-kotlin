@@ -9,9 +9,7 @@ import com.hocheol.shopping.data.network.provideProductRetrofit
 import com.hocheol.shopping.data.preference.PreferenceManager
 import com.hocheol.shopping.data.repository.DefaultProductRepository
 import com.hocheol.shopping.data.repository.ProductRepository
-import com.hocheol.shopping.domain.product.GetProductItemUseCase
-import com.hocheol.shopping.domain.product.GetProductListUseCase
-import com.hocheol.shopping.domain.product.OrderProductItemUseCase
+import com.hocheol.shopping.domain.product.*
 import com.hocheol.shopping.presentation.detail.ProductDetailViewModel
 import com.hocheol.shopping.presentation.list.ProductListViewModel
 import com.hocheol.shopping.presentation.main.MainViewModel
@@ -41,11 +39,13 @@ val appModule = module {
     factory { GetProductItemUseCase(get()) }
     factory { GetProductListUseCase(get()) }
     factory { OrderProductItemUseCase(get()) }
+    factory { GetOrderedProductListUseCase(get()) }
+    factory { DeleteOrderedProductListUseCase(get()) }
 
     // ViewModels
     viewModel { MainViewModel() }
     viewModel { ProductListViewModel(get()) }
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { (productId: Long) -> ProductDetailViewModel(productId, get(), get()) }
 
     // Database

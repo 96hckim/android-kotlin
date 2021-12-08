@@ -15,6 +15,8 @@ import com.hocheol.shopping.databinding.FragmentProfileBinding
 import com.hocheol.shopping.extensions.loadCenterCrop
 import com.hocheol.shopping.extensions.toast
 import com.hocheol.shopping.presentation.BaseFragment
+import com.hocheol.shopping.presentation.adapter.ProductListAdapter
+import com.hocheol.shopping.presentation.detail.ProductDetailActivity
 import org.koin.android.ext.android.inject
 
 internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>() {
@@ -53,6 +55,8 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
         }
     }
 
+    private val adapter = ProductListAdapter()
+
     override fun observeData() = viewModel.profileStateLiveData.observe(this) {
         viewModel.profileStateLiveData.observe(this) {
             when (it) {
@@ -76,11 +80,14 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
     }
 
     private fun initViews() = with(binding) {
+        recyclerView.adapter = adapter
+
         loginButton.setOnClickListener {
             signInGoogle()
         }
-        logoutButton.setOnClickListener {
 
+        logoutButton.setOnClickListener {
+            signOut()
         }
     }
 
@@ -89,12 +96,18 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
         loginLauncher.launch(signInIntent)
     }
 
+    private fun signOut() {
+        firebaseAuth.signOut()
+        viewModel.signOut()
+    }
+
     private fun handleLoadingState() = with(binding) {
         progressBar.isVisible = true
         loginRequiredGroup.isGone = true
     }
 
     private fun handleLoginState(state: ProfileState.Login) = with(binding) {
+        progressBar.isVisible = true
         val credential = GoogleAuthProvider.getCredential(state.idToken, null)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
@@ -116,6 +129,7 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
             is ProfileState.Success.NotRegistered -> {
                 profileGroup.isGone = true
                 loginRequiredGroup.isVisible = true
+                adapter.setProductList(listOf())
             }
         }
     }
@@ -133,6 +147,11 @@ internal class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileB
         } else {
             emptyResultTextView.isGone = true
             recyclerView.isGone = false
+            adapter.setProductList(state.productList) {
+                startActivity(
+                    ProductDetailActivity.newIntent(requireContext(), it.id)
+                )
+            }
         }
     }
 
