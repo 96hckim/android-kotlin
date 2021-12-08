@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shopping">
         <activity
+            android:name="com.hocheol.shopping.presentation.detail.ProductDetailActivity"
+            android:theme="@style/AppTheme.PopupOverlay"
+            android:exported="false" />
+        <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true">
             <intent-filter>

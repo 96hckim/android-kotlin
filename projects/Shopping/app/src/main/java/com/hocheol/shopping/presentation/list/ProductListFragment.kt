@@ -8,6 +8,8 @@ import com.hocheol.shopping.databinding.FragmentProductListBinding
 import com.hocheol.shopping.extensions.toast
 import com.hocheol.shopping.presentation.BaseFragment
 import com.hocheol.shopping.presentation.adapter.ProductListAdapter
+import com.hocheol.shopping.presentation.detail.ProductDetailActivity
+import com.hocheol.shopping.presentation.main.MainActivity
 import org.koin.android.ext.android.inject
 
 internal class ProductListFragment : BaseFragment<ProductListViewModel, FragmentProductListBinding>() {
@@ -24,9 +26,9 @@ internal class ProductListFragment : BaseFragment<ProductListViewModel, Fragment
 
     private val startProductDetailForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-//            if (result.resultCode == ProductDetailActivity.PRODUCT_ORDERED_RESULT_CODE) {
-//                (requireActivity() as MainActivity).viewModel.refreshOrderList()
-//            }
+            if (result.resultCode == ProductDetailActivity.PRODUCT_ORDERED_RESULT_CODE) {
+                (requireActivity() as MainActivity).viewModel.refreshOrderList()
+            }
         }
 
     override fun observeData() = viewModel.productListStateLiveData.observe(this) {
@@ -69,10 +71,9 @@ internal class ProductListFragment : BaseFragment<ProductListViewModel, Fragment
             emptyResultTextView.isGone = true
             recyclerView.isGone = false
             adapter.setProductList(state.productList) {
-//                startProductDetailForResult.launch(
-//                    ProductDetailActivity.newIntent(requireContext(), it.id)
-//                )
-                requireContext().toast("Product Entity: $it")
+                startProductDetailForResult.launch(
+                    ProductDetailActivity.newIntent(requireContext(), it.id)
+                )
             }
         }
     }
