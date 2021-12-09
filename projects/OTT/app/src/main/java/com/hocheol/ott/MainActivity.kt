@@ -30,42 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         initAppBar()
         initInsetMargin()
-
-        binding.scrollView.viewTreeObserver.addOnScrollChangedListener {
-            if (binding.scrollView.scrollY > 150f.dpToPx(this).toInt()) {
-                if (isGatheringMotionAnimating.not()) {
-                    binding.gatheringDigitalThingsLayout.transitionToEnd()
-                    binding.buttonShownMotionLayout.transitionToEnd()
-                }
-            } else {
-                if (isGatheringMotionAnimating.not()) {
-                    binding.gatheringDigitalThingsLayout.transitionToStart()
-                    binding.buttonShownMotionLayout.transitionToStart()
-                }
-            }
-        }
-
-        binding.gatheringDigitalThingsLayout.setTransitionListener(object : MotionLayout.TransitionListener {
-
-            override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
-                isGatheringMotionAnimating = true
-            }
-
-            override fun onTransitionChange(motionLayout: MotionLayout?, startId: Int, endId: Int, progress: Float) =
-                Unit
-
-            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                isGatheringMotionAnimating = false
-            }
-
-            override fun onTransitionTrigger(
-                motionLayout: MotionLayout?,
-                triggerId: Int,
-                positive: Boolean,
-                progress: Float
-            ) = Unit
-
-        })
+        initScrollViewListeners()
+        initMotionLayoutListeners()
 
     }
 
@@ -112,6 +78,43 @@ class MainActivity : AppCompatActivity() {
 
             insets.consumeSystemWindowInsets()
         }
+    }
+
+    private fun initScrollViewListeners() {
+        binding.scrollView.smoothScrollTo(0, 0)
+
+        binding.scrollView.viewTreeObserver.addOnScrollChangedListener {
+            val scrolledValue = binding.scrollView.scrollY
+
+            if (scrolledValue > 150f.dpToPx(this@MainActivity).toInt()) {
+                if (isGatheringMotionAnimating.not()) {
+                    binding.gatheringDigitalThingsMotionLayout.transitionToEnd()
+                    binding.buttonShownMotionLayout.transitionToEnd()
+                }
+            } else {
+                if (isGatheringMotionAnimating.not()) {
+                    binding.gatheringDigitalThingsMotionLayout.transitionToStart()
+                    binding.buttonShownMotionLayout.transitionToStart()
+                }
+            }
+        }
+    }
+
+    private fun initMotionLayoutListeners() {
+        binding.gatheringDigitalThingsMotionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+                isGatheringMotionAnimating = true
+            }
+
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) = Unit
+
+            override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
+                isGatheringMotionAnimating = false
+            }
+
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) = Unit
+
+        })
     }
 
 }
