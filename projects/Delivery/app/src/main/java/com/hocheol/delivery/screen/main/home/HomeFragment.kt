@@ -71,22 +71,30 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
         if (::viewPagerAdapter.isInitialized.not()) {
             val restaurantListFragmentList = restaurantCategories.map {
-                RestaurantListFragment.newInstance(it)
+                RestaurantListFragment.newInstance(it, locationLatLng)
             }
 
             viewPagerAdapter = RestaurantListFragmentPagerAdapter(
                 this@HomeFragment,
-                restaurantListFragmentList
+                restaurantListFragmentList,
+                locationLatLng
             )
 
             viewPager.adapter = viewPagerAdapter
+
+            viewPager.offscreenPageLimit = restaurantCategories.size
+
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                tab.setText(restaurantCategories[position].categoryNameId)
+            }.attach()
         }
 
-        viewPager.offscreenPageLimit = restaurantCategories.size
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.setText(restaurantCategories[position].categoryNameId)
-        }.attach()
+        if (locationLatLng != viewPagerAdapter.locationLatLngEntity) {
+            viewPagerAdapter.locationLatLngEntity = locationLatLng
+            viewPagerAdapter.fragmentList.forEach {
+                it.viewModel.setLocationLatLng(locationLatLng)
+            }
+        }
     }
 
     override fun observeData() = viewModel.homeStateLiveData.observe(viewLifecycleOwner) {
@@ -112,6 +120,10 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                     }
                 }
                 initViewPager(it.mapSearchInfo.locationLatLng)
+                if (it.isLocationSame.not()) {
+                    Toast.makeText(requireContext(), R.string.please_set_your_current_location, Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
             is HomeState.Error -> {
                 binding.locationLoading.visibility = View.GONE

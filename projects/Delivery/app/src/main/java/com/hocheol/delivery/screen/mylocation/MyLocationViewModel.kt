@@ -6,13 +6,15 @@ import com.hocheol.delivery.R
 import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.data.repository.map.MapRepository
+import com.hocheol.delivery.data.repository.user.UserRepository
 import com.hocheol.delivery.screen.base.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MyLocationViewModel(
     private val mapSearchInfoEntity: MapSearchInfoEntity,
-    private val mapRepository: MapRepository
+    private val mapRepository: MapRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     val myLocationStateLiveData = MutableLiveData<MyLocationState>(MyLocationState.UnInitialized)
@@ -43,8 +45,12 @@ class MyLocationViewModel(
     fun confirmSelectLocation() = viewModelScope.launch {
         when (val data = myLocationStateLiveData.value) {
             is MyLocationState.Success -> {
-
+                userRepository.insertUserLocation(data.mapSearchInfo.locationLatLng)
+                myLocationStateLiveData.value = MyLocationState.Confirm(
+                    data.mapSearchInfo
+                )
             }
+            else -> {}
         }
     }
 

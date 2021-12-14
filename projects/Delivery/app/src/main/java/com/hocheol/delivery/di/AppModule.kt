@@ -1,10 +1,13 @@
 package com.hocheol.delivery.di
 
+import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.data.repository.map.DefaultMapRepository
 import com.hocheol.delivery.data.repository.map.MapRepository
 import com.hocheol.delivery.data.repository.restaurant.DefaultRestaurantRepository
 import com.hocheol.delivery.data.repository.restaurant.RestaurantRepository
+import com.hocheol.delivery.data.repository.user.DefaultUserRepository
+import com.hocheol.delivery.data.repository.user.UserRepository
 import com.hocheol.delivery.screen.main.home.HomeViewModel
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListViewModel
@@ -26,6 +29,10 @@ val appModule = module {
     // ResourcesProvider
     single<ResourcesProvider> { DefaultResourcesProvider(androidApplication()) }
 
+    // DB
+    single { provideDB(androidApplication()) }
+    single { provideLocationDao(get()) }
+
     // Retrofit
     single { provideGsonConvertFactory() }
     single { buildOkHttpClient() }
@@ -34,13 +41,20 @@ val appModule = module {
     single { provideMapApiService(get()) }
 
     // ViewModels
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { MyViewModel() }
-    viewModel { (restaurantCategory: RestaurantCategory) -> RestaurantListViewModel(restaurantCategory, get()) }
-    viewModel { (mapSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapSearchInfoEntity, get()) }
+    viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) ->
+        RestaurantListViewModel(
+            restaurantCategory,
+            locationLatLng,
+            get()
+        )
+    }
+    viewModel { (mapSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapSearchInfoEntity, get(), get()) }
 
     // Repositories
-    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
+    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
+    single<UserRepository> { DefaultUserRepository(get(), get()) }
 
 }
