@@ -1,7 +1,9 @@
 package com.hocheol.delivery.di
 
-import com.hocheol.delivery.data.repository.DefaultRestaurantRepository
-import com.hocheol.delivery.data.repository.RestaurantRepository
+import com.hocheol.delivery.data.repository.map.DefaultMapRepository
+import com.hocheol.delivery.data.repository.map.MapRepository
+import com.hocheol.delivery.data.repository.restaurant.DefaultRestaurantRepository
+import com.hocheol.delivery.data.repository.restaurant.RestaurantRepository
 import com.hocheol.delivery.screen.main.home.HomeViewModel
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListViewModel
@@ -25,14 +27,17 @@ val appModule = module {
     // Retrofit
     single { provideGsonConvertFactory() }
     single { buildOkHttpClient() }
-    single { provideRetrofit(get(), get()) }
+    // Map
+    single { provideMapRetrofit(get(), get()) }
+    single { provideMapApiService(get()) }
 
     // ViewModels
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get()) }
     viewModel { MyViewModel() }
     viewModel { (restaurantCategory: RestaurantCategory) -> RestaurantListViewModel(restaurantCategory, get()) }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
+    single<MapRepository> { DefaultMapRepository(get(), get()) }
 
 }

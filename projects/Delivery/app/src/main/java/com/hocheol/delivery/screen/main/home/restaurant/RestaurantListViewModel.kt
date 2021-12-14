@@ -2,7 +2,7 @@ package com.hocheol.delivery.screen.main.home.restaurant
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hocheol.delivery.data.repository.RestaurantRepository
+import com.hocheol.delivery.data.repository.restaurant.RestaurantRepository
 import com.hocheol.delivery.model.restaurant.RestaurantModel
 import com.hocheol.delivery.screen.base.BaseViewModel
 import kotlinx.coroutines.Job

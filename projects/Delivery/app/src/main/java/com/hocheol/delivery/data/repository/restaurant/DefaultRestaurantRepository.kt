@@ -1,4 +1,4 @@
-package com.hocheol.delivery.data.repository
+package com.hocheol.delivery.data.repository.restaurant
 
 import com.hocheol.delivery.data.entity.RestaurantEntity
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
