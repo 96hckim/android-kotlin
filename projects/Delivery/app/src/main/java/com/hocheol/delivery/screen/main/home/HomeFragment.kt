@@ -2,6 +2,7 @@ package com.hocheol.delivery.screen.main.home
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.location.Location
 import android.location.LocationListener
@@ -12,10 +13,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hocheol.delivery.R
 import com.hocheol.delivery.data.entity.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.databinding.FragmentHomeBinding
 import com.hocheol.delivery.screen.base.BaseFragment
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListFragment
+import com.hocheol.delivery.screen.mylocation.MyLocationActivity
 import com.hocheol.delivery.widget.adapter.RestaurantListFragmentPagerAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,6 +34,15 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     private lateinit var myLocationListener: MyLocationListener
 
+    private val changeLocationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getParcelableExtra<MapSearchInfoEntity>(HomeViewModel.MY_LOCATION_KEY)?.let { info ->
+                    viewModel.loadReverseGeoInformation(info.locationLatLng)
+                }
+            }
+        }
+
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val responsePermissions = permissions.entries.filter {
@@ -41,16 +53,17 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             if (responsePermissions.filter { it.value == true }.size == locationPermissions.size) {
                 setMyLocationListener()
             } else {
-                binding.locationTitleTextView.setText(R.string.please_setup_your_location_permission)
+                with(binding.locationTitleTextView) {
+                    text = getString(R.string.please_setup_your_location_permission)
+                    setOnClickListener {
+                        getMyLocation()
+                    }
+                }
                 Toast.makeText(requireContext(), R.string.cannot_assigned_permission, Toast.LENGTH_SHORT).show()
             }
         }
 
-    override fun initViews() {
-        super.initViews()
-        binding.locationTitleTextView.setOnClickListener {
-            getMyLocation()
-        }
+    override fun initViews() = with(binding) {
     }
 
     private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
@@ -91,11 +104,21 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 binding.tabLayout.visibility = View.VISIBLE
                 binding.filterChipGroup.visibility = View.VISIBLE
                 binding.viewPager.visibility = View.VISIBLE
+                binding.locationTitleTextView.setOnClickListener {
+                    viewModel.getMapSearchInfo()?.let { info ->
+                        changeLocationLauncher.launch(
+                            MyLocationActivity.newIntent(requireContext(), info)
+                        )
+                    }
+                }
                 initViewPager(it.mapSearchInfo.locationLatLng)
             }
             is HomeState.Error -> {
                 binding.locationLoading.visibility = View.GONE
                 binding.locationTitleTextView.text = getString(R.string.location_not_found)
+                binding.locationTitleTextView.setOnClickListener {
+                    getMyLocation()
+                }
                 Toast.makeText(requireContext(), it.messageId, Toast.LENGTH_SHORT).show()
             }
         }

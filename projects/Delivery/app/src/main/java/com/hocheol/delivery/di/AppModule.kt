@@ -1,5 +1,6 @@
 package com.hocheol.delivery.di
 
+import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.data.repository.map.DefaultMapRepository
 import com.hocheol.delivery.data.repository.map.MapRepository
 import com.hocheol.delivery.data.repository.restaurant.DefaultRestaurantRepository
@@ -8,6 +9,7 @@ import com.hocheol.delivery.screen.main.home.HomeViewModel
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListViewModel
 import com.hocheol.delivery.screen.main.my.MyViewModel
+import com.hocheol.delivery.screen.mylocation.MyLocationViewModel
 import com.hocheol.delivery.util.provider.DefaultResourcesProvider
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +37,7 @@ val appModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MyViewModel() }
     viewModel { (restaurantCategory: RestaurantCategory) -> RestaurantListViewModel(restaurantCategory, get()) }
+    viewModel { (mapSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapSearchInfoEntity, get()) }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get()) }
