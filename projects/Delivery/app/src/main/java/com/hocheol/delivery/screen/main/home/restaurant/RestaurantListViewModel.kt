@@ -18,17 +18,7 @@ class RestaurantListViewModel(
     override fun fetchData(): Job = viewModelScope.launch {
         val restaurantList = restaurantRepository.getList(restaurantCategory)
         restaurantListLiveData.value = restaurantList.map {
-            RestaurantModel(
-                id = it.id,
-                restaurantInfoId = it.restaurantInfoId,
-                restaurantCategory = it.restaurantCategory,
-                restaurantTitle = it.restaurantTitle,
-                restaurantImageUrl = it.restaurantImageUrl,
-                grade = it.grade,
-                reviewCount = it.reviewCount,
-                deliveryTimeRange = it.deliveryTimeRange,
-                deliveryTipRange = it.deliveryTipRange
-            )
+            it.toModel()
         }
     }
 
