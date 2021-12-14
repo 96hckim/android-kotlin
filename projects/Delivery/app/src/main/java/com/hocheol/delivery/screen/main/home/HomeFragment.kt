@@ -18,6 +18,7 @@ import com.hocheol.delivery.databinding.FragmentHomeBinding
 import com.hocheol.delivery.screen.base.BaseFragment
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListFragment
+import com.hocheol.delivery.screen.main.home.restaurant.RestaurantOrder
 import com.hocheol.delivery.screen.mylocation.MyLocationActivity
 import com.hocheol.delivery.widget.adapter.RestaurantListFragmentPagerAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -64,6 +65,35 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
 
     override fun initViews() = with(binding) {
+        orderChipGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.chipDefault -> {
+                    chipInitialize.visibility = View.GONE
+                    changeRestaurantOrder(RestaurantOrder.DEFAULT)
+                }
+                R.id.chipInitialize -> {
+                    chipDefault.isChecked = true
+                }
+                R.id.chipLowDeliveryTip -> {
+                    chipInitialize.visibility = View.VISIBLE
+                    changeRestaurantOrder(RestaurantOrder.LOW_DELIVERY_TIP)
+                }
+                R.id.chipFastDelivery -> {
+                    chipInitialize.visibility = View.VISIBLE
+                    changeRestaurantOrder(RestaurantOrder.FAST_DELIVERY)
+                }
+                R.id.chipTopRate -> {
+                    chipInitialize.visibility = View.VISIBLE
+                    changeRestaurantOrder(RestaurantOrder.TOP_RATE)
+                }
+            }
+        }
+    }
+
+    private fun changeRestaurantOrder(order: RestaurantOrder) {
+        viewPagerAdapter.fragmentList.forEach {
+            it.viewModel.setRestaurantOrder(order)
+        }
     }
 
     private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
@@ -110,7 +140,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 binding.locationLoading.visibility = View.GONE
                 binding.locationTitleTextView.text = it.mapSearchInfo.fullAddress
                 binding.tabLayout.visibility = View.VISIBLE
-                binding.filterChipGroup.visibility = View.VISIBLE
+                binding.orderChipGroup.visibility = View.VISIBLE
                 binding.viewPager.visibility = View.VISIBLE
                 binding.locationTitleTextView.setOnClickListener {
                     viewModel.getMapSearchInfo()?.let { info ->
