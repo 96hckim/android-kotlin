@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Delivery</string>
+
     <string name="home">홈</string>
     <string name="my">My</string>
     <string name="fast_delivery">배달 빠른 순</string>
@@ -8,14 +9,15 @@
     <string name="top_rate">별점 높은 순</string>
     <string name="initialize">초기화</string>
 
+    <string name="loading">로딩 중…</string>
+
     <!-- Restaurant Item -->
     <string name="grade_format">%1$,.1f</string>
     <string name="review_count">(%1$d++)</string>
     <string name="delivery_time">%1$d~%2$d분</string>
     <string name="delivery_tip">배달팁 %1$,d원~%2$,d원</string>
 
-    <string name="loading">로딩 중…</string>
-
+    <!-- Location Permission -->
     <string name="please_setup_your_location_permission">위치 권한을 설정해주세요!</string>
     <string name="cannot_assigned_permission">권한을 받지 못했습니다.</string>
     <string name="please_turn_on_gps">GPS 를 켜주세요!</string>
@@ -23,5 +25,10 @@
     <string name="location_not_found">위치 정보 없음</string>
     <string name="set_this_location">이 위치로 주소 설정</string>
     <string name="please_set_your_current_location">위치가 맞는지 확인해주세요!</string>
+
+    <!-- Restaurant Detail -->
+    <string name="call">전화</string>
+    <string name="like">찜</string>
+    <string name="share">공유</string>
 
 </resources>

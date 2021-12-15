@@ -29,6 +29,7 @@ class DefaultRestaurantRepository(
             searchtypCd = "A",
             reqCoordType = "WGS84GEO"
         )
+
         if (response.isSuccessful) {
             response.body()?.searchPoiInfo?.pois?.poi?.map { poi ->
                 RestaurantEntity(

@@ -16,4 +16,11 @@
         <item name="toolbarWithArrowButtonStyle">@style/Widget.Delivery.Toolbar.WithArrow</item>
         <item name="toolbarWithCloseButtonStyle">@style/Widget.Delivery.Toolbar.WithClose</item>
     </style>
+
+    <!-- AppBarLayout theme -->
+    <style name="AppTheme.AppBarOverlay" parent="Theme.Delivery">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:background">@null</item>
+    </style>
 </resources>

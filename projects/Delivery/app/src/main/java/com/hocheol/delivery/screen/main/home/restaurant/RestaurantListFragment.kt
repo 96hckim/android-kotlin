@@ -1,11 +1,11 @@
 package com.hocheol.delivery.screen.main.home.restaurant
 
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.databinding.FragmentRestaurantListBinding
 import com.hocheol.delivery.model.restaurant.RestaurantModel
 import com.hocheol.delivery.screen.base.BaseFragment
+import com.hocheol.delivery.screen.main.home.restaurant.detail.RestaurantDetailActivity
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import com.hocheol.delivery.widget.adapter.ModelRecyclerAdapter
 import com.hocheol.delivery.widget.adapter.listener.restaurant.RestaurantListListener
@@ -36,7 +36,12 @@ class RestaurantListFragment : BaseFragment<RestaurantListViewModel, FragmentRes
             adapterListener = object : RestaurantListListener {
 
                 override fun onClickItem(model: RestaurantModel) {
-                    Toast.makeText(requireContext(), "$model", Toast.LENGTH_SHORT).show()
+                    startActivity(
+                        RestaurantDetailActivity.newIntent(
+                            requireContext(),
+                            model.toEntity()
+                        )
+                    )
                 }
 
             },
@@ -56,6 +61,7 @@ class RestaurantListFragment : BaseFragment<RestaurantListViewModel, FragmentRes
 
         const val RESTAURANT_CATEGORY_KEY = "restaurantCategory"
         const val LOCATION_KEY = "location"
+        const val RESTAURANT_KEY = "Restaurant"
 
         fun newInstance(
             restaurantCategory: RestaurantCategory,

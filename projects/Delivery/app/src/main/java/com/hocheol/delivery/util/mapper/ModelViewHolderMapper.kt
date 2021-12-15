@@ -22,6 +22,7 @@ object ModelViewHolderMapper {
         resourcesProvider: ResourcesProvider
     ): ModelViewHolder<M> {
         val inflater = LayoutInflater.from(parent.context)
+
         val viewHolder = when (type) {
             CellType.EMPTY_CELL -> EmptyViewHolder(
                 ViewholderEmptyBinding.inflate(inflater, parent, false),
@@ -34,6 +35,7 @@ object ModelViewHolderMapper {
                 resourcesProvider
             )
         }
+
         return viewHolder as ModelViewHolder<M>
     }
 
