@@ -15,7 +15,8 @@ data class RestaurantEntity(
     val grade: Float,
     val reviewCount: Int,
     val deliveryTimeRange: Pair<Int, Int>,
-    val deliveryTipRange: Pair<Int, Int>
+    val deliveryTipRange: Pair<Int, Int>,
+    val restaurantTelNumber: String?
 ) : Entity, Parcelable {
 
     fun toModel() = RestaurantModel(
@@ -27,7 +28,8 @@ data class RestaurantEntity(
         grade = grade,
         reviewCount = reviewCount,
         deliveryTimeRange = deliveryTimeRange,
-        deliveryTipRange = deliveryTipRange
+        deliveryTipRange = deliveryTipRange,
+        restaurantTelNumber = restaurantTelNumber
     )
 
 }
