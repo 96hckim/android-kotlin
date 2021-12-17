@@ -60,7 +60,7 @@ class RestaurantDetailActivity : BaseActivity<RestaurantDetailViewModel, Activit
         }
 
         likeButton.setOnClickListener {
-
+            viewModel.toggleLikeRestaurant()
         }
 
         shareButton.setOnClickListener {
