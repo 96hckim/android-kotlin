@@ -26,21 +26,20 @@ class RestaurantMenuListViewModel(
     }
 
     fun insertMenuInBasket(foodModel: FoodModel) = viewModelScope.launch {
+        val restaurantMenuListInBasket = restaurantFoodRepository.getFoodMenuListInBasket(restaurantId)
+        val foodMenuEntity = foodModel.toEntity(restaurantMenuListInBasket.size)
         val anotherRestaurantMenuListInBasket =
             restaurantFoodRepository.getAllFoodMenuListInBasket().filter { it.restaurantId != restaurantId }
 
         if (anotherRestaurantMenuListInBasket.isNotEmpty()) {
-            isClearNeedInBasketLiveData.value = Pair(true, { clearMenuAndInsertNewMenuInBasket(foodModel) })
+            isClearNeedInBasketLiveData.value = Pair(true, { clearMenuAndInsertNewMenuInBasket(foodMenuEntity) })
         } else {
-            val restaurantMenuListInBasket = restaurantFoodRepository.getFoodMenuListInBasket(restaurantId)
-            val foodMenuEntity = foodModel.toEntity(restaurantMenuListInBasket.size)
             restaurantFoodRepository.insertFoodMenuInBasket(foodMenuEntity)
             menuBasketLiveData.value = foodMenuEntity
         }
     }
 
-    private fun clearMenuAndInsertNewMenuInBasket(foodModel: FoodModel) = viewModelScope.launch {
-        val foodMenuEntity = foodModel.toEntity(0)
+    private fun clearMenuAndInsertNewMenuInBasket(foodMenuEntity: RestaurantFoodEntity) = viewModelScope.launch {
         restaurantFoodRepository.clearFoodMenuListInBasket()
         restaurantFoodRepository.insertFoodMenuInBasket(foodMenuEntity)
         menuBasketLiveData.value = foodMenuEntity
