@@ -1,14 +1,17 @@
 package com.hocheol.delivery.screen.main.home.restaurant.detail.menu
 
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.hocheol.delivery.data.entity.RestaurantFoodEntity
 import com.hocheol.delivery.databinding.FragmentRestaurantListBinding
 import com.hocheol.delivery.model.restaurant.food.FoodModel
 import com.hocheol.delivery.screen.base.BaseFragment
+import com.hocheol.delivery.screen.main.home.restaurant.detail.RestaurantDetailViewModel
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import com.hocheol.delivery.widget.adapter.ModelRecyclerAdapter
-import com.hocheol.delivery.widget.adapter.listener.AdapterListener
+import com.hocheol.delivery.widget.adapter.listener.restaurant.FoodMenuListListener
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 
 class RestaurantMenuListFragment : BaseFragment<RestaurantMenuListViewModel, FragmentRestaurantListBinding>() {
@@ -23,6 +26,8 @@ class RestaurantMenuListFragment : BaseFragment<RestaurantMenuListViewModel, Fra
         )
     }
 
+    private val restaurantDetailViewModel by sharedViewModel<RestaurantDetailViewModel>()
+
     override fun getViewBinding(): FragmentRestaurantListBinding = FragmentRestaurantListBinding.inflate(layoutInflater)
 
     private val resourcesProvider by inject<ResourcesProvider>()
@@ -31,7 +36,11 @@ class RestaurantMenuListFragment : BaseFragment<RestaurantMenuListViewModel, Fra
         ModelRecyclerAdapter<FoodModel, RestaurantMenuListViewModel>(
             modelList = listOf(),
             viewModel = viewModel,
-            adapterListener = object : AdapterListener {
+            adapterListener = object : FoodMenuListListener {
+
+                override fun onClickItem(model: FoodModel) {
+                    viewModel.insertMenuInBasket(model)
+                }
 
             },
             resourcesProvider = resourcesProvider
@@ -42,8 +51,23 @@ class RestaurantMenuListFragment : BaseFragment<RestaurantMenuListViewModel, Fra
         binding.recyclerView.adapter = adapter
     }
 
-    override fun observeData() = viewModel.restaurantFoodListLiveData.observe(this) {
-        adapter.submitList(it)
+    override fun observeData() {
+
+        viewModel.restaurantFoodListLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+
+        viewModel.menuBasketLiveData.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "장바구니에 담겼습니다. 메뉴 : ${it.title}", Toast.LENGTH_SHORT).show()
+            restaurantDetailViewModel.notifyFoodMenuListInBasket(it)
+        }
+
+        viewModel.isClearNeedInBasketLiveData.observe(viewLifecycleOwner) {
+            if (it.first) {
+                restaurantDetailViewModel.notifyFoodMenuListInBasket(it)
+            }
+        }
+
     }
 
     companion object {

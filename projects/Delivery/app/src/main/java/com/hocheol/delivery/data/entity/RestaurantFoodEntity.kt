@@ -1,12 +1,15 @@
 package com.hocheol.delivery.data.entity
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.hocheol.delivery.model.restaurant.food.FoodModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Entity
 data class RestaurantFoodEntity(
-    val id: String,
+    @PrimaryKey val id: String,
     val title: String,
     val description: String,
     val price: Int,
@@ -20,7 +23,8 @@ data class RestaurantFoodEntity(
         description = description,
         price = price,
         imageUrl = imageUrl,
-        restaurantId = restaurantId
+        restaurantId = restaurantId,
+        foodId = id
     )
 
 }

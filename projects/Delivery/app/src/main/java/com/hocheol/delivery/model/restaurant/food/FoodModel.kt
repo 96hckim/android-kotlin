@@ -1,5 +1,6 @@
 package com.hocheol.delivery.model.restaurant.food
 
+import com.hocheol.delivery.data.entity.RestaurantFoodEntity
 import com.hocheol.delivery.model.CellType
 import com.hocheol.delivery.model.Model
 
@@ -10,5 +11,12 @@ data class FoodModel(
     val description: String,
     val price: Int,
     val imageUrl: String,
-    val restaurantId: Long
-) : Model(id, type)
+    val restaurantId: Long,
+    val foodId: String
+) : Model(id, type) {
+
+    fun toEntity(basketIndex: Int) = RestaurantFoodEntity(
+        "${foodId}_${basketIndex}", title, description, price, imageUrl, restaurantId
+    )
+
+}

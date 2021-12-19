@@ -9,6 +9,7 @@ import com.hocheol.delivery.model.restaurant.food.FoodModel
 import com.hocheol.delivery.screen.base.BaseViewModel
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import com.hocheol.delivery.widget.adapter.listener.AdapterListener
+import com.hocheol.delivery.widget.adapter.listener.restaurant.FoodMenuListListener
 import com.hocheol.delivery.widget.adapter.viewholder.ModelViewHolder
 
 class FoodMenuViewHolder(
@@ -32,6 +33,11 @@ class FoodMenuViewHolder(
     }
 
     override fun bindViews(model: FoodModel, adapterListener: AdapterListener) {
+        if (adapterListener is FoodMenuListListener) {
+            binding.root.setOnClickListener {
+                adapterListener.onClickItem(model)
+            }
+        }
     }
 
 }

@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.hocheol.delivery.R
 import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.data.entity.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.RestaurantFoodEntity
 import com.hocheol.delivery.data.repository.map.MapRepository
+import com.hocheol.delivery.data.repository.restaurant.food.RestaurantFoodRepository
 import com.hocheol.delivery.data.repository.user.UserRepository
 import com.hocheol.delivery.screen.base.BaseViewModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val mapRepository: MapRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val restaurantFoodRepository: RestaurantFoodRepository
 ) : BaseViewModel() {
 
     companion object {
@@ -20,6 +23,8 @@ class HomeViewModel(
     }
 
     val homeStateLiveData = MutableLiveData<HomeState>(HomeState.UnInitialized)
+
+    val foodMenuBasketLiveData = MutableLiveData<List<RestaurantFoodEntity>>()
 
     fun loadReverseGeoInformation(
         locationLatLngEntity: LocationLatLngEntity
@@ -50,6 +55,10 @@ class HomeViewModel(
                 null
             }
         }
+    }
+
+    fun checkMyBasket() = viewModelScope.launch {
+        foodMenuBasketLiveData.value = restaurantFoodRepository.getAllFoodMenuListInBasket()
     }
 
 }
