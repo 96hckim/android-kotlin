@@ -10,12 +10,16 @@ import android.location.LocationManager
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 import com.hocheol.delivery.R
 import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.databinding.FragmentHomeBinding
 import com.hocheol.delivery.screen.base.BaseFragment
+import com.hocheol.delivery.screen.main.MainActivity
+import com.hocheol.delivery.screen.main.MainTabMenu
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListFragment
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantOrder
@@ -34,6 +38,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     private lateinit var locationManager: LocationManager
 
     private lateinit var myLocationListener: MyLocationListener
+
+    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val changeLocationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -178,7 +184,13 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 binding.basketButtonContainer.visibility = View.VISIBLE
                 binding.basketCountTextView.text = getString(R.string.basket_count, it.size)
                 binding.basketButton.setOnClickListener {
-                    // TODO 주문하기 화면으로 이동 or 로그인
+                    if (firebaseAuth.currentUser == null) {
+                        alertNeedLogin {
+                            (requireActivity() as MainActivity).goToTab(MainTabMenu.MY)
+                        }
+                    } else {
+
+                    }
                 }
             } else {
                 binding.basketButtonContainer.visibility = View.GONE
@@ -186,6 +198,21 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }
         }
 
+    }
+
+    private fun alertNeedLogin(afterAction: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("로그인이 필요합니다.")
+            .setMessage("주문하려면 로그인이 필요합니다. My 탭으로 이동하시겠습니까?")
+            .setPositiveButton("이동") { dialog, _ ->
+                afterAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun getMyLocation() {

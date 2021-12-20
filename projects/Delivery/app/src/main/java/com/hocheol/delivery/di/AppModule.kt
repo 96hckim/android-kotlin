@@ -24,6 +24,8 @@ import com.hocheol.delivery.screen.main.home.restaurant.detail.review.Restaurant
 import com.hocheol.delivery.screen.main.like.RestaurantLikeListViewModel
 import com.hocheol.delivery.screen.main.my.MyViewModel
 import com.hocheol.delivery.screen.mylocation.MyLocationViewModel
+import com.hocheol.delivery.screen.order.OrderMenuListViewModel
+import com.hocheol.delivery.util.event.MenuChangeEventBus
 import com.hocheol.delivery.util.provider.DefaultResourcesProvider
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +45,9 @@ val appModule = module {
 
     // Preference
     single { AppPreferenceManager(androidApplication()) }
+
+    // Event Bus
+    single { MenuChangeEventBus() }
 
     // DB
     single { provideDB(androidApplication()) }
@@ -81,6 +86,7 @@ val appModule = module {
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
     viewModel { RestaurantLikeListViewModel(get()) }
+    viewModel { OrderMenuListViewModel() }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }

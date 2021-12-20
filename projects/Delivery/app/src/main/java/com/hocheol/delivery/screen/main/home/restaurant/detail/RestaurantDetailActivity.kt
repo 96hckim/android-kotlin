@@ -8,8 +8,10 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 import com.hocheol.delivery.R
 import com.hocheol.delivery.data.entity.RestaurantEntity
 import com.hocheol.delivery.data.entity.RestaurantFoodEntity
@@ -17,10 +19,14 @@ import com.hocheol.delivery.databinding.ActivityRestaurantDetailBinding
 import com.hocheol.delivery.extensions.fromDpToPx
 import com.hocheol.delivery.extensions.load
 import com.hocheol.delivery.screen.base.BaseActivity
+import com.hocheol.delivery.screen.main.MainTabMenu
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListFragment
 import com.hocheol.delivery.screen.main.home.restaurant.detail.menu.RestaurantMenuListFragment
 import com.hocheol.delivery.screen.main.home.restaurant.detail.review.RestaurantReviewListFragment
+import com.hocheol.delivery.util.event.MenuChangeEventBus
 import com.hocheol.delivery.widget.adapter.RestaurantDetailListFragmentPagerAdapter
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
@@ -37,6 +43,10 @@ class RestaurantDetailActivity : BaseActivity<RestaurantDetailViewModel, Activit
         ActivityRestaurantDetailBinding.inflate(layoutInflater)
 
     private lateinit var viewPagerAdapter: RestaurantDetailListFragmentPagerAdapter
+
+    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
+
+    private val menuChangeEventBus by inject<MenuChangeEventBus>()
 
     override fun initViews() {
         initAppBar()
@@ -180,8 +190,32 @@ class RestaurantDetailActivity : BaseActivity<RestaurantDetailViewModel, Activit
         }
 
         basketButton.setOnClickListener {
-            // TODO 주문하기 화면으로 이동 or 로그인
+            if (firebaseAuth.currentUser == null) {
+                alertNeedLogin {
+                    lifecycleScope.launch {
+                        menuChangeEventBus.changeMenu(MainTabMenu.MY)
+                        finish()
+                    }
+                }
+            } else {
+
+            }
         }
+    }
+
+    private fun alertNeedLogin(afterAction: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle("로그인이 필요합니다.")
+            .setMessage("주문하려면 로그인이 필요합니다. My 탭으로 이동하시겠습니까?")
+            .setPositiveButton("이동") { dialog, _ ->
+                afterAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun alertClearNeedInBasket(afterAction: () -> Unit) {

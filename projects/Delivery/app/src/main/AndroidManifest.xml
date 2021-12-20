@@ -28,15 +28,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".screen.mylocation.MyLocationActivity"
             android:exported="false" />
-
         <activity
             android:name=".screen.main.home.restaurant.detail.RestaurantDetailActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".screen.order.OrderMenuListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
