@@ -1,14 +1,19 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Delivery</string>
 
+    <!-- BottomNav -->
     <string name="home">홈</string>
     <string name="my">My</string>
+
+    <!-- Sort Order -->
     <string name="fast_delivery">배달 빠른 순</string>
     <string name="low_delivery_tip">배달팁 낮은 순</string>
     <string name="default_order">기본 순</string>
     <string name="top_rate">별점 높은 순</string>
     <string name="initialize">초기화</string>
 
+    <!-- Loading -->
     <string name="loading">로딩 중…</string>
 
     <!-- Restaurant Item -->
@@ -31,12 +36,19 @@
     <string name="like">찜</string>
     <string name="share">공유</string>
 
+    <!-- Delivery -->
     <string name="delivery_expected_time">%1$d~%2$d분 소요 예정</string>
     <string name="delivery_tip_range">%1$,d원 ~ %2$,d원</string>
 
+    <!-- Basket Count -->
     <string name="basket_count">+%d</string>
 
     <!-- Menu -->
     <string name="price">%,d원</string>
+    <string name="logout">로그아웃</string>
+
+    <!-- My -->
+    <string name="empty_orders_text">주문 리스트가 존재하지 않습니다.</string>
+    <string name="google_login_required">구글 로그인이 필요합니다.</string>
 
 </resources>
