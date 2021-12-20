@@ -1,6 +1,7 @@
 package com.hocheol.delivery.data.entity
 
 import android.net.Uri
+import com.hocheol.delivery.model.restaurant.review.RestaurantReviewModel
 
 data class RestaurantReviewEntity(
     override val id: Long,
@@ -8,4 +9,14 @@ data class RestaurantReviewEntity(
     val description: String,
     val grade: Int,
     val images: List<Uri>? = null
-) : Entity
+) : Entity {
+
+    fun toModel() = RestaurantReviewModel(
+        id = id,
+        title = title,
+        description = description,
+        grade = grade,
+        thumbnailImageUri = images?.first()
+    )
+
+}

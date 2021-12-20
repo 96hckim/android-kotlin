@@ -1,6 +1,6 @@
 package com.hocheol.delivery.screen.main.home.restaurant.detail.review
 
-import com.hocheol.delivery.data.entity.RestaurantReviewEntity
+import com.hocheol.delivery.model.restaurant.review.RestaurantReviewModel
 
 sealed class RestaurantReviewState {
 
@@ -9,7 +9,7 @@ sealed class RestaurantReviewState {
     object Loading : RestaurantReviewState()
 
     data class Success(
-        val reviewList: List<RestaurantReviewEntity>
+        val reviewList: List<RestaurantReviewModel>
     ) : RestaurantReviewState()
 
 }

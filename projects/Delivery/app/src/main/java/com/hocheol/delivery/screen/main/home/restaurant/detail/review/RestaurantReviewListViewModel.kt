@@ -17,9 +17,7 @@ class RestaurantReviewListViewModel(
     override fun fetchData(): Job = viewModelScope.launch {
         reviewStateLiveData.value = RestaurantReviewState.Loading
         val reviews = restaurantReviewRepository.getReviews(restaurantTitle)
-        reviewStateLiveData.value = RestaurantReviewState.Success(
-            reviews
-        )
+        reviewStateLiveData.value = RestaurantReviewState.Success(reviews.map { it.toModel() })
     }
 
 }

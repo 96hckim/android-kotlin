@@ -14,7 +14,7 @@ class DefaultRestaurantReviewRepository(
                 id = 0,
                 title = "제목 $it",
                 description = "내용 $it",
-                grade = (0..5).random()
+                grade = (1..5).random()
             )
         }
     }
