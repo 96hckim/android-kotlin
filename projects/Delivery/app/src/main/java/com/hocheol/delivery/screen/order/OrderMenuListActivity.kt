@@ -59,7 +59,7 @@ class OrderMenuListActivity : BaseActivity<OrderMenuListViewModel, ActivityOrder
                 handleSuccess(it)
             }
             is OrderMenuState.Order -> {
-
+                handleOrder()
             }
             is OrderMenuState.Error -> {
                 handleError(it)
@@ -83,8 +83,13 @@ class OrderMenuListActivity : BaseActivity<OrderMenuListViewModel, ActivityOrder
         }
     }
 
+    private fun handleOrder() {
+        Toast.makeText(this, "성공적으로 주문을 완료하였습니다.", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
     private fun handleError(state: OrderMenuState.Error) {
-        Toast.makeText(this, state.messageId, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(state.messageId, state.e), Toast.LENGTH_SHORT).show()
     }
 
     companion object {

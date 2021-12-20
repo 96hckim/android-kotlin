@@ -1,5 +1,7 @@
 package com.hocheol.delivery.di
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.data.entity.RestaurantEntity
@@ -7,6 +9,8 @@ import com.hocheol.delivery.data.entity.RestaurantFoodEntity
 import com.hocheol.delivery.data.preference.AppPreferenceManager
 import com.hocheol.delivery.data.repository.map.DefaultMapRepository
 import com.hocheol.delivery.data.repository.map.MapRepository
+import com.hocheol.delivery.data.repository.order.DefaultOrderRepository
+import com.hocheol.delivery.data.repository.order.OrderRepository
 import com.hocheol.delivery.data.repository.restaurant.DefaultRestaurantRepository
 import com.hocheol.delivery.data.repository.restaurant.RestaurantRepository
 import com.hocheol.delivery.data.repository.restaurant.food.DefaultRestaurantFoodRepository
@@ -49,6 +53,9 @@ val appModule = module {
     // Event Bus
     single { MenuChangeEventBus() }
 
+    // Firestore
+    single { Firebase.firestore }
+
     // DB
     single { provideDB(androidApplication()) }
     single { provideLocationDao(get()) }
@@ -86,7 +93,7 @@ val appModule = module {
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
     viewModel { RestaurantLikeListViewModel(get()) }
-    viewModel { OrderMenuListViewModel(get()) }
+    viewModel { OrderMenuListViewModel(get(), get()) }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
@@ -94,5 +101,6 @@ val appModule = module {
     single<UserRepository> { DefaultUserRepository(get(), get(), get()) }
     single<RestaurantFoodRepository> { DefaultRestaurantFoodRepository(get(), get(), get()) }
     single<RestaurantReviewRepository> { DefaultRestaurantReviewRepository(get()) }
+    single<OrderRepository> { DefaultOrderRepository(get(), get()) }
 
 }
