@@ -49,6 +49,11 @@ class RestaurantDetailActivity : BaseActivity<RestaurantDetailViewModel, Activit
 
     private val menuChangeEventBus by inject<MenuChangeEventBus>()
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkMyBasket()
+    }
+
     override fun initViews() {
         initAppBar()
     }

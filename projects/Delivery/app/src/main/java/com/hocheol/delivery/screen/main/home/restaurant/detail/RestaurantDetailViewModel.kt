@@ -104,4 +104,15 @@ class RestaurantDetailViewModel(
         }
     }
 
+    fun checkMyBasket() = viewModelScope.launch {
+        when (val data = restaurantDetailStateLiveData.value) {
+            is RestaurantDetailState.Success -> {
+                restaurantDetailStateLiveData.value = data.copy(
+                    foodMenuListInBasket = restaurantFoodRepository.getAllFoodMenuListInBasket()
+                )
+            }
+            else -> Unit
+        }
+    }
+
 }
