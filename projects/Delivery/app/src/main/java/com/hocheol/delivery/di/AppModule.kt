@@ -10,6 +10,8 @@ import com.hocheol.delivery.data.repository.restaurant.DefaultRestaurantReposito
 import com.hocheol.delivery.data.repository.restaurant.RestaurantRepository
 import com.hocheol.delivery.data.repository.restaurant.food.DefaultRestaurantFoodRepository
 import com.hocheol.delivery.data.repository.restaurant.food.RestaurantFoodRepository
+import com.hocheol.delivery.data.repository.restaurant.review.DefaultRestaurantReviewRepository
+import com.hocheol.delivery.data.repository.restaurant.review.RestaurantReviewRepository
 import com.hocheol.delivery.data.repository.user.DefaultUserRepository
 import com.hocheol.delivery.data.repository.user.UserRepository
 import com.hocheol.delivery.screen.main.home.HomeViewModel
@@ -72,12 +74,13 @@ val appModule = module {
             get()
         )
     }
-    viewModel { RestaurantReviewListViewModel() }
+    viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
     single<MapRepository> { DefaultMapRepository(get(), get()) }
     single<UserRepository> { DefaultUserRepository(get(), get(), get()) }
     single<RestaurantFoodRepository> { DefaultRestaurantFoodRepository(get(), get(), get()) }
+    single<RestaurantReviewRepository> { DefaultRestaurantReviewRepository(get()) }
 
 }
