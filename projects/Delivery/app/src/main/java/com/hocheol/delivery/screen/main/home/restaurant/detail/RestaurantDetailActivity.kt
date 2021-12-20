@@ -23,6 +23,7 @@ import com.hocheol.delivery.screen.main.MainTabMenu
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListFragment
 import com.hocheol.delivery.screen.main.home.restaurant.detail.menu.RestaurantMenuListFragment
 import com.hocheol.delivery.screen.main.home.restaurant.detail.review.RestaurantReviewListFragment
+import com.hocheol.delivery.screen.order.OrderMenuListActivity
 import com.hocheol.delivery.util.event.MenuChangeEventBus
 import com.hocheol.delivery.widget.adapter.RestaurantDetailListFragmentPagerAdapter
 import kotlinx.coroutines.launch
@@ -198,7 +199,9 @@ class RestaurantDetailActivity : BaseActivity<RestaurantDetailViewModel, Activit
                     }
                 }
             } else {
-
+                startActivity(
+                    OrderMenuListActivity.newInstance(this@RestaurantDetailActivity)
+                )
             }
         }
     }

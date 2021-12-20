@@ -6,7 +6,7 @@ import com.hocheol.delivery.model.Model
 
 data class FoodModel(
     override val id: Long,
-    override val type: CellType = CellType.FOOD_CELL,
+    override var type: CellType = CellType.FOOD_CELL,
     val title: String,
     val description: String,
     val price: Int,

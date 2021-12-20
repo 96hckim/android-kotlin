@@ -24,6 +24,7 @@ import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListFragment
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantOrder
 import com.hocheol.delivery.screen.mylocation.MyLocationActivity
+import com.hocheol.delivery.screen.order.OrderMenuListActivity
 import com.hocheol.delivery.widget.adapter.RestaurantListFragmentPagerAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -189,7 +190,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                             (requireActivity() as MainActivity).goToTab(MainTabMenu.MY)
                         }
                     } else {
-
+                        startActivity(
+                            OrderMenuListActivity.newInstance(requireContext())
+                        )
                     }
                 }
             } else {

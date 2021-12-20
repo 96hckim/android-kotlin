@@ -10,6 +10,7 @@ import com.hocheol.delivery.util.provider.ResourcesProvider
 import com.hocheol.delivery.widget.adapter.viewholder.EmptyViewHolder
 import com.hocheol.delivery.widget.adapter.viewholder.ModelViewHolder
 import com.hocheol.delivery.widget.adapter.viewholder.food.FoodMenuViewHolder
+import com.hocheol.delivery.widget.adapter.viewholder.order.OrderMenuViewHolder
 import com.hocheol.delivery.widget.adapter.viewholder.restaurant.LikeRestaurantViewHolder
 import com.hocheol.delivery.widget.adapter.viewholder.restaurant.RestaurantViewHolder
 import com.hocheol.delivery.widget.adapter.viewholder.review.RestaurantReviewViewHolder
@@ -48,6 +49,11 @@ object ModelViewHolderMapper {
             )
             CellType.REVIEW_CELL -> RestaurantReviewViewHolder(
                 ViewholderRestaurantReviewBinding.inflate(inflater, parent, false),
+                viewModel,
+                resourcesProvider
+            )
+            CellType.ORDER_FOOD_CELL -> OrderMenuViewHolder(
+                ViewholderOrderMenuBinding.inflate(inflater, parent, false),
                 viewModel,
                 resourcesProvider
             )
