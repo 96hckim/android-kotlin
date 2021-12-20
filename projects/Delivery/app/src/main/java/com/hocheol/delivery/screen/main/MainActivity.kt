@@ -8,6 +8,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.hocheol.delivery.R
 import com.hocheol.delivery.databinding.ActivityMainBinding
 import com.hocheol.delivery.screen.main.home.HomeFragment
+import com.hocheol.delivery.screen.main.like.RestaurantLikeListFragment
 import com.hocheol.delivery.screen.main.my.MyFragment
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         return when (item.itemId) {
             R.id.menu_home -> {
                 showFragment(HomeFragment.newInstance(), HomeFragment.TAG)
+                true
+            }
+            R.id.menu_like -> {
+                showFragment(RestaurantLikeListFragment.newInstance(), RestaurantLikeListFragment.TAG)
                 true
             }
             R.id.menu_my -> {

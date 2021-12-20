@@ -26,8 +26,8 @@ class RestaurantReviewListFragment : BaseFragment<RestaurantReviewListViewModel,
         ModelRecyclerAdapter<RestaurantReviewModel, RestaurantReviewListViewModel>(
             modelList = listOf(),
             viewModel = viewModel,
-            adapterListener = object : AdapterListener {},
-            resourcesProvider = resourcesProvider
+            resourcesProvider = resourcesProvider,
+            adapterListener = object : AdapterListener {}
         )
     }
 

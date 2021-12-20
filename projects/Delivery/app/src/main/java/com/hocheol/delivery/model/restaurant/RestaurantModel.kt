@@ -7,7 +7,7 @@ import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 
 data class RestaurantModel(
     override val id: Long,
-    override val type: CellType = CellType.RESTAURANT_CELL,
+    override var type: CellType = CellType.RESTAURANT_CELL,
     val restaurantInfoId: Long,
     val restaurantCategory: RestaurantCategory,
     val restaurantTitle: String,

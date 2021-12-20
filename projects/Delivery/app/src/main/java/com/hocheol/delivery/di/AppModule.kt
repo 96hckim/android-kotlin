@@ -21,6 +21,7 @@ import com.hocheol.delivery.screen.main.home.restaurant.RestaurantListViewModel
 import com.hocheol.delivery.screen.main.home.restaurant.detail.RestaurantDetailViewModel
 import com.hocheol.delivery.screen.main.home.restaurant.detail.menu.RestaurantMenuListViewModel
 import com.hocheol.delivery.screen.main.home.restaurant.detail.review.RestaurantReviewListViewModel
+import com.hocheol.delivery.screen.main.like.RestaurantLikeListViewModel
 import com.hocheol.delivery.screen.main.my.MyViewModel
 import com.hocheol.delivery.screen.mylocation.MyLocationViewModel
 import com.hocheol.delivery.util.provider.DefaultResourcesProvider
@@ -79,6 +80,7 @@ val appModule = module {
         )
     }
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
+    viewModel { RestaurantLikeListViewModel(get()) }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }

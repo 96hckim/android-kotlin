@@ -36,14 +36,14 @@ class RestaurantMenuListFragment : BaseFragment<RestaurantMenuListViewModel, Fra
         ModelRecyclerAdapter<FoodModel, RestaurantMenuListViewModel>(
             modelList = listOf(),
             viewModel = viewModel,
+            resourcesProvider = resourcesProvider,
             adapterListener = object : FoodMenuListListener {
 
                 override fun onClickItem(model: FoodModel) {
                     viewModel.insertMenuInBasket(model)
                 }
 
-            },
-            resourcesProvider = resourcesProvider
+            }
         )
     }
 

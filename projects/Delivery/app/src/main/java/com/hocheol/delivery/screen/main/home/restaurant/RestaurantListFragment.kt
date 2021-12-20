@@ -33,6 +33,7 @@ class RestaurantListFragment : BaseFragment<RestaurantListViewModel, FragmentRes
         ModelRecyclerAdapter<RestaurantModel, RestaurantListViewModel>(
             modelList = listOf(),
             viewModel = viewModel,
+            resourcesProvider = resourcesProvider,
             adapterListener = object : RestaurantListListener {
 
                 override fun onClickItem(model: RestaurantModel) {
@@ -44,8 +45,7 @@ class RestaurantListFragment : BaseFragment<RestaurantListViewModel, FragmentRes
                     )
                 }
 
-            },
-            resourcesProvider = resourcesProvider
+            }
         )
     }
 
