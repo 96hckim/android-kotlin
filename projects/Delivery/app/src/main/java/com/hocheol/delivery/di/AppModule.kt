@@ -4,6 +4,7 @@ import com.hocheol.delivery.data.entity.LocationLatLngEntity
 import com.hocheol.delivery.data.entity.MapSearchInfoEntity
 import com.hocheol.delivery.data.entity.RestaurantEntity
 import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.preference.AppPreferenceManager
 import com.hocheol.delivery.data.repository.map.DefaultMapRepository
 import com.hocheol.delivery.data.repository.map.MapRepository
 import com.hocheol.delivery.data.repository.restaurant.DefaultRestaurantRepository
@@ -39,6 +40,9 @@ val appModule = module {
     // ResourcesProvider
     single<ResourcesProvider> { DefaultResourcesProvider(androidApplication()) }
 
+    // Preference
+    single { AppPreferenceManager(androidApplication()) }
+
     // DB
     single { provideDB(androidApplication()) }
     single { provideLocationDao(get()) }
@@ -57,7 +61,7 @@ val appModule = module {
 
     // ViewModels
     viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { MyViewModel() }
+    viewModel { MyViewModel(get()) }
     viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) ->
         RestaurantListViewModel(
             restaurantCategory,
