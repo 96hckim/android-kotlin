@@ -31,6 +31,8 @@ import com.hocheol.delivery.screen.main.like.RestaurantLikeListViewModel
 import com.hocheol.delivery.screen.main.my.MyViewModel
 import com.hocheol.delivery.screen.mylocation.MyLocationViewModel
 import com.hocheol.delivery.screen.order.OrderMenuListViewModel
+import com.hocheol.delivery.screen.review.gallery.GalleryPhotoRepository
+import com.hocheol.delivery.screen.review.gallery.GalleryViewModel
 import com.hocheol.delivery.util.event.MenuChangeEventBus
 import com.hocheol.delivery.util.provider.DefaultResourcesProvider
 import com.hocheol.delivery.util.provider.ResourcesProvider
@@ -98,6 +100,7 @@ val appModule = module {
     viewModel { (restaurantTitle: String) -> RestaurantReviewListViewModel(restaurantTitle, get()) }
     viewModel { RestaurantLikeListViewModel(get()) }
     viewModel { OrderMenuListViewModel(get(), get(), get()) }
+    viewModel { GalleryViewModel(get()) }
 
     // Repositories
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get()) }
@@ -106,5 +109,6 @@ val appModule = module {
     single<RestaurantFoodRepository> { DefaultRestaurantFoodRepository(get(), get(), get()) }
     single<RestaurantReviewRepository> { DefaultRestaurantReviewRepository(get()) }
     single<OrderRepository> { DefaultOrderRepository(get(), get()) }
+    single { GalleryPhotoRepository(androidApplication()) }
 
 }
