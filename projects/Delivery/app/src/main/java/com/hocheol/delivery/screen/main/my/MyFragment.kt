@@ -94,6 +94,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
         loginRequiredGroup.visibility = View.GONE
         profileImageView.load(state.profileImageUri.toString(), 60f)
         userNameTextView.text = state.userName
+        Toast.makeText(requireContext(), state.orderList.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun handleLogin(state: MyState.Login) {
@@ -112,7 +113,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
     }
 
     private fun handleError(state: MyState.Error) {
-        Toast.makeText(requireContext(), state.messageId, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(state.messageId, state.e), Toast.LENGTH_SHORT).show()
     }
 
     companion object {
