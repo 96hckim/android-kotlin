@@ -1,8 +1,9 @@
 package com.hocheol.delivery.screen.main.home.restaurant.detail.review
 
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.hocheol.delivery.databinding.FragmentRestaurantListBinding
-import com.hocheol.delivery.model.restaurant.review.RestaurantReviewModel
+import com.hocheol.delivery.model.restaurant.review.ReviewModel
 import com.hocheol.delivery.screen.base.BaseFragment
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import com.hocheol.delivery.widget.adapter.ModelRecyclerAdapter
@@ -23,7 +24,7 @@ class RestaurantReviewListFragment : BaseFragment<RestaurantReviewListViewModel,
     private val resourcesProvider by inject<ResourcesProvider>()
 
     private val adapter by lazy {
-        ModelRecyclerAdapter<RestaurantReviewModel, RestaurantReviewListViewModel>(
+        ModelRecyclerAdapter<ReviewModel, RestaurantReviewListViewModel>(
             modelList = listOf(),
             viewModel = viewModel,
             resourcesProvider = resourcesProvider,
@@ -40,12 +41,19 @@ class RestaurantReviewListFragment : BaseFragment<RestaurantReviewListViewModel,
             is RestaurantReviewState.Success -> {
                 handleSuccess(it)
             }
+            is RestaurantReviewState.Error -> {
+                handleError(it)
+            }
             else -> Unit
         }
     }
 
     private fun handleSuccess(state: RestaurantReviewState.Success) {
         adapter.submitList(state.reviewList)
+    }
+
+    private fun handleError(state: RestaurantReviewState.Error) {
+        Toast.makeText(requireContext(), getString(state.messageId, state.e), Toast.LENGTH_SHORT).show()
     }
 
     companion object {
