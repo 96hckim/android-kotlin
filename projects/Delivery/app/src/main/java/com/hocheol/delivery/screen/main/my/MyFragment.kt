@@ -14,9 +14,10 @@ import com.hocheol.delivery.databinding.FragmentMyBinding
 import com.hocheol.delivery.extensions.load
 import com.hocheol.delivery.model.restaurant.order.OrderModel
 import com.hocheol.delivery.screen.base.BaseFragment
+import com.hocheol.delivery.screen.review.AddRestaurantReviewActivity
 import com.hocheol.delivery.util.provider.ResourcesProvider
 import com.hocheol.delivery.widget.adapter.ModelRecyclerAdapter
-import com.hocheol.delivery.widget.adapter.listener.AdapterListener
+import com.hocheol.delivery.widget.adapter.listener.order.OrderListListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,7 +34,15 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
             modelList = listOf(),
             viewModel = viewModel,
             resourcesProvider = resourcesProvider,
-            adapterListener = object : AdapterListener {}
+            adapterListener = object : OrderListListener {
+
+                override fun writeRestaurantReview(orderId: String, restaurantTitle: String) {
+                    startActivity(
+                        AddRestaurantReviewActivity.newIntent(requireContext(), orderId, restaurantTitle)
+                    )
+                }
+
+            }
         )
     }
 

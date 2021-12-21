@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
         android:name=".DeliveryApplication"
@@ -37,6 +40,11 @@
         <activity
             android:name=".screen.order.OrderMenuListActivity"
             android:exported="false" />
+        <activity android:name=".screen.review.AddRestaurantReviewActivity" />
+        <activity android:name=".screen.review.gallery.GalleryActivity" />
+        <activity android:name=".screen.review.camera.CameraActivity" />
+        <activity android:name=".screen.review.camera.preview.ImagePreviewListActivity" />
+
     </application>
 
 </manifest>

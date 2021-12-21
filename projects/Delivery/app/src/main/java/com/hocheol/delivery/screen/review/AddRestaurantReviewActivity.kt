@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.hocheol.delivery.data.entity.review.ReviewEntity
 import com.hocheol.delivery.databinding.ActivityAddRestaurantReviewBinding
+import com.hocheol.delivery.screen.review.camera.CameraActivity
+import com.hocheol.delivery.screen.review.gallery.GalleryActivity
 import com.hocheol.delivery.widget.adapter.PhotoListAdapter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -38,6 +41,7 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
     private val orderId by lazy { intent.getStringExtra(ORDER_ID_KEY)!! }
 
     companion object {
+
         fun newIntent(
             context: Context,
             orderId: String,
@@ -48,14 +52,49 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
         }
 
         const val PERMISSION_REQUEST_CODE = 1000
-        const val GALLERY_REQUEST_CODE = 1001
-        const val CAMERA_REQUEST_CODE = 1002
 
         const val ORDER_ID_KEY = "orderId"
         const val RESTAURANT_TITLE_KEY = "restaurantTitle"
+
     }
 
     private lateinit var binding: ActivityAddRestaurantReviewBinding
+
+    private var galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            result.data?.let {
+                val uriList = it.getParcelableArrayListExtra<Uri>("uriList")
+                uriList?.let { list ->
+                    imageUriList.addAll(list)
+                    photoListAdapter.setPhotoList(imageUriList)
+                }
+            } ?: kotlin.run {
+                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+    }
+
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            result.data?.let {
+                val uriList = it.getParcelableArrayListExtra<Uri>("uriList")
+                uriList?.let { list ->
+                    imageUriList.addAll(list)
+                    photoListAdapter.setPhotoList(imageUriList)
+                }
+            } ?: kotlin.run {
+                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +132,7 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
                     afterUploadPhoto(results, title, content, rating, userId)
                 }
             } else {
-                uploadArticle(userId, title, content, rating, listOf())
+                uploadReview(userId, title, content, rating, listOf())
             }
         }
     }
@@ -116,6 +155,7 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
                 }
             }
         }
+
         return@withContext uploadDeferred.awaitAll()
     }
 
@@ -131,12 +171,12 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
                 uploadError()
             }
             else -> {
-                uploadArticle(userId, title, content, rating, successResults)
+                uploadReview(userId, title, content, rating, successResults)
             }
         }
     }
 
-    private fun uploadArticle(userId: String, title: String, content: String, rating: Float, imageUrlList: List<String>) {
+    private fun uploadReview(userId: String, title: String, content: String, rating: Float, imageUrlList: List<String>) {
         val reviewEntity = ReviewEntity(userId, title, System.currentTimeMillis(), content, rating, imageUrlList, orderId, restaurantTitle)
         firestore
             .collection("review")
@@ -160,15 +200,12 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
     }
 
     private fun startGalleryScreen() {
-        startActivityForResult(
-            GalleryActivity.newIntent(this),
-            GALLERY_REQUEST_CODE
-        )
+        galleryLauncher.launch(GalleryActivity.newIntent(this))
     }
 
     private fun startCameraScreen() {
         val intent = Intent(this, CameraActivity::class.java)
-        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+        cameraLauncher.launch(intent)
     }
 
     private fun showProgress() {
@@ -177,42 +214,6 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
 
     private fun hideProgress() {
         binding.progressBar.visibility = View.GONE
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-
-        when (requestCode) {
-            GALLERY_REQUEST_CODE -> {
-                data?.let {
-                    val uriList = it.getParcelableArrayListExtra<Uri>("uriList")
-                    uriList?.let { list ->
-                        imageUriList.addAll(list)
-                        photoListAdapter.setPhotoList(imageUriList)
-                    }
-                } ?: kotlin.run {
-                    Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            CAMERA_REQUEST_CODE -> {
-                data?.let {
-                    val uriList = it.getParcelableArrayListExtra<Uri>("uriList")
-                    uriList?.let { list ->
-                        imageUriList.addAll(list)
-                        photoListAdapter.setPhotoList(imageUriList)
-                    }
-                } ?: kotlin.run {
-                    Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else -> {
-                Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun showPictureUploadDialog() {
@@ -276,7 +277,7 @@ class AddRestaurantReviewActivity : AppCompatActivity() {
                 "$uri\n"
             } + "그럼에도 불구하고 업로드 하시겠습니까?")
             .setPositiveButton("업로드") { _, _ ->
-                uploadArticle(userId, title, content, rating, successResults)
+                uploadReview(userId, title, content, rating, successResults)
             }
             .create()
             .show()
