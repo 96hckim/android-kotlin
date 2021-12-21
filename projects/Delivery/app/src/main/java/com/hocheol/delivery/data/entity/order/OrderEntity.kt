@@ -1,12 +1,14 @@
-package com.hocheol.delivery.data.entity
+package com.hocheol.delivery.data.entity.order
 
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import com.hocheol.delivery.model.restaurant.order.OrderModel
 
 data class OrderEntity(
     val id: String,
     val userId: String,
     val restaurantId: Long,
-    val foodMenuList: List<RestaurantFoodEntity>
+    val foodMenuList: List<RestaurantFoodEntity>,
+    val restaurantTitle: String
 ) {
 
     fun toModel() = OrderModel(
@@ -14,7 +16,8 @@ data class OrderEntity(
         orderId = id,
         userId = userId,
         restaurantId = restaurantId,
-        foodMenuList = foodMenuList
+        foodMenuList = foodMenuList,
+        restaurantTitle = restaurantTitle
     )
 
 }

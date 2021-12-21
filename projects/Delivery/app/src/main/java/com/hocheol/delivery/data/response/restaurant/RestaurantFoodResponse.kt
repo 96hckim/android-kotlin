@@ -1,6 +1,6 @@
 package com.hocheol.delivery.data.response.restaurant
 
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 
 data class RestaurantFoodResponse(
     val id: String,
@@ -10,13 +10,14 @@ data class RestaurantFoodResponse(
     val imageUrl: String
 ) {
 
-    fun toEntity(restaurantId: Long) = RestaurantFoodEntity(
+    fun toEntity(restaurantId: Long, restaurantTitle: String) = RestaurantFoodEntity(
         id,
         title,
         description,
         price.toDouble().toInt(),
         imageUrl,
-        restaurantId
+        restaurantId,
+        restaurantTitle
     )
 
 }

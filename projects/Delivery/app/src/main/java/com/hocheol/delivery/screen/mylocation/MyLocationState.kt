@@ -1,7 +1,7 @@
 package com.hocheol.delivery.screen.mylocation
 
 import androidx.annotation.StringRes
-import com.hocheol.delivery.data.entity.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.location.MapSearchInfoEntity
 
 sealed class MyLocationState {
 

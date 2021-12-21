@@ -13,8 +13,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.hocheol.delivery.R
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.location.MapSearchInfoEntity
 import com.hocheol.delivery.databinding.ActivityMyLocationBinding
 import com.hocheol.delivery.screen.base.BaseActivity
 import com.hocheol.delivery.screen.main.home.HomeViewModel

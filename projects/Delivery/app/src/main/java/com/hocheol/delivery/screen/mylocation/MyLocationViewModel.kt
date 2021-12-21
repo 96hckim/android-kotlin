@@ -3,8 +3,8 @@ package com.hocheol.delivery.screen.mylocation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hocheol.delivery.R
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.location.MapSearchInfoEntity
 import com.hocheol.delivery.data.repository.map.MapRepository
 import com.hocheol.delivery.data.repository.user.UserRepository
 import com.hocheol.delivery.screen.base.BaseViewModel

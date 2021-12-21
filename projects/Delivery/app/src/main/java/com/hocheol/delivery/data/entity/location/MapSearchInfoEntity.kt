@@ -1,4 +1,4 @@
-package com.hocheol.delivery.data.entity
+package com.hocheol.delivery.data.entity.location
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

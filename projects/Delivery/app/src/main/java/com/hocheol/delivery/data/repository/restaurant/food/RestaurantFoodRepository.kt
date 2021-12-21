@@ -1,10 +1,10 @@
 package com.hocheol.delivery.data.repository.restaurant.food
 
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 
 interface RestaurantFoodRepository {
 
-    suspend fun getFoods(restaurantId: Long): List<RestaurantFoodEntity>
+    suspend fun getFoods(restaurantId: Long, restaurantTitle: String): List<RestaurantFoodEntity>
 
     suspend fun getAllFoodMenuListInBasket(): List<RestaurantFoodEntity>
 

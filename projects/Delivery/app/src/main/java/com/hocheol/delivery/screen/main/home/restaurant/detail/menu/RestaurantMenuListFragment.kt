@@ -2,7 +2,7 @@ package com.hocheol.delivery.screen.main.home.restaurant.detail.menu
 
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import com.hocheol.delivery.databinding.FragmentRestaurantListBinding
 import com.hocheol.delivery.model.restaurant.food.FoodModel
 import com.hocheol.delivery.screen.base.BaseFragment

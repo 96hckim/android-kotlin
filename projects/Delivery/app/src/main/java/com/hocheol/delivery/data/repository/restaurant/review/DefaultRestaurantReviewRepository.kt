@@ -1,6 +1,6 @@
 package com.hocheol.delivery.data.repository.restaurant.review
 
-import com.hocheol.delivery.data.entity.RestaurantReviewEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantReviewEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

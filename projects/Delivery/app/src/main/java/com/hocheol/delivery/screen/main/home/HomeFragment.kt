@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.hocheol.delivery.R
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.location.MapSearchInfoEntity
 import com.hocheol.delivery.databinding.FragmentHomeBinding
 import com.hocheol.delivery.screen.base.BaseFragment
 import com.hocheol.delivery.screen.main.MainActivity
@@ -26,6 +26,7 @@ import com.hocheol.delivery.screen.main.home.restaurant.RestaurantOrder
 import com.hocheol.delivery.screen.mylocation.MyLocationActivity
 import com.hocheol.delivery.screen.order.OrderMenuListActivity
 import com.hocheol.delivery.widget.adapter.RestaurantListFragmentPagerAdapter
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
@@ -40,7 +41,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     private lateinit var myLocationListener: MyLocationListener
 
-    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val firebaseAuth by inject<FirebaseAuth>()
 
     private val changeLocationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

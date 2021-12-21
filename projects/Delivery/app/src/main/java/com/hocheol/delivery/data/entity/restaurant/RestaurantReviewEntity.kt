@@ -1,6 +1,7 @@
-package com.hocheol.delivery.data.entity
+package com.hocheol.delivery.data.entity.restaurant
 
 import android.net.Uri
+import com.hocheol.delivery.data.entity.Entity
 import com.hocheol.delivery.model.restaurant.review.RestaurantReviewModel
 
 data class RestaurantReviewEntity(

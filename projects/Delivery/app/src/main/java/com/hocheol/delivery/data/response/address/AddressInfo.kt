@@ -2,8 +2,8 @@ package com.hocheol.delivery.data.response.address
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.location.MapSearchInfoEntity
 
 data class AddressInfo(
     @SerializedName("fullAddress")

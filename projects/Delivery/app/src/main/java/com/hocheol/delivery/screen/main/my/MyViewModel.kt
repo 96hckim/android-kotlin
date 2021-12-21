@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.hocheol.delivery.R
-import com.hocheol.delivery.data.entity.OrderEntity
+import com.hocheol.delivery.data.entity.order.OrderEntity
 import com.hocheol.delivery.data.preference.AppPreferenceManager
 import com.hocheol.delivery.data.repository.order.DefaultOrderRepository
 import com.hocheol.delivery.data.repository.order.OrderRepository

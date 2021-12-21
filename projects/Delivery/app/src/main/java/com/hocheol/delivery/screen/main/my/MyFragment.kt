@@ -46,7 +46,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
 
     private val gsc by lazy { GoogleSignIn.getClient(requireContext(), gso) }
 
-    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val firebaseAuth by inject<FirebaseAuth>()
 
     private val loginLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -58,6 +58,17 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private var isFirstShown = false
+
+    override fun onResume() {
+        super.onResume()
+        if (isFirstShown.not()) {
+            isFirstShown = true
+        } else {
+            viewModel.fetchData()
         }
     }
 

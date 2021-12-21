@@ -1,7 +1,7 @@
 package com.hocheol.delivery.data.repository.user
 
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.RestaurantEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
 
 interface UserRepository {
 

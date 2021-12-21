@@ -15,10 +15,9 @@ import kotlinx.coroutines.launch
 
 class OrderMenuListViewModel(
     private val restaurantFoodRepository: RestaurantFoodRepository,
-    private val orderRepository: OrderRepository
+    private val orderRepository: OrderRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
-
-    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     val orderMenuStateLiveData = MutableLiveData<OrderMenuState>(OrderMenuState.UnInitialized)
 
@@ -38,8 +37,9 @@ class OrderMenuListViewModel(
         val foodMenuList = restaurantFoodRepository.getAllFoodMenuListInBasket()
         if (foodMenuList.isNotEmpty()) {
             val restaurantId = foodMenuList.first().restaurantId
+            val restaurantTitle = foodMenuList.first().restaurantTitle
             firebaseAuth.currentUser?.let { user ->
-                when (val data = orderRepository.orderMenu(user.uid, restaurantId, foodMenuList)) {
+                when (val data = orderRepository.orderMenu(user.uid, restaurantId, foodMenuList, restaurantTitle)) {
                     is DefaultOrderRepository.Result.Success<*> -> {
                         restaurantFoodRepository.clearFoodMenuListInBasket()
                         orderMenuStateLiveData.value = OrderMenuState.Order

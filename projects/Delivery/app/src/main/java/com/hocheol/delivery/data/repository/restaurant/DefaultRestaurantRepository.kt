@@ -1,7 +1,7 @@
 package com.hocheol.delivery.data.repository.restaurant
 
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.RestaurantEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
 import com.hocheol.delivery.data.network.MapApiService
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory
 import com.hocheol.delivery.util.provider.ResourcesProvider

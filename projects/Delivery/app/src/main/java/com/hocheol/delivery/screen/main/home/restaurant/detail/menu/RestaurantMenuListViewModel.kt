@@ -2,7 +2,7 @@ package com.hocheol.delivery.screen.main.home.restaurant.detail.menu
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import com.hocheol.delivery.data.repository.restaurant.food.RestaurantFoodRepository
 import com.hocheol.delivery.model.restaurant.food.FoodModel
 import com.hocheol.delivery.screen.base.BaseViewModel

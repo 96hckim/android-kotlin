@@ -1,7 +1,8 @@
-package com.hocheol.delivery.data.entity
+package com.hocheol.delivery.data.entity.location
 
 import android.os.Parcelable
 import androidx.room.PrimaryKey
+import com.hocheol.delivery.data.entity.Entity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

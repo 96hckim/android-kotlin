@@ -3,9 +3,9 @@ package com.hocheol.delivery.screen.main.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hocheol.delivery.R
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.MapSearchInfoEntity
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.location.MapSearchInfoEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import com.hocheol.delivery.data.repository.map.MapRepository
 import com.hocheol.delivery.data.repository.restaurant.food.RestaurantFoodRepository
 import com.hocheol.delivery.data.repository.user.UserRepository

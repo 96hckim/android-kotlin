@@ -1,4 +1,4 @@
-package com.hocheol.delivery.data.entity
+package com.hocheol.delivery.data.entity.restaurant
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -14,7 +14,8 @@ data class RestaurantFoodEntity(
     val description: String,
     val price: Int,
     val imageUrl: String,
-    val restaurantId: Long
+    val restaurantId: Long,
+    val restaurantTitle: String
 ) : Parcelable {
 
     fun toModel() = FoodModel(
@@ -24,7 +25,8 @@ data class RestaurantFoodEntity(
         price = price,
         imageUrl = imageUrl,
         restaurantId = restaurantId,
-        foodId = id
+        foodId = id,
+        restaurantTitle = restaurantTitle
     )
 
 }

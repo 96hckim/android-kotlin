@@ -1,7 +1,7 @@
 package com.hocheol.delivery.data.repository.restaurant.food
 
 import com.hocheol.delivery.data.db.dao.FoodMenuBasketDao
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import com.hocheol.delivery.data.network.FoodApiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -12,11 +12,11 @@ class DefaultRestaurantFoodRepository(
     private val ioDispatcher: CoroutineDispatcher
 ) : RestaurantFoodRepository {
 
-    override suspend fun getFoods(restaurantId: Long): List<RestaurantFoodEntity> = withContext(ioDispatcher) {
+    override suspend fun getFoods(restaurantId: Long, restaurantTitle: String): List<RestaurantFoodEntity> = withContext(ioDispatcher) {
         val response = foodApiService.getRestaurantFoods(restaurantId)
 
         if (response.isSuccessful) {
-            response.body()?.map { it.toEntity(restaurantId) } ?: listOf()
+            response.body()?.map { it.toEntity(restaurantId, restaurantTitle) } ?: listOf()
         } else {
             listOf()
         }

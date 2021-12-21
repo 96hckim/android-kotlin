@@ -2,7 +2,7 @@ package com.hocheol.delivery.screen.main.like
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hocheol.delivery.data.entity.RestaurantEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
 import com.hocheol.delivery.data.repository.user.UserRepository
 import com.hocheol.delivery.model.CellType
 import com.hocheol.delivery.model.restaurant.RestaurantModel

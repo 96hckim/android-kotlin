@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.hocheol.delivery.data.entity.RestaurantEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
 
 @Dao
 interface RestaurantDao {

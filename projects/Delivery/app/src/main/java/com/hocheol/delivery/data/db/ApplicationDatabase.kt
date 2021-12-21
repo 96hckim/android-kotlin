@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import com.hocheol.delivery.data.db.dao.FoodMenuBasketDao
 import com.hocheol.delivery.data.db.dao.LocationDao
 import com.hocheol.delivery.data.db.dao.RestaurantDao
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.RestaurantEntity
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 
 @Database(
     entities = [LocationLatLngEntity::class, RestaurantEntity::class, RestaurantFoodEntity::class],

@@ -2,8 +2,8 @@ package com.hocheol.delivery.data.repository.order
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.hocheol.delivery.data.entity.OrderEntity
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.order.OrderEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -16,12 +16,14 @@ class DefaultOrderRepository(
     override suspend fun orderMenu(
         userId: String,
         restaurantId: Long,
-        foodMenuList: List<RestaurantFoodEntity>
+        foodMenuList: List<RestaurantFoodEntity>,
+        restaurantTitle: String
     ): Result = withContext(ioDispatcher) {
         val orderMenuData = hashMapOf(
             "userId" to userId,
             "restaurantId" to restaurantId,
-            "orderMenuList" to foodMenuList
+            "orderMenuList" to foodMenuList,
+            "restaurantTitle" to restaurantTitle
         )
 
         val result: Result = try {
@@ -57,9 +59,11 @@ class DefaultOrderRepository(
                             description = food["description"] as String,
                             price = (food["price"] as Long).toInt(),
                             imageUrl = food["imageUrl"] as String,
-                            restaurantId = food["restaurantId"] as Long
+                            restaurantId = food["restaurantId"] as Long,
+                            it.get("restaurantTitle") as String
                         )
-                    }
+                    },
+                    restaurantTitle = it.get("restaurantTitle") as String
                 )
             })
         } catch (e: Exception) {

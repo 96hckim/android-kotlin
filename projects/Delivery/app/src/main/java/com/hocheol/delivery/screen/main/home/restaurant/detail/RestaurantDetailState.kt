@@ -1,7 +1,7 @@
 package com.hocheol.delivery.screen.main.home.restaurant.detail
 
-import com.hocheol.delivery.data.entity.RestaurantEntity
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 
 sealed class RestaurantDetailState {
 

@@ -13,8 +13,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.hocheol.delivery.R
-import com.hocheol.delivery.data.entity.RestaurantEntity
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 import com.hocheol.delivery.databinding.ActivityRestaurantDetailBinding
 import com.hocheol.delivery.extensions.fromDpToPx
 import com.hocheol.delivery.extensions.load
@@ -45,7 +45,7 @@ class RestaurantDetailActivity : BaseActivity<RestaurantDetailViewModel, Activit
 
     private lateinit var viewPagerAdapter: RestaurantDetailListFragmentPagerAdapter
 
-    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val firebaseAuth by inject<FirebaseAuth>()
 
     private val menuChangeEventBus by inject<MenuChangeEventBus>()
 

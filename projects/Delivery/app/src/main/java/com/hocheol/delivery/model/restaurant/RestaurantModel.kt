@@ -1,6 +1,6 @@
 package com.hocheol.delivery.model.restaurant
 
-import com.hocheol.delivery.data.entity.RestaurantEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
 import com.hocheol.delivery.model.CellType
 import com.hocheol.delivery.model.Model
 import com.hocheol.delivery.screen.main.home.restaurant.RestaurantCategory

@@ -1,13 +1,14 @@
 package com.hocheol.delivery.data.repository.order
 
-import com.hocheol.delivery.data.entity.RestaurantFoodEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantFoodEntity
 
 interface OrderRepository {
 
     suspend fun orderMenu(
         userId: String,
         restaurantId: Long,
-        foodMenuList: List<RestaurantFoodEntity>
+        foodMenuList: List<RestaurantFoodEntity>,
+        restaurantTitle: String
     ): DefaultOrderRepository.Result
 
     suspend fun getAllOrderMenus(

@@ -2,8 +2,8 @@ package com.hocheol.delivery.data.repository.user
 
 import com.hocheol.delivery.data.db.dao.LocationDao
 import com.hocheol.delivery.data.db.dao.RestaurantDao
-import com.hocheol.delivery.data.entity.LocationLatLngEntity
-import com.hocheol.delivery.data.entity.RestaurantEntity
+import com.hocheol.delivery.data.entity.location.LocationLatLngEntity
+import com.hocheol.delivery.data.entity.restaurant.RestaurantEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
