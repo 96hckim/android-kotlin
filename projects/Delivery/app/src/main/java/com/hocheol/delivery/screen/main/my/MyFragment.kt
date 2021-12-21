@@ -12,7 +12,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.hocheol.delivery.R
 import com.hocheol.delivery.databinding.FragmentMyBinding
 import com.hocheol.delivery.extensions.load
+import com.hocheol.delivery.model.restaurant.order.OrderModel
 import com.hocheol.delivery.screen.base.BaseFragment
+import com.hocheol.delivery.util.provider.ResourcesProvider
+import com.hocheol.delivery.widget.adapter.ModelRecyclerAdapter
+import com.hocheol.delivery.widget.adapter.listener.AdapterListener
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
@@ -20,6 +25,17 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
     override val viewModel by viewModel<MyViewModel>()
 
     override fun getViewBinding(): FragmentMyBinding = FragmentMyBinding.inflate(layoutInflater)
+
+    private val resourcesProvider by inject<ResourcesProvider>()
+
+    private val adapter by lazy {
+        ModelRecyclerAdapter<OrderModel, MyViewModel>(
+            modelList = listOf(),
+            viewModel = viewModel,
+            resourcesProvider = resourcesProvider,
+            adapterListener = object : AdapterListener {}
+        )
+    }
 
     private val gso: GoogleSignInOptions by lazy {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -54,6 +70,8 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
             firebaseAuth.signOut()
             viewModel.signOut()
         }
+
+        recyclerView.adapter = adapter
     }
 
     private fun signInGoogle() {
@@ -94,7 +112,7 @@ class MyFragment : BaseFragment<MyViewModel, FragmentMyBinding>() {
         loginRequiredGroup.visibility = View.GONE
         profileImageView.load(state.profileImageUri.toString(), 60f)
         userNameTextView.text = state.userName
-        Toast.makeText(requireContext(), state.orderList.toString(), Toast.LENGTH_SHORT).show()
+        adapter.submitList(state.orderList)
     }
 
     private fun handleLogin(state: MyState.Login) {

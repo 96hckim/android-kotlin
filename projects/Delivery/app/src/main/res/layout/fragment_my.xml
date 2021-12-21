@@ -56,7 +56,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userNameTextView"
-        tools:itemCount="10" />
+        tools:itemCount="10"
+        tools:listitem="@layout/viewholder_order" />
 
     <TextView
         android:id="@+id/emptyResultTextView"

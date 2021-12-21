@@ -47,7 +47,7 @@ class MyViewModel(
                     myStateLiveData.value = MyState.Success.Registered(
                         userName = user.displayName ?: "익명",
                         profileImageUri = user.photoUrl,
-                        orderList = orderList
+                        orderList = orderList.map { it.toModel() }
                     )
                 }
                 is DefaultOrderRepository.Result.Error -> {

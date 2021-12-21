@@ -44,6 +44,7 @@ class DefaultOrderRepository(
                 .whereEqualTo("userId", userId)
                 .get()
                 .await()
+
             Result.Success(result.documents.map {
                 OrderEntity(
                     id = it.id,
