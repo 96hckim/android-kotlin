@@ -30,6 +30,6 @@
 26. 식당 상세 > 리뷰 리스트 화면
 
 # Preview
-1. 메인화면 > 홈탭(식당 리스트) | 2. 위치 변경 화면 | 3. 정렬 기능
-:---: | :---: | :---:
-![1  메인화면  홈탭(식당 리스트)](https://user-images.githubusercontent.com/74343321/147190172-071d3789-35d3-40cd-b346-3bd73405011e.png) | ![2  위치 변경 화면](https://user-images.githubusercontent.com/74343321/147190173-5b9ef5b8-38a2-4387-b1e2-5f7574f974df.png) | ![3  정렬 기능](https://user-images.githubusercontent.com/74343321/147190170-9ec9e0da-3da4-4e07-a914-148beedee08f.png)
+| 1. 메인화면 > 홈탭(식당 리스트) | 2. 위치 변경 화면 | 3. 정렬 기능 |
+| :---: | :---: | :---: |
+| ![1  메인화면  홈탭(식당 리스트)](https://user-images.githubusercontent.com/74343321/147190172-071d3789-35d3-40cd-b346-3bd73405011e.png) | ![2  위치 변경 화면](https://user-images.githubusercontent.com/74343321/147190173-5b9ef5b8-38a2-4387-b1e2-5f7574f974df.png) | ![3  정렬 기능](https://user-images.githubusercontent.com/74343321/147190170-9ec9e0da-3da4-4e07-a914-148beedee08f.png) |
