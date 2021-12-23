@@ -59,3 +59,33 @@
 | 22. 카메라 > 사진 미리보기 | 23. 리뷰 글 쓰기 화면 - 사진 첨부 후 | 24. 식당 상세 > 리뷰 리스트 화면 |
 | :---: | :---: | :---: |
 | ![22  카메라  사진 미리보기](https://user-images.githubusercontent.com/74343321/147191959-1b3a82ce-7948-4e52-ba5d-b82f716da3e0.png) | ![23  리뷰 글 쓰기 화면 - 사진 첨부 후](https://user-images.githubusercontent.com/74343321/147191964-fcb9ea79-8834-4a7a-91a3-1929e459f306.png) | ![24  식당 상세 리뷰 리스트 화면](https://user-images.githubusercontent.com/74343321/147191966-847c4178-ac9e-446a-a117-bf214454a173.png) |
+
+# Skill
+ * Architecture
+   * AAC-VM
+   * Clean Architecture
+ * Presentation Layer
+   * Activity
+   * Fragment
+   * ViewModel
+   * LiveData
+   * GOF State Pattern
+ * Repository Layer
+   * Remote Data Source(Retrofit2)
+   * Local Data Source(Room)
+ * Unit Test
+   * JUnit4
+   * Mockito
+   * Koin-Test
+ * Common
+   * Coroutines
+   * Android X
+   * Koin (for Light-Weight DI)
+   * View-Binding
+ * Third-Party Library
+   * Glide, Glide-Transformation
+   * Retrofit2
+   * OkHttp3
+   * CameraX
+   * Google Maps, Location
+   * Firebase Auth, Cloud Storage
