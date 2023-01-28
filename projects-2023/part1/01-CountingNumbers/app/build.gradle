@@ -32,8 +32,18 @@ android {
     }
 }
 
-dependencies {
+configurations {
+    ktlint
+    detekt
+}
 
+dependencies {
+    ktlint("com.pinterest:ktlint:0.48.2") {
+        attributes {
+            attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
+        }
+    }
+    detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.22.0'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'com.google.android.material:material:1.7.0'
@@ -41,4 +51,33 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args "src/**/*.kt"
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args "-F", "src/**/*.kt"
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+}
+
+task detekt(type: JavaExec) {
+    mainClass.set("io.gitlab.arturbosch.detekt.cli.Main")
+    classpath = configurations.detekt
+
+    def input = "$projectDir"
+    def config = "$rootDir/detekt.yml"
+    def exclude = ".*/build/.*,.*/resources/.*"
+    def params = ['-i', input, '-c', config, '-ex', exclude]
+
+    args(params)
 }

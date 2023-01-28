@@ -6,24 +6,42 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+
+    private val numberTextView by lazy { findViewById<TextView>(R.id.numberTextView) }
+    private val resetButton by lazy { findViewById<Button>(R.id.resetButton) }
+    private val plusButton by lazy { findViewById<Button>(R.id.plusButton) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val numberTextView = findViewById<TextView>(R.id.numberTextView)
-        val resetButton = findViewById<Button>(R.id.resetButton)
-        val plusButton = findViewById<Button>(R.id.plusButton)
-
-        var number = 0
+        var number = savedInstanceState?.getInt(NUMBER_KEY) ?: 0
+        setNumber(number)
 
         resetButton.setOnClickListener {
             number = 0
-            numberTextView.text = number.toString()
+            setNumber(number)
         }
 
         plusButton.setOnClickListener {
             number += 1
-            numberTextView.text = number.toString()
+            setNumber(number)
         }
+    }
+
+    private fun setNumber(number: Int) {
+        numberTextView.text = number.toString()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        numberTextView.text?.toString()?.toIntOrNull()?.let { number ->
+            outState.putInt(NUMBER_KEY, number)
+        }
+    }
+
+    companion object {
+        private const val NUMBER_KEY = "number_key"
     }
 }

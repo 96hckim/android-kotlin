@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CountingNumbers</string>
+    <string name="initialization">초기화</string>
+    <string name="plus">+</string>
 </resources>
