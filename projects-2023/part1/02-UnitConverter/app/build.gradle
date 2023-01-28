@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.hocheol.countingnumbers'
+    namespace 'com.hocheol.unitconverter'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.hocheol.countingnumbers"
+        applicationId "com.hocheol.unitconverter"
         minSdk 28
         targetSdk 33
         versionCode 1
