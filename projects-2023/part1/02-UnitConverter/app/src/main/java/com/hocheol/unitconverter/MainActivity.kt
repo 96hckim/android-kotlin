@@ -9,42 +9,49 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var inputNumber: Int = 0
+    private var cmToM = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        val inputEditText = binding.inputEditText
-        val outputTextView = binding.outputTextView
-        val inputUnitTextView = binding.inputUnitTextView
-        val outputUnitTextView = binding.outputUnitTextView
-        val swapImageButton = binding.swapImageButton
-
-        var inputNumber = 0
-        var cmToM = true
-
-        inputEditText.addTextChangedListener { text ->
+        binding.inputEditText.addTextChangedListener { text ->
             inputNumber = text?.toString()?.toIntOrNull() ?: 0
-
-            if (cmToM) {
-                outputTextView.text = inputNumber.times(0.01).toString()
-            } else {
-                outputTextView.text = inputNumber.times(100).toString()
-            }
+            swapUnitData()
         }
 
-        swapImageButton.setOnClickListener {
+        binding.swapImageButton.setOnClickListener {
             cmToM = cmToM.not()
-            if (cmToM) {
-                inputUnitTextView.text = "cm"
-                outputUnitTextView.text = "m"
-                outputTextView.text = inputNumber.times(0.01).toString()
-            } else {
-                inputUnitTextView.text = "m"
-                outputUnitTextView.text = "cm"
-                outputTextView.text = inputNumber.times(100).toString()
-            }
+            swapUnitData()
         }
+    }
+
+    private fun swapUnitData() = with(binding) {
+        if (cmToM) {
+            inputUnitTextView.text = "cm"
+            outputUnitTextView.text = "m"
+            outputTextView.text = inputNumber.times(0.01).toString()
+        } else {
+            inputUnitTextView.text = "m"
+            outputUnitTextView.text = "cm"
+            outputTextView.text = inputNumber.times(100).toString()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(STATE_CM_TO_M, cmToM)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        cmToM = savedInstanceState.getBoolean(STATE_CM_TO_M)
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
+    companion object {
+        const val STATE_CM_TO_M = "cmToM"
     }
 }
