@@ -7,12 +7,116 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/nameTitleTextView"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="36dp"
+        android:text="이름"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/birthTitleTextView"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="생년월일"
+        app:layout_constraintStart_toStartOf="@+id/nameTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/nameTitleTextView" />
+
+    <TextView
+        android:id="@+id/bloodTypeTitleTextView"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="혈액형"
+        app:layout_constraintStart_toStartOf="@id/nameTitleTextView"
+        app:layout_constraintTop_toBottomOf="@id/birthValueTextView" />
+
+    <TextView
+        android:id="@+id/emergencyContactTitleTextView"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비상 연락처"
+        app:layout_constraintStart_toStartOf="@id/nameTitleTextView"
+        app:layout_constraintTop_toBottomOf="@id/bloodTypeTitleTextView" />
+
+    <TextView
+        android:id="@+id/warningTitleTextView"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주의사항"
+        app:layout_constraintStart_toStartOf="@id/nameTitleTextView"
+        app:layout_constraintTop_toBottomOf="@id/emergencyContactTitleTextView" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <TextView
+        android:id="@+id/nameValueTextView"
+        style="@style/Value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/nameTitleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideLine"
+        tools:text="홍길동" />
+
+    <TextView
+        android:id="@+id/birthValueTextView"
+        style="@style/Value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/birthTitleTextView"
+        app:layout_constraintEnd_toEndOf="@+id/nameValueTextView"
+        app:layout_constraintStart_toEndOf="@id/guideLine"
+        tools:text="0000-00-00" />
+
+    <TextView
+        android:id="@+id/bloodTypeValueTextView"
+        style="@style/Value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/bloodTypeTitleTextView"
+        app:layout_constraintEnd_toEndOf="@id/nameValueTextView"
+        app:layout_constraintStart_toStartOf="@id/guideLine"
+        tools:text="B" />
+
+    <TextView
+        android:id="@+id/emergencyContactValueTextView"
+        style="@style/Value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/emergencyContactTitleTextView"
+        app:layout_constraintEnd_toStartOf="@id/emergencyContactIconImageView"
+        app:layout_constraintStart_toStartOf="@id/guideLine"
+        tools:text="000-0000-0000" />
+
+    <ImageView
+        android:id="@+id/emergencyContactIconImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/emergencyContactValueTextView"
+        app:layout_constraintEnd_toEndOf="@id/nameValueTextView"
+        app:layout_constraintTop_toTopOf="@id/emergencyContactValueTextView" />
+
+    <TextView
+        android:id="@+id/warningValueTextView"
+        style="@style/Value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/warningTitleTextView"
+        app:layout_constraintEnd_toEndOf="@id/nameValueTextView"
+        app:layout_constraintStart_toStartOf="@id/guideLine"
+        tools:text="주의사항" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
