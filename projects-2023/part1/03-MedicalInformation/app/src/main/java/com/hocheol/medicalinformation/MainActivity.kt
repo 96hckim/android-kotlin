@@ -3,6 +3,7 @@ package com.hocheol.medicalinformation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.hocheol.medicalinformation.databinding.ActivityMainBinding
@@ -19,14 +20,18 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, EditActivity::class.java)
             startActivity(intent)
         }
+
+        binding.deleteButton.setOnClickListener {
+            deleteData()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        getDataUiUpdate()
+        updateUIWithData()
     }
 
-    private fun getDataUiUpdate() {
+    private fun updateUIWithData() {
         with(getSharedPreferences(USER_INFORMATION, Context.MODE_PRIVATE)) {
             binding.nameValueTextView.text = getString(NAME, "미정")
             binding.birthValueTextView.text = getString(BIRTHDATE, "미정")
@@ -41,5 +46,16 @@ class MainActivity : AppCompatActivity() {
                 binding.warningValueTextView.text = warning
             }
         }
+    }
+
+    private fun deleteData() {
+        with(getSharedPreferences(USER_INFORMATION, MODE_PRIVATE).edit()) {
+            clear()
+            apply()
+        }
+
+        updateUIWithData()
+
+        Toast.makeText(this, "초기화를 완료했습니다.", Toast.LENGTH_SHORT).show()
     }
 }
