@@ -105,6 +105,7 @@
         android:id="@+id/emergencyContactIconImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_phone_24"
         app:layout_constraintBottom_toBottomOf="@id/emergencyContactValueTextView"
         app:layout_constraintEnd_toEndOf="@id/nameValueTextView"
         app:layout_constraintTop_toTopOf="@id/emergencyContactValueTextView" />
@@ -138,5 +139,12 @@
         app:layout_constraintBottom_toTopOf="@id/editButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+    <androidx.constraintlayout.helper.widget.Layer
+        android:id="@+id/emergencyContactLayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="emergencyContactValueTextView,emergencyContactIconImageView"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

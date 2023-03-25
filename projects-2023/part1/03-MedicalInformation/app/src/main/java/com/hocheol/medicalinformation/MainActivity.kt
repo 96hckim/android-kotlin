@@ -2,6 +2,7 @@ package com.hocheol.medicalinformation
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,13 +17,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 정보 편집
         binding.editButton.setOnClickListener {
             val intent = Intent(this, EditActivity::class.java)
             startActivity(intent)
         }
 
+        // 정보 삭제
         binding.deleteButton.setOnClickListener {
             deleteData()
+        }
+
+        // 전화 앱 실행
+        binding.emergencyContactLayer.setOnClickListener {
+            with(Intent(Intent.ACTION_VIEW)) {
+                val phoneNumber = binding.emergencyContactValueTextView.text.toString()
+                    .replace("-", "")
+                data = Uri.parse("tel:$phoneNumber")
+                startActivity(this)
+            }
         }
     }
 
