@@ -6,11 +6,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.stopwatch.databinding.ActivityMainBinding
 import com.hocheol.stopwatch.databinding.DialogCountdownSettingBinding
+import java.util.Timer
+import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private var countdownSeconds: Int = 10
+    private var countdownSeconds = 10
+    private var currentCountdownDeciSeconds = countdownSeconds * 10
+    private var currentDeciSeconds = 0
+
+    private var timer: Timer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +50,42 @@ class MainActivity : AppCompatActivity() {
         binding.lapButton.setOnClickListener {
             lap()
         }
+
+        initCountdownViews()
+    }
+
+    private fun initCountdownViews() {
+        binding.countdownValueTextView.text = String.format("%02d", countdownSeconds)
+        binding.countdownProgressBar.progress = INITIAL_COUNTDOWN_MAX
     }
 
     private fun start() {
+        timer = timer(initialDelay = 0, period = 100L) {
+            if (currentCountdownDeciSeconds == 0) {
+                currentDeciSeconds++
 
+                val totalSeconds = currentDeciSeconds.div(10)
+                val minutes = totalSeconds / 60
+                val seconds = totalSeconds % 60
+                val deciSeconds = currentDeciSeconds % 10
+
+                runOnUiThread {
+                    binding.timeTextView.text = String.format("%02d:%02d", minutes, seconds)
+                    binding.tickTextView.text = deciSeconds.toString()
+                    binding.countdownGroup.visibility = View.GONE
+                }
+            } else {
+                currentCountdownDeciSeconds--
+
+                val seconds = currentCountdownDeciSeconds / 10
+                val progress = ((currentCountdownDeciSeconds / (countdownSeconds * 10F)) * INITIAL_COUNTDOWN_MAX).toInt()
+
+                binding.root.post {
+                    binding.countdownValueTextView.text = String.format("%02d", seconds)
+                    binding.countdownProgressBar.progress = progress
+                }
+            }
+        }
     }
 
     private fun stop() {
@@ -55,10 +93,18 @@ class MainActivity : AppCompatActivity() {
         binding.stopButton.visibility = View.VISIBLE
         binding.pauseButton.visibility = View.GONE
         binding.lapButton.visibility = View.GONE
+
+        currentDeciSeconds = 0
+        binding.timeTextView.text = "00:00"
+        binding.tickTextView.text = "0"
+
+        binding.countdownGroup.visibility = View.VISIBLE
+        initCountdownViews()
     }
 
     private fun pause() {
-
+        timer?.cancel()
+        timer = null
     }
 
     private fun lap() {
@@ -73,9 +119,11 @@ class MainActivity : AppCompatActivity() {
                 minValue = 0
                 value = countdownSeconds
             }
+            setTitle("카운트다운 설정")
             setView(countdownSettingBinding.root)
             setPositiveButton("확인") { _, _ ->
                 countdownSeconds = countdownSettingBinding.countdownNumberPicker.value
+                currentCountdownDeciSeconds = countdownSeconds * 10
                 binding.countdownValueTextView.text = String.format("%02d", countdownSeconds)
             }
             setNegativeButton("취소", null)
@@ -90,5 +138,9 @@ class MainActivity : AppCompatActivity() {
             }
             setNegativeButton("아니오", null)
         }.show()
+    }
+
+    companion object {
+        private const val INITIAL_COUNTDOWN_MAX = 100
     }
 }
