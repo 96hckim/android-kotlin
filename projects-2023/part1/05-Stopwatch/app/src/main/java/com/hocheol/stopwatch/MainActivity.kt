@@ -1,5 +1,7 @@
 package com.hocheol.stopwatch
 
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -88,6 +90,16 @@ class MainActivity : AppCompatActivity() {
                     binding.countdownProgressBar.progress = progress
                 }
             }
+
+            if (currentDeciSeconds == 0 && currentCountdownDeciSeconds <= 30 && currentCountdownDeciSeconds % 10 == 0) {
+                val toneType = if (currentCountdownDeciSeconds == 0) {
+                    ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD
+                } else {
+                    ToneGenerator.TONE_PROP_BEEP
+                }
+                ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME)
+                    .startTone(toneType, 100)
+            }
         }
     }
 
@@ -103,6 +115,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.countdownGroup.visibility = View.VISIBLE
         initCountdownViews()
+
+        binding.lapContainer.removeAllViews()
     }
 
     private fun pause() {
@@ -111,6 +125,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun lap() {
+        if (currentDeciSeconds == 0) return
+
         val container = binding.lapContainer
         TextView(this).apply {
             textSize = 20F
