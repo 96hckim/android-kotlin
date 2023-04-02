@@ -1,9 +1,12 @@
 package com.hocheol.stopwatch
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.setPadding
 import com.hocheol.stopwatch.databinding.ActivityMainBinding
 import com.hocheol.stopwatch.databinding.DialogCountdownSettingBinding
 import java.util.Timer
@@ -108,7 +111,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun lap() {
-
+        val container = binding.lapContainer
+        TextView(this).apply {
+            textSize = 20F
+            gravity = Gravity.CENTER
+            val totalSeconds = currentDeciSeconds.div(10)
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            val deciSeconds = currentDeciSeconds % 10
+            text = "${container.childCount.inc()}. " + String.format("%02d:%02d %01d", minutes, seconds, deciSeconds)
+            setPadding(30)
+        }.let { lapTextView ->
+            container.addView(lapTextView, 0)
+        }
     }
 
     private fun showCountdownSettingDialog() {
