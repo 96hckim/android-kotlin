@@ -110,6 +110,9 @@ class MainActivity : AppCompatActivity() {
         binding.lapButton.visibility = View.GONE
 
         currentDeciSeconds = 0
+        // stop 한 뒤 다시 start 하면, 그때도 카운트다운 실행되도록
+        currentCountdownDeciSeconds = countdownSeconds * 10
+
         binding.timeTextView.text = "00:00"
         binding.tickTextView.text = "0"
 
