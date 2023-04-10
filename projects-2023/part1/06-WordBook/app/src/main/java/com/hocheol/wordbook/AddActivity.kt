@@ -9,6 +9,7 @@ import kotlin.concurrent.thread
 
 class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
+    private val appDatabase by lazy { AppDatabase.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +48,12 @@ class AddActivity : AppCompatActivity() {
         val word = Word(text, mean, type)
 
         thread {
-            AppDatabase.getInstance(this).wordDao().insert(word)
+            appDatabase.wordDao().insert(word)
             runOnUiThread {
                 Toast.makeText(this, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show()
-                finish()
             }
+            setResult(RESULT_OK)
+            finish()
         }
     }
 }
