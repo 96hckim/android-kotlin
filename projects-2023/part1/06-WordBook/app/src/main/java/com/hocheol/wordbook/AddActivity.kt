@@ -1,9 +1,11 @@
 package com.hocheol.wordbook
 
 import android.os.Bundle
+import android.provider.UserDictionary.Words.addWord
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.chip.Chip
 import com.hocheol.wordbook.databinding.ActivityAddBinding
 import kotlin.concurrent.thread
@@ -22,7 +24,13 @@ class AddActivity : AppCompatActivity() {
 
         initViews()
         binding.addButton.setOnClickListener {
-            if (originWord == null) addWord() else editWord()
+            if (isValidWord()) {
+                if (originWord == null) {
+                    addWord()
+                } else {
+                    editWord()
+                }
+            }
         }
     }
 
@@ -31,6 +39,16 @@ class AddActivity : AppCompatActivity() {
         binding.typeChipGroup.apply {
             types.forEach { type ->
                 addView(createChip(type))
+            }
+        }
+
+        binding.wordTextInputEditText.addTextChangedListener {
+            it?.let { text ->
+                binding.wordTextInputEditText.error = when (text.length) {
+                    0 -> "값을 입력해주세요"
+                    1 -> "2자 이상을 입력해주세요"
+                    else -> null
+                }
             }
         }
 
@@ -85,5 +103,15 @@ class AddActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    private fun isValidWord(): Boolean {
+        val isValid = binding.wordTextInputEditText.text?.isNotEmpty() == true
+                && binding.meanTextInputEditText.text?.isNotEmpty() == true
+                && binding.typeChipGroup.checkedChipIds.isNotEmpty()
+        if (isValid.not()) {
+            Toast.makeText(this, "유효하지 않습니다. 다시 입력해주세요.", Toast.LENGTH_SHORT).show()
+        }
+        return isValid
     }
 }
