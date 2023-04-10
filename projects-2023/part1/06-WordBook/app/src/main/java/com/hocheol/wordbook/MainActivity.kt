@@ -25,13 +25,7 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
     }
 
     private fun initRecyclerView() {
-        val dummyList = mutableListOf(
-            Word("weather", "날씨", "명사"),
-            Word("honey", "꿀", "명사"),
-            Word("run", "실행하다", "동사")
-        )
-
-        wordAdapter = WordAdapter(dummyList, this)
+        wordAdapter = WordAdapter(mutableListOf(), this)
         binding.wordRecyclerView.apply {
             adapter = wordAdapter
             layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
@@ -41,6 +35,6 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
     }
 
     override fun onClick(word: Word) {
-        Toast.makeText(this, "${word.word} 가 클릭 됐습니다.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "${word.text} 가 클릭 됐습니다.", Toast.LENGTH_SHORT).show()
     }
 }

@@ -31,7 +31,7 @@ class WordAdapter(
 
     class WordViewHolder(private val binding: ItemWordBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Word) = with(binding) {
-            wordTextView.text = item.word
+            wordTextView.text = item.text
             meanTextView.text = item.mean
             typeChip.text = item.type
         }
