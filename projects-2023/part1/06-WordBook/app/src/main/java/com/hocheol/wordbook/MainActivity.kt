@@ -19,7 +19,16 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            updateLatestWordList()
+            updateLatestWord()
+        }
+    }
+
+    private val editWordActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val editWord = result.data?.getParcelableExtra<Word>(WordConstants.EDIT_WORD_KEY)
+        if (result.resultCode == RESULT_OK && editWord != null) {
+            updateEditWord(editWord)
         }
     }
 
@@ -37,6 +46,10 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
 
         binding.deleteImageView.setOnClickListener {
             deleteSelectedWord()
+        }
+
+        binding.editImageView.setOnClickListener {
+            editSelectedWord()
         }
     }
 
@@ -58,13 +71,24 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         }
     }
 
-    private fun updateLatestWordList() {
+    private fun updateLatestWord() {
         thread {
             val latestWord = appDatabase.wordDao().getLatestWord()
             wordAdapter.list.add(0, latestWord)
             runOnUiThread {
                 wordAdapter.notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun updateEditWord(word: Word) {
+        val index = wordAdapter.list.indexOfFirst { it.id == word.id }
+        wordAdapter.list[index] = word
+        runOnUiThread {
+            selectedWord = word
+            wordAdapter.notifyItemChanged(index)
+            binding.wordTextView.text = word.text
+            binding.meanTextView.text = word.mean
         }
     }
 
@@ -84,6 +108,15 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
                 selectedWord = null
             }
         }
+    }
+
+    private fun editSelectedWord() {
+        selectedWord ?: return
+
+        val intent = Intent(this, AddActivity::class.java).apply {
+            putExtra(WordConstants.ORIGIN_WORD_KEY, selectedWord)
+        }
+        editWordActivityResult.launch(intent)
     }
 
     override fun onClick(word: Word) {
