@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.hocheol.soundplay"
         minSdk 28
-        targetSdk 33
+        targetSdk 32 // 33 부터 Notification 권한 요청 필요
         versionCode 1
         versionName "1.0"
 
