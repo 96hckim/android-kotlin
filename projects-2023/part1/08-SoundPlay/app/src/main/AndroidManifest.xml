@@ -13,6 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SoundPlay"
         tools:targetApi="31">
+        <receiver
+            android:name=".LowBatteryReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
         <service
             android:name=".MediaPlayerService"
             android:enabled="true"
