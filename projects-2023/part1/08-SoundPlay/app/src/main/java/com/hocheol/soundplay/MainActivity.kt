@@ -19,20 +19,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun mediaPlayerPlay() {
-        val intent = Intent(this, MediaPlayerService::class.java)
-            .apply { action = MEDIA_PLAYER_PLAY }
+        val intent = Intent(this, MediaPlayerService::class.java).apply {
+            action = MEDIA_PLAYER_PLAY
+        }
         startService(intent)
     }
 
     private fun mediaPlayerPause() {
-        val intent = Intent(this, MediaPlayerService::class.java)
-            .apply { action = MEDIA_PLAYER_PAUSE }
+        val intent = Intent(this, MediaPlayerService::class.java).apply {
+            action = MEDIA_PLAYER_PAUSE
+        }
         startService(intent)
     }
 
     private fun mediaPlayerStop() {
-        val intent = Intent(this, MediaPlayerService::class.java)
-            .apply { action = MEDIA_PLAYER_STOP }
+        val intent = Intent(this, MediaPlayerService::class.java).apply {
+            action = MEDIA_PLAYER_STOP
+        }
         startService(intent)
+    }
+
+    override fun onDestroy() {
+        stopService(Intent(this, MediaPlayerService::class.java))
+        super.onDestroy()
     }
 }
