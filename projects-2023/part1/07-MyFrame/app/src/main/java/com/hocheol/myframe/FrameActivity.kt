@@ -3,6 +3,7 @@ package com.hocheol.myframe
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayoutMediator
 import com.hocheol.myframe.databinding.ActivityFrameBinding
 
 class FrameActivity : AppCompatActivity() {
@@ -19,5 +20,12 @@ class FrameActivity : AppCompatActivity() {
         val frameAdapter = FrameAdapter(images)
 
         binding.imageViewPager.adapter = frameAdapter
+
+        TabLayoutMediator(
+            binding.tabLayout,
+            binding.imageViewPager
+        ) { tab, position ->
+            binding.imageViewPager.currentItem = tab.position
+        }.attach()
     }
 }
