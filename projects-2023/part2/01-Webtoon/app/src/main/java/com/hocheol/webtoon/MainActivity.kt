@@ -1,7 +1,6 @@
 package com.hocheol.webtoon
 
 import android.os.Bundle
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.webtoon.databinding.ActivityMainBinding
 
@@ -13,10 +12,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
-            webView.webViewClient = WebViewClient()
-            webView.settings.javaScriptEnabled = true
-            webView.loadUrl("https://google.com")
+        binding.button1.setOnClickListener {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragmentContainer, WebViewFragment())
+                commit()
+            }
+        }
+
+        binding.button2.setOnClickListener {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragmentContainer, SecondFragment())
+                commit()
+            }
         }
     }
 }
