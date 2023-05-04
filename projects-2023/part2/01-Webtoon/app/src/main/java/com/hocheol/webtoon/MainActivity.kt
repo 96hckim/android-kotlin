@@ -3,13 +3,14 @@ package com.hocheol.webtoon
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayoutMediator
 import com.hocheol.webtoon.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            val currentFragment = supportFragmentManager.fragments.firstOrNull()
+            val currentFragment = supportFragmentManager.fragments[binding.viewPager.currentItem]
             if (currentFragment is WebViewFragment) {
                 if (currentFragment.canGoBack()) {
                     currentFragment.goBack()
@@ -29,19 +30,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.button1.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentContainer, WebViewFragment())
-                commit()
-            }
-        }
+        binding.viewPager.adapter = ViewPagerAdapter(this)
 
-        binding.button2.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentContainer, SecondFragment())
-                commit()
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            run {
+//                val textView = TextView(this@MainActivity).apply {
+//                    text = "position $position"
+//                    gravity = Gravity.CENTER
+//                }
+//                tab.customView = textView
+                tab.text = "position $position"
             }
-        }
+        }.attach()
 
         onBackPressedDispatcher.addCallback(this, callback)
     }
