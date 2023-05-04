@@ -11,15 +11,15 @@ class ViewPagerAdapter(mainActivity: MainActivity) : FragmentStateAdapter(mainAc
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> {
-                return WebViewFragment()
+                return WebViewFragment(position)
             }
 
             1 -> {
-                return WebViewFragment()
+                return WebViewFragment(position)
             }
 
             else -> {
-                return WebViewFragment()
+                return WebViewFragment(position)
             }
         }
     }
