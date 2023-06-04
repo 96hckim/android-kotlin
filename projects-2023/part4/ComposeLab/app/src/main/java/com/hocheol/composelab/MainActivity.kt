@@ -1,15 +1,18 @@
 package com.hocheol.composelab
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,9 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                ButtonExample {
-                    Toast.makeText(this, "Send clicked.", Toast.LENGTH_SHORT).show()
-                }
+                ModifierExample()
             }
         }
     }
@@ -74,12 +75,50 @@ fun ButtonExample(onButtonClicked: () -> Unit) {
     }
 }
 
+@Composable
+fun ModifierExample() {
+    // fillMaxSize()
+    // height(dp)
+    // width(dp)
+    // size(dp, dp)
+    // background(color)
+    // colors = ButtonDefaults.buttonColors(containerColor, contentColor)
+    // padding(dp)
+    // enabled, clickable
+    // offset(dp, dp)
+    Button(
+        onClick = {},
+        modifier = Modifier
+            .size(200.dp)
+            .padding(10.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Magenta,
+            contentColor = Color.Cyan
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Search,
+            contentDescription = null,
+            modifier = Modifier.background(Color.Blue)
+        )
+        Spacer(
+            modifier = Modifier
+                .size(ButtonDefaults.IconSpacing)
+                .background(Color.Blue)
+        )
+        Text(
+            "Search",
+            modifier = Modifier
+                .offset(x = 10.dp, y = (-10).dp)
+                .background(Color.Blue)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ComposeLabTheme {
-        ButtonExample {
-
-        }
+        ModifierExample()
     }
 }
