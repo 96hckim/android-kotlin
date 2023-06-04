@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -37,7 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                SurfaceExample()
+                BoxExample()
             }
         }
     }
@@ -138,10 +140,33 @@ fun SurfaceExample() {
     }
 }
 
+@Composable
+fun BoxExample() {
+    // Box 를 만들거나 FrameLayout 과 같이 중첩시키는 용도로 사용된다.
+    // Modifier.align(Alignment)
+    // matchParentSize()
+    // BoxScope 에서 사용 가능 align, matchParentSize
+    // fillMaxSize()
+    Box {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(Color.Cyan)
+                .align(Alignment.TopStart)
+        )
+        Box(
+            modifier = Modifier
+                .size(70.dp)
+                .background(Color.Yellow)
+                .align(Alignment.BottomEnd)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ComposeLabTheme {
-        SurfaceExample()
+        BoxExample()
     }
 }
