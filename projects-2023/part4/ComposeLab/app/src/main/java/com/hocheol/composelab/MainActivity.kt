@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                RowExample()
+                ColumnExample()
             }
         }
     }
@@ -202,10 +204,23 @@ fun RowExample() {
     }
 }
 
+@Composable
+fun ColumnExample() {
+    Column(
+        modifier = Modifier.size(100.dp),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Text(text = "첫 번째", modifier = Modifier.align(Alignment.Start))
+        Text(text = "두 번째")
+        Text(text = "세 번째", modifier = Modifier.align(Alignment.CenterHorizontally))
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ComposeLabTheme {
-        RowExample()
+        ColumnExample()
     }
 }
