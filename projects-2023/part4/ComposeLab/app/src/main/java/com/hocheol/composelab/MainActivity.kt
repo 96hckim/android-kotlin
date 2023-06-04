@@ -7,12 +7,14 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                BoxExample()
+                RowExample()
             }
         }
     }
@@ -163,10 +165,47 @@ fun BoxExample() {
     }
 }
 
+@Composable
+fun RowExample() {
+    // Row 는 가로 배치이므로 alignment 는 수직적으로 행해진다.
+    // Modifier.align(Alignment) 개별 위치 조정
+    // verticalAlignment(Alignment) 세로 위치 조정
+    // horizontalArrangement 가로 위치 조정
+    // weight
+    // textAlign(TextAlign)
+    Row(
+        modifier = Modifier.size(200.dp, 40.dp),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Text(
+            text = "첫 번째!",
+            textAlign = TextAlign.End,
+            modifier = Modifier
+                .align(Alignment.Top)
+                .weight(3f)
+                .background(Color.Magenta)
+        )
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "추가",
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.Cyan)
+        )
+        Text(
+            text = "세 번째!",
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .weight(3f)
+                .background(Color.Blue)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ComposeLabTheme {
-        BoxExample()
+        RowExample()
     }
 }
