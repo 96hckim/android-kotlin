@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,14 +37,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                ModifierExample()
+                SurfaceExample()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun TextExample(name: String, modifier: Modifier = Modifier) {
     Text(
         color = Color(0xFFFF9944), // Color.Red,
         text = "Hello $name!",
@@ -115,10 +117,31 @@ fun ModifierExample() {
     }
 }
 
+@Composable
+fun SurfaceExample() {
+    // Surface 아래 View 에는 터치 전달 안된다.
+    // margin 대신 윗 View 에서 padding 으로 설정
+    Surface(
+        modifier = Modifier.padding(5.dp),
+        shadowElevation = 10.dp,
+        border = BorderStroke(
+            width = 2.dp,
+            color = Color.Magenta
+        ),
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.error
+    ) {
+        Text(
+            text = "Hello World!",
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ComposeLabTheme {
-        ModifierExample()
+        SurfaceExample()
     }
 }
