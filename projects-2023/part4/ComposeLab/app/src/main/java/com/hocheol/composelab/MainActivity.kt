@@ -274,15 +274,16 @@ fun ImageExample() {
 @Composable
 fun CoilExample() {
     Column {
+        val imageUrl = "https://picsum.photos/1920/1080"
         // rememberImagePainter [Deprecated]
-        val painter = rememberImagePainter(data = "https://picsum.photos/1920/1080")
+        val painter = rememberImagePainter(data = imageUrl)
         Image(
             painter = painter,
             contentDescription = "이미지"
         )
         // Coil Image [Recommended]
         AsyncImage(
-            model = "https://picsum.photos/1920/1080",
+            model = imageUrl,
             contentDescription = "이미지"
         )
     }
