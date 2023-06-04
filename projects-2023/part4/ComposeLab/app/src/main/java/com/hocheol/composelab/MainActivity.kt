@@ -44,6 +44,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.hocheol.composelab.ui.theme.ComposeLabTheme
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +53,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                ImageExample()
+                CoilExample()
             }
         }
     }
@@ -269,10 +271,27 @@ fun ImageExample() {
     }
 }
 
+@Composable
+fun CoilExample() {
+    Column {
+        // rememberImagePainter [Deprecated]
+        val painter = rememberImagePainter(data = "https://picsum.photos/1920/1080")
+        Image(
+            painter = painter,
+            contentDescription = "이미지"
+        )
+        // Coil Image [Recommended]
+        AsyncImage(
+            model = "https://picsum.photos/1920/1080",
+            contentDescription = "이미지"
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        ImageExample()
+        CoilExample()
     }
 }
