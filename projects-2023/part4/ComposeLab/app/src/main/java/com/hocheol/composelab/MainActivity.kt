@@ -7,13 +7,18 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -43,7 +48,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                ColumnExample()
+                Outer()
             }
         }
     }
@@ -217,10 +222,40 @@ fun ColumnExample() {
     }
 }
 
+@Composable
+fun Outer() {
+    // 외부에서 size 지정 시 내부에서 높게 지정하더라도 외부 size 따라감.
+    Column(Modifier.width(150.dp)) {
+        Inner(
+            Modifier
+                .width(200.dp)
+                .height(160.dp)
+        )
+        Inner(
+            Modifier
+                .widthIn(min = 200.dp)
+                .heightIn(min = 50.dp, max = 100.dp)
+        )
+    }
+}
+
+@Composable
+fun Inner(modifier: Modifier = Modifier) {
+    BoxWithConstraints(modifier) {
+        if (maxHeight > 150.dp) {
+            Text(
+                text = "여기 꽤 길군요!",
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+        Text(text = "maxW:$maxWidth maxH:$maxHeight minW:$minWidth minH:$minHeight")
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ComposeLabTheme {
-        ColumnExample()
+        Outer()
     }
 }
