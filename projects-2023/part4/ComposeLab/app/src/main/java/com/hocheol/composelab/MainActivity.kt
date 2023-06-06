@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                TopAppBarExample()
+                SlotExample()
             }
         }
     }
@@ -394,10 +395,56 @@ fun TopAppBarExample() {
     }
 }
 
+@Composable
+fun CheckBoxWithSlot(
+    checked: Boolean,
+    onCheckedChanged: () -> Unit,
+    content: @Composable RowScope.() -> Unit
+) {
+    // 위임할 수 있는 것들은 가능한 밖에서 위임하는 형태로 만들자
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            onCheckedChanged()
+        }
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = { onCheckedChanged() }
+        )
+        content()
+    }
+}
+
+@Composable
+fun SlotExample() {
+    var checked1 by remember { mutableStateOf(false) }
+    var checked2 by remember { mutableStateOf(false) }
+
+    Column {
+        CheckBoxWithSlot(
+            checked = checked1,
+            onCheckedChanged = {
+                checked1 = checked1.not()
+            }
+        ) {
+            Text(text = "텍스트 1")
+        }
+        CheckBoxWithSlot(
+            checked = checked2,
+            onCheckedChanged = {
+                checked2 = checked2.not()
+            }
+        ) {
+            Text(text = "텍스트 2")
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        TopAppBarExample()
+        SlotExample()
     }
 }
