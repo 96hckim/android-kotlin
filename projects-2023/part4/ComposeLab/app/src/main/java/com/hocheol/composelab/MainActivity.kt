@@ -38,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                SlotExample()
+                ScaffoldExample()
             }
         }
     }
@@ -441,10 +442,45 @@ fun SlotExample() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScaffoldExample() {
+    var checked by remember {
+        mutableStateOf(false)
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = {}) {
+                        Image(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "뒤로가기"
+                        )
+                    }
+                },
+                title = {
+                    Text(text = "Scaffold App")
+                }
+            )
+        }
+    ) { paddingValues ->
+        Surface(modifier = Modifier.padding(paddingValues)) {
+            CheckBoxWithSlot(
+                checked = checked,
+                onCheckedChanged = { checked = checked.not() },
+            ) {
+                Text(text = "Hello World!")
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        SlotExample()
+        ScaffoldExample()
     }
 }
