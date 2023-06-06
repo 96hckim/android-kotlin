@@ -26,6 +26,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.hocheol.profilecard.ui.theme.ProfileCardTheme
 
@@ -40,8 +43,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        CardExample(CARD_DATA)
-                        CardExample(CARD_DATA)
+                        CardWithConstraintLayout(CARD_DATA)
+                        CardWithConstraintLayout(CARD_DATA)
                     }
                 }
             }
@@ -96,11 +99,77 @@ fun CardExample(cardData: CardData) {
     }
 }
 
+@Composable
+fun CardWithConstraintLayout(cardData: CardData) {
+    val placeHolderColor = Color(0x33000000)
+
+    Card(
+        elevation = CardDefaults.cardElevation(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+    ) {
+        ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+            val (profileImage, author, description) = createRefs()
+
+            AsyncImage(
+                model = cardData.imageUri,
+                contentScale = ContentScale.Crop,
+                contentDescription = cardData.imageDescription,
+                placeholder = ColorPainter(placeHolderColor),
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .constrainAs(profileImage) {
+                        centerVerticallyTo(parent)
+                        start.linkTo(parent.start, margin = 8.dp)
+                    }
+            )
+
+            Text(
+                text = cardData.author,
+                modifier = Modifier.constrainAs(author) {
+                    linkTo(
+                        profileImage.end,
+                        parent.end,
+                        startMargin = 8.dp,
+                        endMargin = 8.dp
+                    )
+                    width = Dimension.fillToConstraints
+                }
+            )
+
+            Text(
+                text = cardData.description,
+                modifier = Modifier.constrainAs(description) {
+                    linkTo(
+                        profileImage.end,
+                        parent.end,
+                        startMargin = 8.dp,
+                        endMargin = 8.dp
+                    )
+                    width = Dimension.fillToConstraints
+                }
+            )
+
+            val chain = createVerticalChain(
+                author,
+                description,
+                chainStyle = ChainStyle.Packed
+            )
+            constrain(chain) {
+                top.linkTo(parent.top, margin = 8.dp)
+                bottom.linkTo(parent.bottom, margin = 8.dp)
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ProfileCardPreview() {
     ProfileCardTheme {
-        CardExample(MainActivity.CARD_DATA)
+        CardWithConstraintLayout(MainActivity.CARD_DATA)
     }
 }
 
