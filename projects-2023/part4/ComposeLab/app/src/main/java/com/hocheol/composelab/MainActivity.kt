@@ -60,6 +60,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import coil.compose.AsyncImage
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ConstraintSetExample()
+                    ConstraintChainBarrierExample()
                 }
             }
         }
@@ -585,10 +586,53 @@ fun ConstraintSetExample() {
     }
 }
 
+@Composable
+fun ConstraintChainBarrierExample() {
+    ConstraintLayout(Modifier.fillMaxSize()) {
+        val (redBox, yellowBox, magentaBox, text) = createRefs()
+
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Red)
+                .constrainAs(redBox) {
+                    top.linkTo(parent.top, margin = 18.dp)
+                }
+        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Yellow)
+                .constrainAs(yellowBox) {
+                    top.linkTo(parent.top, margin = 32.dp)
+                }
+        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Magenta)
+                .constrainAs(magentaBox) {
+                    top.linkTo(parent.top, margin = 20.dp)
+                }
+        )
+
+//        createVerticalChain(redBox, yellowBox, magentaBox)
+        createHorizontalChain(redBox, yellowBox, magentaBox, chainStyle = ChainStyle.SpreadInside)
+        val barrier = createBottomBarrier(redBox, yellowBox, magentaBox)
+
+        Text(
+            text = "Hello World! Hello World! Hello World! Hello World! Hello World! ",
+            modifier = Modifier.constrainAs(text) {
+                top.linkTo(barrier)
+            }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        ConstraintSetExample()
+        ConstraintChainBarrierExample()
     }
 }
