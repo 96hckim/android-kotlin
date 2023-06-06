@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
@@ -58,6 +59,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.hocheol.composelab.ui.theme.ComposeLabTheme
@@ -67,7 +69,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLabTheme {
-                ScaffoldExample()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    ConstraintLayoutExample()
+                }
             }
         }
     }
@@ -477,10 +484,53 @@ fun ScaffoldExample() {
     }
 }
 
+@Composable
+fun ConstraintLayoutExample() {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (redBox, magentaBox, greenBox, yellowBox) = createRefs()
+
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Red)
+                .constrainAs(redBox) {
+                    bottom.linkTo(parent.bottom, margin = 8.dp)
+                    end.linkTo(parent.end, margin = 4.dp)
+                }
+        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Magenta)
+                .constrainAs(magentaBox) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Green)
+                .constrainAs(greenBox) {
+                    centerTo(parent)
+                }
+        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Yellow)
+                .constrainAs(yellowBox) {
+                    start.linkTo(magentaBox.end)
+                    top.linkTo(magentaBox.bottom)
+                }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        ScaffoldExample()
+        ConstraintLayoutExample()
     }
 }
