@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todo.ui.theme.ToDoTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,15 +33,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun TopLevel() {
-    val (text, setText) = remember { mutableStateOf("") }
-    val toDoList = remember { mutableStateListOf<ToDoData>() }
+class ToDoViewModel : ViewModel() {
+    val text = mutableStateOf("")
+    private val key = mutableStateOf(0)
+    val toDoList = mutableStateListOf<ToDoData>()
 
     val onSubmit: (String) -> Unit = {
-        val key = (toDoList.lastOrNull()?.key ?: 0) + 1
-        toDoList.add(ToDoData(key, it))
-        setText("")
+        key.value = key.value + 1
+        toDoList.add(ToDoData(key.value, it))
+        text.value = ""
     }
 
     val onEdit: (Int, String) -> Unit = { key, newText ->
@@ -62,27 +64,32 @@ fun TopLevel() {
             toDoList.removeAt(i)
         }
     }
+}
 
+@Composable
+fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
             ToDoInput(
-                text = text,
-                onTextChange = setText,
-                onSubmit = onSubmit
+                text = viewModel.text.value,
+                onTextChange = {
+                    viewModel.text.value = it
+                },
+                onSubmit = viewModel.onSubmit
             )
 
             LazyColumn {
                 items(
-                    items = toDoList,
+                    items = viewModel.toDoList,
                     key = { it.key }
                 ) { toDoData ->
                     ToDo(
                         toDoData = toDoData,
-                        onEdit = onEdit,
-                        onToggle = onToggle,
-                        onDelete = onDelete
+                        onEdit = viewModel.onEdit,
+                        onToggle = viewModel.onToggle,
+                        onDelete = viewModel.onDelete
                     )
                 }
             }
