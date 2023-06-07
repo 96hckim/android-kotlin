@@ -3,53 +3,17 @@ package com.hocheol.composelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
@@ -76,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ConstraintChainBarrierExample()
+                    CanvasExample()
                 }
             }
         }
@@ -629,10 +593,34 @@ fun ConstraintChainBarrierExample() {
     }
 }
 
+@Composable
+fun CanvasExample() {
+    Canvas(modifier = Modifier.size(20.dp)) {
+        drawLine(Color.Red, Offset(30f, 10f), Offset(50f, 40f))
+        drawCircle(Color.Yellow, 10f, Offset(15f, 40f))
+        drawRect(Color.Magenta, Offset(30f, 30f), Size(10f, 10f))
+
+        // Search Icon
+//        moveTo(2.01f, 21.0f)
+//        lineTo(23.0f, 12.0f)
+//        lineTo(2.01f, 3.0f)
+//        lineTo(2.0f, 10.0f)
+//        lineToRelative(15.0f, 2.0f)
+//        lineToRelative(-15.0f, 2.0f)
+//        close()
+        drawLine(Color.Green, Offset(2.01f, 21.0f), Offset(23.0f, 12.0f))
+        drawLine(Color.Green, Offset(23.0f, 12.0f), Offset(2.01f, 3.0f))
+        drawLine(Color.Green, Offset(2.01f, 3.0f), Offset(2.0f, 10.0f))
+        drawLine(Color.Green, Offset(2.0f, 10.0f), Offset(17.0f, 12.0f))
+        drawLine(Color.Green, Offset(17.0f, 12.0f), Offset(2.0f, 14.0f))
+        drawLine(Color.Green, Offset(2.0f, 14.0f), Offset(2.01f, 21.0f))
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        ConstraintChainBarrierExample()
+        CanvasExample()
     }
 }
