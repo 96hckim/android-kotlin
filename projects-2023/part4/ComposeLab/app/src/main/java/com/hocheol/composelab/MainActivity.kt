@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SnackbarExample()
+                    BottomAppBarExample()
                 }
             }
         }
@@ -766,10 +766,61 @@ fun SnackbarExample() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomAppBarExample() {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    var counter by remember { mutableStateOf(0) }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = {
+            BottomAppBar {
+                Text(text = "헬로")
+                Button(onClick = {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("안녕하세요")
+                    }
+                }) {
+                    Text(text = "인사하기")
+                }
+                Button(onClick = {
+                    counter++
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("${counter}입니다")
+                    }
+                }) {
+                    Text(text = "더하기")
+                }
+                Button(onClick = {
+                    counter--
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("${counter}입니다")
+                    }
+                }) {
+                    Text(text = "빼기")
+                }
+            }
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Text(
+                text = "카운터는 ${counter}회입니다.",
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        SnackbarExample()
+        BottomAppBarExample()
     }
 }
