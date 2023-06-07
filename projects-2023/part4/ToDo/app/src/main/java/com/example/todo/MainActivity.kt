@@ -9,10 +9,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todo.ui.theme.ToDoTheme
@@ -34,34 +37,46 @@ class MainActivity : ComponentActivity() {
 }
 
 class ToDoViewModel : ViewModel() {
-    val text = mutableStateOf("")
-    private val key = mutableStateOf(0)
-    val toDoList = mutableStateListOf<ToDoData>()
+    private val _text = MutableLiveData("")
+    val text: LiveData<String> = _text
+    val setText: (String) -> Unit = {
+        _text.value = it
+    }
+
+    // mutableStateListOf - 추가, 삭제, 대입 -> UI 가 갱신이 됩니다. 각 항목의 필드가 바뀌었을 때 -> 갱신이 안되는 문제.
+    // LiveData<List<T>>.observeAsState() - List 가 통채로 다른 List 로 바뀌었을 때만 State 가 갱신된다.
+    private val _rawToDoList = mutableListOf<ToDoData>()
+    private val _toDoList = MutableLiveData<List<ToDoData>>(_rawToDoList)
+    val toDoList: LiveData<List<ToDoData>> = _toDoList
 
     val onSubmit: (String) -> Unit = {
-        key.value = key.value + 1
-        toDoList.add(ToDoData(key.value, it))
-        text.value = ""
+        val key = (_rawToDoList.lastOrNull()?.key ?: 0) + 1
+        _rawToDoList.add(ToDoData(key, it))
+        _toDoList.value = ArrayList(_rawToDoList)
+        _text.value = ""
     }
 
     val onEdit: (Int, String) -> Unit = { key, newText ->
-        val i = toDoList.indexOfFirst { it.key == key }
+        val i = _rawToDoList.indexOfFirst { it.key == key }
         if (i != -1) {
-            toDoList[i] = toDoList[i].copy(text = newText)
+            _rawToDoList[i] = _rawToDoList[i].copy(text = newText)
+            _toDoList.value = ArrayList(_rawToDoList)
         }
     }
 
     val onToggle: (key: Int, checked: Boolean) -> Unit = { key, checked ->
-        val i = toDoList.indexOfFirst { it.key == key }
+        val i = _rawToDoList.indexOfFirst { it.key == key }
         if (i != -1) {
-            toDoList[i] = toDoList[i].copy(done = checked)
+            _rawToDoList[i] = _rawToDoList[i].copy(done = checked)
+            _toDoList.value = ArrayList(_rawToDoList)
         }
     }
 
     val onDelete: (Int) -> Unit = { key ->
-        val i = toDoList.indexOfFirst { it.key == key }
+        val i = _rawToDoList.indexOfFirst { it.key == key }
         if (i != -1) {
-            toDoList.removeAt(i)
+            _rawToDoList.removeAt(i)
+            _toDoList.value = ArrayList(_rawToDoList)
         }
     }
 }
@@ -73,16 +88,15 @@ fun TopLevel(viewModel: ToDoViewModel = viewModel()) {
             modifier = Modifier.padding(paddingValues)
         ) {
             ToDoInput(
-                text = viewModel.text.value,
-                onTextChange = {
-                    viewModel.text.value = it
-                },
+                text = viewModel.text.observeAsState("").value,
+                onTextChange = viewModel.setText,
                 onSubmit = viewModel.onSubmit
             )
 
+            val items = viewModel.toDoList.observeAsState(emptyList()).value
             LazyColumn {
                 items(
-                    items = viewModel.toDoList,
+                    items = items,
                     key = { it.key }
                 ) { toDoData ->
                     ToDo(
