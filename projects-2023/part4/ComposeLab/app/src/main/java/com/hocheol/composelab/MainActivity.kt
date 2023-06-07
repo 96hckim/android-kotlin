@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CustomDialogExample()
+                    DropDownMenuExample()
                 }
             }
         }
@@ -700,10 +700,47 @@ fun CustomDialogExample() {
     }
 }
 
+@Composable
+fun DropDownMenuExample() {
+    var expandDropDownMenu by remember { mutableStateOf(false) }
+    var counter by remember { mutableStateOf(0) }
+
+    Column {
+        Button(onClick = { expandDropDownMenu = true }) {
+            Text("드롭다운 메뉴 열기")
+        }
+        Text("카운터: $counter")
+    }
+
+    DropdownMenu(
+        expanded = expandDropDownMenu,
+        onDismissRequest = {
+            expandDropDownMenu = false
+        }
+    ) {
+        DropdownMenuItem(
+            text = {
+                Text(text = "증가")
+            },
+            onClick = {
+                counter++
+            }
+        )
+        DropdownMenuItem(
+            text = {
+                Text(text = "감소")
+            },
+            onClick = {
+                counter--
+            }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        CustomDialogExample()
+        DropDownMenuExample()
     }
 }
