@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CanvasExample()
+                    CustomDialogExample()
                 }
             }
         }
@@ -617,10 +618,92 @@ fun CanvasExample() {
     }
 }
 
+@Composable
+fun DialogExample() {
+    var openDialog by remember { mutableStateOf(false) }
+    var counter by remember { mutableStateOf(0) }
+
+    Column {
+        Button(onClick = { openDialog = true }) {
+            Text("다이얼로그 열기")
+        }
+        Text("카운터: $counter")
+    }
+
+    if (openDialog) {
+        AlertDialog(onDismissRequest = {
+            openDialog = false
+        }, confirmButton = {
+            Button(onClick = {
+                counter++
+                openDialog = false
+            }) {
+                Text(text = "더하기")
+            }
+        }, dismissButton = {
+            Button(onClick = {
+                openDialog = false
+            }) {
+                Text(text = "취소")
+            }
+        }, title = {
+            Text(text = "더하기")
+        }, text = {
+            Text(text = "더하기 버튼을 누르면 카운터를 증가합니다.\n버튼을 눌러주세요.")
+        })
+    }
+}
+
+@Composable
+fun CustomDialogExample() {
+    var openDialog by remember { mutableStateOf(false) }
+    var counter by remember { mutableStateOf(0) }
+
+    Column {
+        Button(onClick = {
+            openDialog = true
+        }) {
+            Text("다이얼로그 열기")
+        }
+        Text("카운터: $counter")
+    }
+
+    if (openDialog) {
+        Dialog(onDismissRequest = {
+            openDialog = false
+        }) {
+            Surface {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Text(text = "버튼을 클릭해주세요.\n * +1을 누르면 값이 증가합니다.\n * -1을 누르면 값이 감소합니다.")
+                    Row(modifier = Modifier.align(Alignment.End)) {
+                        Button(onClick = {
+                            openDialog = false
+                        }) {
+                            Text(text = "취소")
+                        }
+                        Button(onClick = {
+                            counter++
+                            openDialog = false
+                        }) {
+                            Text(text = "+1")
+                        }
+                        Button(onClick = {
+                            counter--
+                            openDialog = false
+                        }) {
+                            Text(text = "-1")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        CanvasExample()
+        CustomDialogExample()
     }
 }
