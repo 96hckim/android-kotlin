@@ -3,8 +3,11 @@ package com.hocheol.composelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -13,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -43,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PyeongToSquareMeter()
+                    AnimationExample()
                 }
             }
         }
@@ -896,10 +900,115 @@ fun PyeongToSquareMeterStateless(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun AnimationExample() {
+    var helloWorldVisible by remember { mutableStateOf(true) }
+    var isRed by remember { mutableStateOf(false) }
+
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isRed) Color.Red else Color.White
+    )
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isRed) 1.0f else 0.5f
+    )
+
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .background(backgroundColor)
+            .alpha(alpha)
+    ) {
+        // expand(), scale(), slide(), fade()
+        AnimatedVisibility(
+            visible = helloWorldVisible,
+            enter = slideInHorizontally() + expandVertically(),
+            exit = slideOutHorizontally()
+        ) {
+            Text(text = "Hello World!")
+        }
+
+        Row(
+            Modifier.selectable(
+                selected = helloWorldVisible,
+                onClick = {
+                    helloWorldVisible = true
+                }
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = helloWorldVisible,
+                onClick = { helloWorldVisible = true }
+            )
+            Text(
+                text = "Hello World 보이기"
+            )
+        }
+
+        Row(
+            Modifier.selectable(
+                selected = !helloWorldVisible,
+                onClick = {
+                    helloWorldVisible = false
+                }
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = !helloWorldVisible,
+                onClick = { helloWorldVisible = false }
+            )
+            Text(
+                text = "Hello World 감추기"
+            )
+        }
+
+        Text(text = "배경 색을 바꾸어봅시다.")
+
+        Row(
+            Modifier.selectable(
+                selected = !isRed,
+                onClick = {
+                    isRed = false
+                }
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = !isRed,
+                onClick = { isRed = false }
+            )
+            Text(
+                text = "흰색"
+            )
+        }
+
+        Row(
+            Modifier.selectable(
+                selected = isRed,
+                onClick = {
+                    isRed = true
+                }
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = isRed,
+                onClick = { isRed = true }
+            )
+            Text(
+                text = "빨간색"
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        PyeongToSquareMeter()
+        AnimationExample()
     }
 }
