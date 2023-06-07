@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AnimationExample()
+                    Animation2Example()
                 }
             }
         }
@@ -1005,10 +1007,135 @@ fun AnimationExample() {
     }
 }
 
+@Composable
+fun Animation2Example() {
+    var isDarkMode by remember { mutableStateOf(false) }
+
+    val transition = updateTransition(targetState = isDarkMode, label = "다크 모드 트랜지션")
+    val backgroundColor by transition.animateColor(label = "다크 모드 배경색상 애니메이션") { state ->
+        if (state) {
+            Color.Black
+        } else {
+            Color.White
+        }
+    }
+    val textColor by transition.animateColor(label = "다크 모드 글자 색상 애니메이션") { state ->
+        if (state) {
+            Color.White
+        } else {
+            Color.Black
+        }
+    }
+    val alpha by transition.animateFloat(label = "다크 모드 알파 애니메이션") { state ->
+        if (state) {
+            1.0f
+        } else {
+            0.7f
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .background(backgroundColor)
+            .alpha(alpha)
+    ) {
+        RadioButtonWithText(text = "일반 모드", color = textColor, selected = !isDarkMode) {
+            isDarkMode = false
+        }
+        RadioButtonWithText(text = "다크 모드", color = textColor, selected = isDarkMode) {
+            isDarkMode = true
+        }
+
+        Crossfade(targetState = isDarkMode) { state ->
+            if (state) {
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Red)
+                            .size(20.dp)
+                    ) {
+                        Text("A")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Magenta)
+                            .size(20.dp)
+                    ) {
+                        Text("B")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Blue)
+                            .size(20.dp)
+                    ) {
+                        Text("C")
+                    }
+                }
+            } else {
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Red)
+                            .size(20.dp)
+                    ) {
+                        Text("1")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Magenta)
+                            .size(20.dp)
+                    ) {
+                        Text("2")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Blue)
+                            .size(20.dp)
+                    ) {
+                        Text("3")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RadioButtonWithTextPreview() {
+    ComposeLabTheme {
+        RadioButtonWithText(
+            text = "라디오 버튼",
+            color = Color.Red,
+            selected = true,
+            onClick = {}
+        )
+    }
+}
+
+@Composable
+fun RadioButtonWithText(
+    text: String,
+    color: Color = Color.Black,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.selectable(
+            selected = selected,
+            onClick = onClick
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(selected = selected, onClick = onClick)
+        Text(text = text, color = color)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        AnimationExample()
+        Animation2Example()
     }
 }
