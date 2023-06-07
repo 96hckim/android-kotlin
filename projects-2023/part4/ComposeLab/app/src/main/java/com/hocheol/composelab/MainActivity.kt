@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    EffectExample()
+                    CompositionLocalExample()
                 }
             }
         }
@@ -1186,11 +1186,36 @@ fun EffectExample(lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current) 
     }
 }
 
+val LocalElevation = compositionLocalOf { 8.dp }
+
+@Composable
+fun CompositionLocalExample() {
+    CompositionLocalProvider(LocalElevation provides 12.dp) {
+        Card(
+            modifier = Modifier.padding(8.dp),
+            elevation = CardDefaults.cardElevation(LocalElevation.current)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+            ) {
+                Text("안녕하세요. 지아이티")
+                CompositionLocalProvider(LocalContentColor provides Color.Red) {
+                    Text("티안녕하세요. 지아이")
+                    CompositionLocalProvider(LocalContentColor provides Color.Blue) {
+                        Text("이티안녕하세요. 지아")
+                    }
+                    Text("아이티안녕하세요. 지")
+                }
+                Text("지아이티안녕하세요.")
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        EffectExample()
+        CompositionLocalExample()
     }
 }
