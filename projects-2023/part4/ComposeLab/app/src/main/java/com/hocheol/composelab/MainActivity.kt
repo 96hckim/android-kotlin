@@ -1,6 +1,7 @@
 package com.hocheol.composelab
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +37,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.hocheol.composelab.ui.theme.ComposeLabTheme
@@ -49,7 +54,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Animation2Example()
+                    EffectExample()
                 }
             }
         }
@@ -1132,10 +1137,60 @@ fun RadioButtonWithText(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EffectExample(lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current) {
+    val snackbarHostState by remember {
+        mutableStateOf(SnackbarHostState())
+    }
+
+    LaunchedEffect(key1 = snackbarHostState) {
+        snackbarHostState.showSnackbar("Hello World!")
+    }
+
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> {
+                    Log.d("이펙트", "ON_START")
+                }
+                Lifecycle.Event.ON_RESUME -> {
+                    Log.d("이펙트", "ON_RESUME")
+                }
+                Lifecycle.Event.ON_PAUSE -> {
+                    Log.d("이펙트", "ON_PAUSE")
+                }
+                Lifecycle.Event.ON_STOP -> {
+                    Log.d("이펙트", "ON_STOP")
+                }
+                else -> {
+                    Log.d("이펙트", "그 외")
+                }
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Text(
+            text = "",
+            modifier = Modifier.padding(paddingValues)
+        )
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        Animation2Example()
+        EffectExample()
     }
 }
