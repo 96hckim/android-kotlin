@@ -31,6 +31,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.hocheol.composelab.ui.theme.ComposeLabTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DropDownMenuExample()
+                    SnackbarExample()
                 }
             }
         }
@@ -737,10 +738,38 @@ fun DropDownMenuExample() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SnackbarExample() {
+    var counter by remember { mutableStateOf(0) }
+
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Button(
+            onClick = {
+                counter++
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "카운터는 ${counter}입니다.",
+                        actionLabel = "닫기",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            },
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            Text("더하기")
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        DropDownMenuExample()
+        SnackbarExample()
     }
 }
