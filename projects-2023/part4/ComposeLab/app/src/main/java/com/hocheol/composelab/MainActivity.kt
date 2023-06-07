@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    BottomAppBarExample()
+                    PyeongToSquareMeter()
                 }
             }
         }
@@ -817,10 +818,88 @@ fun BottomAppBarExample() {
     }
 }
 
+@Composable
+fun PyeongToSquareMeter() {
+    var pyeong by rememberSaveable {
+        mutableStateOf("23")
+    }
+    var squareMeter by rememberSaveable {
+        mutableStateOf((23 * 3.306).toString())
+    }
+
+//    Column(modifier = Modifier.padding(16.dp)) {
+//        OutlinedTextField(
+//            value = pyeong,
+//            onValueChange = {
+//                if (it.isBlank()) {
+//                    pyeong = ""
+//                    squareMeter = ""
+//                    return@OutlinedTextField
+//                }
+//                val numericValue = it.toFloatOrNull() ?: return@OutlinedTextField
+//                pyeong = it
+//                squareMeter = (numericValue * 3.306).toString()
+//            },
+//            label = {
+//                Text("평")
+//            }
+//        )
+//        OutlinedTextField(
+//            value = squareMeter,
+//            onValueChange = {
+//            },
+//            label = {
+//                Text("제곱미터")
+//            }
+//        )
+//    }
+
+    // 상태를 위로 올려서 사용해야 여러 곳에서 테스트가 용이하다. (UI = Stateless)
+    // 상태를 한 곳으로 몰아 유지보수하기 쉬워진다. (ViewModel)
+    PyeongToSquareMeterStateless(
+        pyeong = pyeong,
+        squareMeter = squareMeter
+    ) {
+        if (it.isBlank()) {
+            pyeong = ""
+            squareMeter = ""
+            return@PyeongToSquareMeterStateless
+        }
+        val numericValue = it.toFloatOrNull() ?: return@PyeongToSquareMeterStateless
+        pyeong = it
+        squareMeter = (numericValue * 3.306).toString()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PyeongToSquareMeterStateless(
+    pyeong: String,
+    squareMeter: String,
+    onPyeongChange: (String) -> Unit
+) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        OutlinedTextField(
+            value = pyeong,
+            onValueChange = onPyeongChange,
+            label = {
+                Text("평")
+            }
+        )
+        OutlinedTextField(
+            value = squareMeter,
+            onValueChange = {},
+            label = {
+                Text("제곱미터")
+            }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        BottomAppBarExample()
+        PyeongToSquareMeter()
     }
 }
