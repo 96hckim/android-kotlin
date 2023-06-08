@@ -40,6 +40,10 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.hocheol.composelab.ui.theme.ComposeLabTheme
@@ -54,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CompositionLocalExample()
+                    NavigationExample()
                 }
             }
         }
@@ -1212,10 +1216,107 @@ fun CompositionLocalExample() {
     }
 }
 
+@Composable
+fun NavigationExample(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
+    // Home -> Login -> Mail
+    // inclusive 사용 시 Home -> Mail
+    NavHost(navController = navController, startDestination = "Home", modifier = modifier) {
+        composable("Home") {
+            Column {
+                Text(text = "Home")
+                Button(onClick = {
+                    navController.navigate("Playground") {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "Playground 으로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Office") {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "Office 로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Home") {
+                        launchSingleTop = true
+                    }
+                }) {
+                    Text(text = "Home 으로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Argument/GIT")
+                }) {
+                    Text(text = "GIT 로 이동")
+                }
+            }
+        }
+        composable("Office") {
+            Column {
+                Text(text = "Office")
+                Button(onClick = {
+                    navController.navigate("Playground") {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "Playground 으로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Home") {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "Home 으로 이동")
+                }
+            }
+        }
+        composable("Playground") {
+            Column {
+                Text(text = "Playground")
+                Button(onClick = {
+                    navController.navigate("Office") {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "Office 로 이동")
+                }
+                Button(onClick = {
+                    navController.navigate("Home") {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "Home 으로 이동")
+                }
+            }
+        }
+
+        composable("Argument/{userId}") {
+            val userId = it.arguments?.getString("userId")
+            Text("userId: $userId")
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComposeLabPreview() {
     ComposeLabTheme {
-        CompositionLocalExample()
+        NavigationExample()
     }
 }
