@@ -34,7 +34,7 @@ class WaveformView @JvmOverloads constructor(
         val rectF = RectF()
         val centerY = (this.height / 2).toFloat()
         rectF.top = centerY - amp / 2 - rectHeightOffset
-        rectF.bottom = rectF.top + amp + rectHeightOffset
+        rectF.bottom = centerY + amp / 2 + rectHeightOffset
         rectF.left = index * rectWidth
         rectF.right = rectF.left + rectWidth - 5f // 여백을 위해 5를 더 줌
         return rectF
