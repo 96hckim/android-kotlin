@@ -17,7 +17,8 @@ class WaveformView @JvmOverloads constructor(
     private val ampList = mutableListOf<Float>()
     private val rectList = mutableListOf<RectF>()
 
-    private val rectWidth = 10f
+    private val rectWidth = 15f
+    private val rectHeightOffset = 3f
     private var tick = 0
 
     private val redPaint = Paint().apply {
@@ -26,55 +27,41 @@ class WaveformView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        rectList.forEach { canvas.drawRect(it, redPaint) }
+    }
 
-        for (rectF in rectList) {
-            canvas.drawRect(rectF, redPaint)
-        }
+    private fun createRectF(amp: Float, index: Int): RectF {
+        val rectF = RectF()
+        val centerY = (this.height / 2).toFloat()
+        rectF.top = centerY - amp / 2 - rectHeightOffset
+        rectF.bottom = rectF.top + amp + rectHeightOffset
+        rectF.left = index * rectWidth
+        rectF.right = rectF.left + rectWidth - 5f // 여백을 위해 5를 더 줌
+        return rectF
+    }
+
+    private fun updateRectList(amps: List<Float>) {
+        rectList.clear()
+        rectList.addAll(amps.mapIndexed { i, amp -> createRectF(amp, i) })
     }
 
     fun addAmplitude(maxAmplitude: Float) {
-        ampList.add(maxAmplitude)
-        rectList.clear()
-
-        val maxRect = (this.width / rectWidth).toInt()
-        val amps = ampList.takeLast(maxRect)
-
-        for ((i, amp) in amps.withIndex()) {
-            val rectF = RectF()
-            rectF.top = 0f
-            rectF.bottom = amp
-            rectF.left = i * rectWidth
-            rectF.right = rectF.left + rectWidth
-
-            rectList.add(rectF)
-        }
-
+        val amplitude = (maxAmplitude / Short.MAX_VALUE) * this.height * 0.8f
+        ampList.add(amplitude)
+        updateRectList(ampList.takeLast((width / rectWidth).toInt()))
         invalidate()
     }
 
-    fun replayAmplitude(duration: Int) {
-        rectList.clear()
-
-        val maxRect = (this.width / rectWidth).toInt()
-        val amps = ampList.take(tick).takeLast(maxRect)
-
-        for ((i, amp) in amps.withIndex()) {
-            val rectF = RectF()
-            rectF.top = 0f
-            rectF.bottom = amp
-            rectF.left = i * rectWidth
-            rectF.right = rectF.left + rectWidth
-
-            rectList.add(rectF)
-        }
-
+    fun replayAmplitude() {
+        updateRectList(ampList.take(tick).takeLast((width / rectWidth).toInt()))
         tick++
-
         invalidate()
     }
 
     fun clearData() {
         ampList.clear()
+        rectList.clear()
+        invalidate()
     }
 
     fun clearWave() {
