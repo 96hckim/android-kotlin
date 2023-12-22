@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import com.hocheol.recorder.databinding.ActivityMainBinding
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnTimerTickListener {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var timer: Timer
+
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
     private var fileName: String = ""
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fileName = "${externalCacheDir?.absolutePath}/audiorecordtest.3gp"
+        timer = Timer(this)
 
         binding.recordButton.setOnClickListener {
             when (state) {
@@ -119,6 +122,8 @@ class MainActivity : AppCompatActivity() {
             start()
         }
 
+        timer.start()
+
         binding.recordButton.setImageDrawable(
             ContextCompat.getDrawable(
                 this,
@@ -143,6 +148,8 @@ class MainActivity : AppCompatActivity() {
             it.release()
         }
         recorder = null
+
+        timer.stop()
 
         binding.recordButton.setImageDrawable(
             ContextCompat.getDrawable(
@@ -248,5 +255,9 @@ class MainActivity : AppCompatActivity() {
 
             else -> Unit
         }
+    }
+
+    override fun onTick(duration: Long) {
+        binding.waveformView.addAmplitude(recorder?.maxAmplitude?.toFloat() ?: 0f)
     }
 }
