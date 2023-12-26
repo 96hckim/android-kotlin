@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import com.google.gson.Gson
 import com.hocheol.todaynotice.databinding.ActivityMainBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -45,9 +46,11 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val body = response.body?.string()
 
+                        val message = Gson().fromJson(body, Message::class.java)
+
                         runOnUiThread {
                             binding.noticeTextView.isVisible = true
-                            binding.noticeTextView.text = body
+                            binding.noticeTextView.text = message.message
 
                             binding.serverHostEditText.isVisible = false
                             binding.confirmButton.isVisible = false
