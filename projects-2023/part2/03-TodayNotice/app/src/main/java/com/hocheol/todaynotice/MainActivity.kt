@@ -3,39 +3,42 @@ package com.hocheol.todaynotice
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.PrintWriter
-import java.net.Socket
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Thread {
-            try {
-                val socket = Socket("10.0.2.2", 8080)
-                val printer = PrintWriter(socket.getOutputStream())
-                val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
+        val client = OkHttpClient()
 
-                printer.println("GET / HTTP/1.1")
-                printer.println("Host: 127.0.0.1:8080")
-                printer.println("User-Agent: android")
-                printer.println("\r\n")
-                printer.flush()
+        val request: Request = Request.Builder()
+            .url("http://10.0.2.2:8080")
+            .build()
 
-                var input: String?
-                while (reader.readLine().also { input = it } != null) {
-                    println("Received response: $input")
-                }
-
-                reader.close()
-                printer.close()
-                socket.close()
-            } catch (e: Exception) {
-                Log.e("Client", e.toString())
+        val callback = object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, e.toString())
             }
-        }.start()
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val body = response.body?.string()
+                    Log.e(TAG, "$body")
+                }
+            }
+        }
+
+        client.newCall(request).enqueue(callback)
+    }
+
+    companion object {
+        private const val TAG = "Client"
     }
 }
