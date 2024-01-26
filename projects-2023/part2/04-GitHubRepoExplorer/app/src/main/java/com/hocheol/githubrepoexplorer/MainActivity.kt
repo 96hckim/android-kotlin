@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.githubrepoexplorer.databinding.ActivityMainBinding
 import com.hocheol.githubrepoexplorer.model.Repo
+import com.hocheol.githubrepoexplorer.model.UserDto
 import com.hocheol.githubrepoexplorer.network.GitHubService
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,10 +30,19 @@ class MainActivity : AppCompatActivity() {
         val gitHubService = retrofit.create(GitHubService::class.java)
         gitHubService.listRepos("96hckim").enqueue(object : Callback<List<Repo>> {
             override fun onResponse(call: Call<List<Repo>>, response: Response<List<Repo>>) {
-                Log.e(TAG, "onResponse: ${response.body()?.toString()}")
+                Log.e(TAG, "listRepos: ${response.body()?.toString()}")
             }
 
             override fun onFailure(call: Call<List<Repo>>, t: Throwable) {
+            }
+        })
+
+        gitHubService.searchUsers("squar").enqueue(object : Callback<UserDto> {
+            override fun onResponse(call: Call<UserDto>, response: Response<UserDto>) {
+                Log.e(TAG, "searchUsers: ${response.body()?.toString()}")
+            }
+
+            override fun onFailure(call: Call<UserDto>, t: Throwable) {
             }
         })
     }
