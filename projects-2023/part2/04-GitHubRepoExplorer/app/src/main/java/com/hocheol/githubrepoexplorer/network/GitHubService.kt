@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface GitHubService {
     //    @Headers("Authorization: Bearer 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")
     @GET("users/{username}/repos")
-    fun listRepos(@Path("username") username: String): Call<List<Repo>>
+    fun listRepos(@Path("username") username: String, @Query("page") page: Int): Call<List<Repo>>
 
     //    @Headers("Authorization: Bearer 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")
     @GET("search/users")

@@ -8,10 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.githubrepoexplorer.databinding.ItemRepoBinding
 import com.hocheol.githubrepoexplorer.model.Repo
 
-class RepoAdapter : ListAdapter<Repo, RepoAdapter.ViewHolder>(diffCallback) {
+class RepoAdapter(private val onClick: (Repo) -> Unit) : ListAdapter<Repo, RepoAdapter.ViewHolder>(diffCallback) {
 
     inner class ViewHolder(private val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Repo) {
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
+
             binding.repoNameTextView.text = item.name
             binding.descriptionTextView.text = item.description
             binding.starCountTextView.text = item.starCount.toString()
