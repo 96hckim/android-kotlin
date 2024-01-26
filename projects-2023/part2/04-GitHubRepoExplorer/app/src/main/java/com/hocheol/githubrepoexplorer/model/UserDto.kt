@@ -1,6 +1,5 @@
 package com.hocheol.githubrepoexplorer.model
 
-
 import com.google.gson.annotations.SerializedName
 
 data class UserDto(
