@@ -8,10 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.githubrepoexplorer.databinding.ItemUserBinding
 import com.hocheol.githubrepoexplorer.model.User
 
-class UserAdapter : ListAdapter<User, UserAdapter.ViewHolder>(diffCallback) {
+class UserAdapter(val onClick: (User) -> Unit) : ListAdapter<User, UserAdapter.ViewHolder>(diffCallback) {
 
     inner class ViewHolder(private val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: User) {
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
+
             binding.userNameTextView.text = item.name
         }
     }
