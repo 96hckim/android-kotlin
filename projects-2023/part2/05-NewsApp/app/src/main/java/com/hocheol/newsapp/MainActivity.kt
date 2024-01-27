@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.newsapp.databinding.ActivityMainBinding
 import com.tickaroo.tikxml.TikXml
@@ -122,6 +123,8 @@ class MainActivity : AppCompatActivity() {
                 val newsItems = response.body()?.channel?.items.orEmpty()
                 val newsModels = newsItems.transform()
                 newsAdapter.submitList(newsModels)
+
+                binding.notFoundView.isVisible = newsModels.isEmpty()
 
                 newsModels.forEachIndexed { index, newsModel ->
                     Thread {
