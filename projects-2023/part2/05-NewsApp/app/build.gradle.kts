@@ -53,6 +53,12 @@ dependencies {
     kapt("com.tickaroo.tikxml:processor:0.8.13")
     implementation("com.tickaroo.tikxml:retrofit-converter:0.8.13")
 
+    // Jsoup
+    implementation("org.jsoup:jsoup:1.17.2")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

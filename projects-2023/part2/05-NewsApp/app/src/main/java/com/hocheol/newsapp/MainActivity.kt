@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.newsapp.databinding.ActivityMainBinding
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
+import org.jsoup.Jsoup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,10 +43,34 @@ class MainActivity : AppCompatActivity() {
         val newsService = retrofit.create(NewsService::class.java)
         newsService.mainFeed().enqueue(object : Callback<NewsRss> {
             override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
-                Log.e(TAG, "onResponse: ${response.body()?.channel?.items}")
+                Log.e(TAG, "items: ${response.body()?.channel?.items}")
 
-                val items = response.body()?.channel?.items.orEmpty()
-                newsAdapter.submitList(items)
+                val newsItems = response.body()?.channel?.items.orEmpty()
+                val newsModels = newsItems.transform()
+                newsAdapter.submitList(newsModels)
+
+                newsModels.forEachIndexed { index, newsModel ->
+                    Thread {
+                        try {
+                            val jsoup = Jsoup.connect(newsModel.link).get()
+
+                            val elements = jsoup.select("meta[property^=og:]")
+                            val ogImageNode = elements.find { node ->
+                                node.attr("property") == "og:image"
+                            }
+
+                            newsModel.imageUrl = ogImageNode?.attr("content")
+                            Log.e(TAG, "link: ${newsModel.link}")
+                            Log.e(TAG, "imageUrl: ${newsModel.imageUrl}")
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        } finally {
+                            runOnUiThread {
+                                newsAdapter.notifyItemChanged(index)
+                            }
+                        }
+                    }.start()
+                }
             }
 
             override fun onFailure(call: Call<NewsRss>, t: Throwable) {
