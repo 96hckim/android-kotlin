@@ -8,10 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hocheol.newsapp.databinding.ItemNewsBinding
 
-class NewsAdapter : ListAdapter<NewsModel, NewsAdapter.ViewHolder>(diffCallback) {
+class NewsAdapter(private val onClick: (String) -> Unit) : ListAdapter<NewsModel, NewsAdapter.ViewHolder>(diffCallback) {
 
     inner class ViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: NewsModel) {
+            binding.root.setOnClickListener {
+                onClick(item.link)
+            }
+
             binding.titleTextView.text = item.title
 
             Glide.with(binding.thumbnailImageView)
