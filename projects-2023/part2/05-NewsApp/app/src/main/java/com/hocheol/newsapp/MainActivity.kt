@@ -3,15 +3,21 @@ package com.hocheol.newsapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.Chip
 import com.hocheol.newsapp.databinding.ActivityMainBinding
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,11 +39,20 @@ class MainActivity : AppCompatActivity() {
         )
         .build()
 
+    private val newsService = retrofit.create(NewsService::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupViews()
+        setupChips()
+        setupSearch()
+        loadMainFeed()
+    }
+
+    private fun setupViews() {
         newsAdapter = NewsAdapter { url ->
             startActivity(
                 Intent(this, WebViewActivity::class.java).apply {
@@ -45,110 +60,59 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         }
-
         binding.newsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = newsAdapter
         }
+    }
 
-        val newsService = retrofit.create(NewsService::class.java)
-
-        binding.feedChip.setOnClickListener {
+    private fun setupChips() {
+        val chipClickListener: (Chip) -> Unit = { chip ->
             binding.chipGroup.clearCheck()
-            binding.feedChip.isChecked = true
-
-            newsService.mainFeed().submitList()
+            chip.isChecked = true
+            when (chip.id) {
+                R.id.feedChip -> loadMainFeed()
+                R.id.politicsChip -> loadNews(newsService.politicsNews())
+                R.id.economyChip -> loadNews(newsService.economyNews())
+                R.id.societyChip -> loadNews(newsService.societyNews())
+                R.id.itChip -> loadNews(newsService.itNews())
+                R.id.sportChip -> loadNews(newsService.sportNews())
+            }
         }
-
-        binding.politicsChip.setOnClickListener {
-            binding.chipGroup.clearCheck()
-            binding.politicsChip.isChecked = true
-
-            newsService.politicsNews().submitList()
+        binding.chipGroup.children.forEach { chip ->
+            chip.setOnClickListener { chipClickListener(chip as Chip) }
         }
+    }
 
-        binding.economyChip.setOnClickListener {
-            binding.chipGroup.clearCheck()
-            binding.economyChip.isChecked = true
-
-            newsService.economyNews().submitList()
-        }
-
-        binding.societyChip.setOnClickListener {
-            binding.chipGroup.clearCheck()
-            binding.societyChip.isChecked = true
-
-            newsService.societyNews().submitList()
-        }
-
-        binding.itChip.setOnClickListener {
-            binding.chipGroup.clearCheck()
-            binding.itChip.isChecked = true
-
-            newsService.itNews().submitList()
-        }
-
-        binding.sportChip.setOnClickListener {
-            binding.chipGroup.clearCheck()
-            binding.sportChip.isChecked = true
-
-            newsService.sportNews().submitList()
-        }
-
+    private fun setupSearch() {
         binding.searchTextInputEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 binding.chipGroup.clearCheck()
-
-                binding.searchTextInputEditText.clearFocus()
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                hideKeyboard(v)
 
                 val query = binding.searchTextInputEditText.text.toString()
-                newsService.search(query).submitList()
+                loadNews(newsService.search(query))
 
                 return@setOnEditorActionListener true
             }
-
             return@setOnEditorActionListener false
         }
-
-        newsService.mainFeed().submitList()
     }
 
-    private fun Call<NewsRss>.submitList() {
-        this.enqueue(object : Callback<NewsRss> {
-            override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
-                Log.e(TAG, "items: ${response.body()?.channel?.items}")
+    private fun loadMainFeed() {
+        loadNews(newsService.mainFeed())
+    }
 
+    private fun loadNews(call: Call<NewsRss>) {
+        call.enqueue(object : Callback<NewsRss> {
+            override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
                 val newsItems = response.body()?.channel?.items.orEmpty()
                 val newsModels = newsItems.transform()
-                newsAdapter.submitList(newsModels)
 
+                newsAdapter.submitList(newsModels)
                 binding.notFoundView.isVisible = newsModels.isEmpty()
 
-                newsModels.forEachIndexed { index, newsModel ->
-                    Thread {
-                        try {
-                            val jsoup = Jsoup.connect(newsModel.link).get()
-
-                            val elements = jsoup.select("meta[property^=og:]")
-                            val ogImageNode = elements.find { node ->
-                                node.attr("property") == "og:image"
-                            }
-
-                            newsModel.imageUrl = ogImageNode?.attr("content")
-                            Log.e(TAG, "imageUrl: ${newsModel.imageUrl}")
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        } finally {
-                            if (newsModel.imageUrl != null) {
-                                runOnUiThread {
-                                    newsAdapter.notifyItemChanged(index)
-                                }
-                            }
-                        }
-                    }.start()
-                }
+                fetchImageUrls(newsModels)
             }
 
             override fun onFailure(call: Call<NewsRss>, t: Throwable) {
@@ -157,7 +121,28 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    companion object {
-        private const val TAG = "MainActivity"
+    private fun fetchImageUrls(newsModels: List<NewsModel>) {
+        newsModels.forEachIndexed { index, newsModel ->
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val jsoup = Jsoup.connect(newsModel.link).get()
+                    val elements = jsoup.select("meta[property^=og:]")
+                    val ogImageNode = elements.find { node ->
+                        node.attr("property") == "og:image"
+                    }
+                    newsModel.imageUrl = ogImageNode?.attr("content")
+                    withContext(Dispatchers.Main) {
+                        newsAdapter.notifyItemChanged(index)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
