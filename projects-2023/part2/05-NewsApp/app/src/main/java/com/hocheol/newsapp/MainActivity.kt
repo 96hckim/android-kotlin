@@ -41,7 +41,54 @@ class MainActivity : AppCompatActivity() {
         }
 
         val newsService = retrofit.create(NewsService::class.java)
-        newsService.mainFeed().enqueue(object : Callback<NewsRss> {
+
+        binding.feedChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.feedChip.isChecked = true
+
+            newsService.mainFeed().submitList()
+        }
+
+        binding.politicsChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.politicsChip.isChecked = true
+
+            newsService.politicsNews().submitList()
+        }
+
+        binding.economyChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.economyChip.isChecked = true
+
+            newsService.economyNews().submitList()
+        }
+
+        binding.societyChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.societyChip.isChecked = true
+
+            newsService.societyNews().submitList()
+        }
+
+        binding.itChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.itChip.isChecked = true
+
+            newsService.itNews().submitList()
+        }
+
+        binding.sportChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.sportChip.isChecked = true
+
+            newsService.sportNews().submitList()
+        }
+
+        newsService.mainFeed().submitList()
+    }
+
+    private fun Call<NewsRss>.submitList() {
+        this.enqueue(object : Callback<NewsRss> {
             override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
                 Log.e(TAG, "items: ${response.body()?.channel?.items}")
 
@@ -60,13 +107,14 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             newsModel.imageUrl = ogImageNode?.attr("content")
-                            Log.e(TAG, "link: ${newsModel.link}")
                             Log.e(TAG, "imageUrl: ${newsModel.imageUrl}")
                         } catch (e: Exception) {
                             e.printStackTrace()
                         } finally {
-                            runOnUiThread {
-                                newsAdapter.notifyItemChanged(index)
+                            if (newsModel.imageUrl != null) {
+                                runOnUiThread {
+                                    newsAdapter.notifyItemChanged(index)
+                                }
                             }
                         }
                     }.start()
