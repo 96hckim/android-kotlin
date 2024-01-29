@@ -4,6 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.hocheol.chattingapp.Key
 import com.hocheol.chattingapp.R
 import com.hocheol.chattingapp.databinding.FragmentUserlistBinding
 
@@ -22,19 +29,23 @@ class UserFragment : Fragment(R.layout.fragment_userlist) {
             adapter = userListAdapter
         }
 
-        userListAdapter.submitList(
-            mutableListOf(
-                UserItem(
-                    userId = "1",
-                    username = "1",
-                    description = "1.."
-                ),
-                UserItem(
-                    userId = "2",
-                    username = "2",
-                    description = "2.."
-                )
-            )
+        val currentUserId = Firebase.auth.currentUser?.uid ?: ""
+
+        Firebase.database.reference.child(Key.DB_USERS).addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val userItemList = snapshot.children.mapNotNull {
+                        it.getValue(UserItem::class.java)
+                    }.filter {
+                        it.userId != currentUserId
+                    }
+                    userListAdapter.submitList(userItemList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    error.toException().printStackTrace()
+                }
+            }
         )
     }
 }
