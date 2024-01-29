@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/nicknameTextView"
+        android:id="@+id/nicknameEditView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/descriptionTextView"
+        android:id="@+id/descriptionEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -24,7 +24,7 @@
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nicknameTextView" />
+        app:layout_constraintTop_toBottomOf="@id/nicknameEditView" />
 
     <Button
         android:id="@+id/applyButton"
@@ -36,7 +36,7 @@
         android:text="적용하기"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descriptionTextView" />
+        app:layout_constraintTop_toBottomOf="@id/descriptionEditText" />
 
     <Button
         android:id="@+id/signOutButton"
