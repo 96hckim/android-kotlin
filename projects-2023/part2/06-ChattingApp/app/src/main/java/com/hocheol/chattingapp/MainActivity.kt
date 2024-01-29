@@ -6,12 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.hocheol.chattingapp.chatroom.ChatRoomFragment
 import com.hocheol.chattingapp.databinding.ActivityMainBinding
+import com.hocheol.chattingapp.mypage.MyPageFragment
 import com.hocheol.chattingapp.userlist.UserFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val userFragment = UserFragment()
+    private val chatRoomFragment = ChatRoomFragment()
+    private val myPageFragment = MyPageFragment()
 
     override fun onStart() {
         super.onStart()
@@ -35,15 +41,15 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             val fragment: Fragment? = when (it.itemId) {
                 R.id.userList -> {
-                    UserFragment()
+                    userFragment
                 }
 
                 R.id.chatRoomList -> {
-                    UserFragment()
+                    chatRoomFragment
                 }
 
                 R.id.myPage -> {
-                    UserFragment()
+                    myPageFragment
                 }
 
                 else -> null
@@ -56,6 +62,8 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
+
+        binding.bottomNavigationView.selectedItemId = R.id.userList
     }
 
     private fun replaceFragment(fragment: Fragment) {
