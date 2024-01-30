@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.chattingapp.databinding.ItemChatroomBinding
 
-class ChatRoomAdapter : ListAdapter<ChatRoomItem, ChatRoomAdapter.ViewHolder>(diffCallback) {
+class ChatRoomAdapter(private val onClick: (ChatRoomItem) -> Unit) : ListAdapter<ChatRoomItem, ChatRoomAdapter.ViewHolder>(diffCallback) {
 
     inner class ViewHolder(private val binding: ItemChatroomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ChatRoomItem) {
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
+
             binding.nicknameTextView.text = item.otherUserName
             binding.lastMessageTextView.text = item.lastMessage
         }

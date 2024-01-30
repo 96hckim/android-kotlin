@@ -17,8 +17,12 @@ class ChatDetailAdapter : ListAdapter<ChatDetailItem, ChatDetailAdapter.ViewHold
     inner class ViewHolder(private val binding: ItemChatDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ChatDetailItem) {
             val isOtherUser = item.userId == otherUserItem?.userId
+
             binding.nicknameTextView.isVisible = isOtherUser
-            binding.nicknameTextView.text = otherUserItem?.username.takeIf { isOtherUser }
+            if (isOtherUser) {
+                binding.nicknameTextView.text = otherUserItem?.username
+            }
+
             binding.messageTextView.text = item.message
             binding.messageTextView.gravity = if (isOtherUser) Gravity.START else Gravity.END
         }

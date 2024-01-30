@@ -1,6 +1,7 @@
 package com.hocheol.chattingapp.chatdetail
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.ktx.auth
@@ -20,8 +21,7 @@ class ChatDetailActivity : AppCompatActivity() {
     private var chatRoomId: String = ""
     private var otherUserId: String = ""
     private var myUserId: String = ""
-
-    private val chatDetailItemList = mutableListOf<ChatDetailItem>()
+    private var myUserName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,26 +30,28 @@ class ChatDetailActivity : AppCompatActivity() {
 
         val chatDetailAdapter = ChatDetailAdapter()
 
-        chatRoomId = intent.getStringExtra("chatRoomId") ?: return
-        otherUserId = intent.getStringExtra("otherUserId") ?: return
+        chatRoomId = intent.getStringExtra(EXTRA_CHAT_ROOM_ID) ?: return
+        otherUserId = intent.getStringExtra(EXTRA_OTHER_USER_ID) ?: return
         myUserId = Firebase.auth.currentUser?.uid ?: ""
 
         Firebase.database.reference.child(Key.DB_USERS).child(myUserId).get().addOnSuccessListener {
             val myUserItem = it.getValue(UserItem::class.java)
-            val myUserName = myUserItem?.username
+            myUserName = myUserItem?.username ?: ""
         }
         Firebase.database.reference.child(Key.DB_USERS).child(otherUserId).get().addOnSuccessListener {
             val otherUserItem = it.getValue(UserItem::class.java)
             chatDetailAdapter.otherUserItem = otherUserItem
         }
 
-        Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId).addChildEventListener(
+        val chatRoomDB = Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId)
+
+        chatRoomDB.addChildEventListener(
             object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val chatDetailItem = snapshot.getValue(ChatDetailItem::class.java) ?: return
 
-                    chatDetailItemList.add(chatDetailItem)
-                    chatDetailAdapter.submitList(chatDetailItemList)
+                    val chatDetailItems = chatDetailAdapter.currentList + chatDetailItem
+                    chatDetailAdapter.submitList(chatDetailItems)
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) = Unit
@@ -68,5 +70,41 @@ class ChatDetailActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = chatDetailAdapter
         }
+
+        binding.sendButton.setOnClickListener {
+            val message = binding.messageEditText.text?.toString()
+
+            if (message.isNullOrEmpty()) {
+                Toast.makeText(applicationContext, "빈 메세지를 전송할 수는 없습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val newChatItem = ChatDetailItem(
+                message = message,
+                userId = myUserId
+            )
+
+            chatRoomDB.push().apply {
+                newChatItem.chatId = key
+                setValue(newChatItem)
+            }
+
+            val updates: MutableMap<String, Any> = hashMapOf(
+                "${Key.DB_CHAT_ROOMS}/$myUserId/$otherUserId/lastMessage" to message,
+                "${Key.DB_CHAT_ROOMS}/$otherUserId/$myUserId/lastMessage" to message,
+                "${Key.DB_CHAT_ROOMS}/$otherUserId/$myUserId/chatRoomId" to chatRoomId,
+                "${Key.DB_CHAT_ROOMS}/$otherUserId/$myUserId/otherUserId" to myUserId,
+                "${Key.DB_CHAT_ROOMS}/$otherUserId/$myUserId/otherUserName" to myUserName,
+            )
+
+            Firebase.database.reference.updateChildren(updates)
+
+            binding.messageEditText.text?.clear()
+        }
+    }
+
+    companion object {
+        const val EXTRA_CHAT_ROOM_ID = "chatRoomId"
+        const val EXTRA_OTHER_USER_ID = "otherUserId"
     }
 }

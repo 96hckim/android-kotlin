@@ -1,5 +1,6 @@
 package com.hocheol.chattingapp.chatroom
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.hocheol.chattingapp.Key
 import com.hocheol.chattingapp.R
+import com.hocheol.chattingapp.chatdetail.ChatDetailActivity
 import com.hocheol.chattingapp.databinding.FragmentChatroomBinding
 
 class ChatRoomFragment : Fragment(R.layout.fragment_chatroom) {
@@ -22,7 +24,13 @@ class ChatRoomFragment : Fragment(R.layout.fragment_chatroom) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentChatroomBinding.bind(view)
 
-        val chatRoomAdapter = ChatRoomAdapter()
+        val chatRoomAdapter = ChatRoomAdapter { chatRoomItem ->
+            val intent = Intent(context, ChatDetailActivity::class.java).apply {
+                putExtra(ChatDetailActivity.EXTRA_CHAT_ROOM_ID, chatRoomItem.chatRoomId)
+                putExtra(ChatDetailActivity.EXTRA_OTHER_USER_ID, chatRoomItem.otherUserId)
+            }
+            startActivity(intent)
+        }
 
         binding.chatRoomRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
