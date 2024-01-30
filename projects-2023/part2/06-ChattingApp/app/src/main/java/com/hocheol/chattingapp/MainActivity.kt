@@ -46,29 +46,19 @@ class MainActivity : AppCompatActivity() {
 
         askNotificationPermission()
 
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            val fragment: Fragment? = when (it.itemId) {
-                R.id.userList -> {
-                    userFragment
-                }
-
-                R.id.chatRoomList -> {
-                    chatRoomFragment
-                }
-
-                R.id.myPage -> {
-                    myPageFragment
-                }
-
+        binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            val fragment: Fragment? = when (menuItem.itemId) {
+                R.id.userList -> userFragment
+                R.id.chatRoomList -> chatRoomFragment
+                R.id.myPage -> myPageFragment
                 else -> null
             }
 
-            if (fragment != null) {
-                replaceFragment(fragment)
+            fragment?.let {
+                supportActionBar?.title = menuItem.title
+                replaceFragment(it)
                 true
-            } else {
-                false
-            }
+            } ?: false
         }
 
         binding.bottomNavigationView.selectedItemId = R.id.userList

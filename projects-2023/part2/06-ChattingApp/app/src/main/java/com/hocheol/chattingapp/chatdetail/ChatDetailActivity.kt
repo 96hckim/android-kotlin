@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -29,6 +30,7 @@ class ChatDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatDetailBinding
     private lateinit var chatDetailAdapter: ChatDetailAdapter
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     private var chatRoomId: String = ""
     private var otherUserId: String = ""
@@ -36,12 +38,15 @@ class ChatDetailActivity : AppCompatActivity() {
     private var myUserId: String = ""
     private var myUserName: String = ""
 
+    private val chatDetailItemList = mutableListOf<ChatDetailItem>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         chatDetailAdapter = ChatDetailAdapter()
+        linearLayoutManager = LinearLayoutManager(applicationContext)
 
         chatRoomId = intent.getStringExtra(EXTRA_CHAT_ROOM_ID) ?: return
         otherUserId = intent.getStringExtra(EXTRA_OTHER_USER_ID) ?: return
@@ -55,9 +60,21 @@ class ChatDetailActivity : AppCompatActivity() {
         }
 
         binding.chatRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = linearLayoutManager
             adapter = chatDetailAdapter
         }
+
+        chatDetailAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+
+                linearLayoutManager.smoothScrollToPosition(
+                    binding.chatRecyclerView,
+                    null,
+                    chatDetailAdapter.itemCount - 1
+                )
+            }
+        })
 
         binding.sendButton.setOnClickListener {
             val message = binding.messageEditText.text?.toString()
@@ -102,7 +119,7 @@ class ChatDetailActivity : AppCompatActivity() {
             val request = Request.Builder()
                 .post(requestBody)
                 .url("https://fcm.googleapis.com/fcm/send")
-                .header("Authorization", "key=${Key.FCM_SERVER_KEY}")
+                .header("Authorization", "key=${getString(R.string.fcm_server_key)}")
                 .build()
 
             client.newCall(request).enqueue(object : Callback {
@@ -136,8 +153,8 @@ class ChatDetailActivity : AppCompatActivity() {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val chatDetailItem = snapshot.getValue(ChatDetailItem::class.java) ?: return
 
-                    val chatDetailItems = chatDetailAdapter.currentList + chatDetailItem
-                    chatDetailAdapter.submitList(chatDetailItems)
+                    chatDetailItemList.add(chatDetailItem)
+                    chatDetailAdapter.submitList(chatDetailItemList.toMutableList())
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) = Unit
