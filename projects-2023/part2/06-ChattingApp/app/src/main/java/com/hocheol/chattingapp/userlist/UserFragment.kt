@@ -31,7 +31,8 @@ class UserFragment : Fragment(R.layout.fragment_userlist) {
             val chatRoomDB = Firebase.database.reference.child(Key.DB_CHAT_ROOMS).child(myUserId).child(otherUser.userId ?: "")
 
             chatRoomDB.get().addOnSuccessListener {
-                var chatRoomId = ""
+                val chatRoomId: String
+
                 if (it.value != null) {
                     val chatRoom = it.getValue(ChatRoomItem::class.java)
                     chatRoomId = chatRoom?.chatRoomId ?: ""
