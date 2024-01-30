@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.hocheol.chattingapp.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -62,15 +63,19 @@ class LoginActivity : AppCompatActivity() {
 
                     val userId = currentUser.uid
 
-                    val user = mutableMapOf<String, Any>(
-                        "userId" to userId,
-                        "username" to email
-                    )
+                    Firebase.messaging.token.addOnCompleteListener {
+                        val token = it.result
+                        val user = mutableMapOf<String, Any>(
+                            "userId" to userId,
+                            "username" to email,
+                            "fcmToken" to token
+                        )
 
-                    Firebase.database(Key.DB_URL).reference.child(Key.DB_USERS).child(userId).updateChildren(user)
+                        Firebase.database(Key.DB_URL).reference.child(Key.DB_USERS).child(userId).updateChildren(user)
 
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     showToast("로그인에 실패했습니다.")

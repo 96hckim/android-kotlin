@@ -1,6 +1,7 @@
 package com.hocheol.chattingapp.chatdetail
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,15 +12,27 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.hocheol.chattingapp.Key
+import com.hocheol.chattingapp.R
 import com.hocheol.chattingapp.databinding.ActivityChatDetailBinding
 import com.hocheol.chattingapp.userlist.UserItem
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class ChatDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatDetailBinding
+    private lateinit var chatDetailAdapter: ChatDetailAdapter
 
     private var chatRoomId: String = ""
     private var otherUserId: String = ""
+    private var otherUserFcmToken: String = ""
     private var myUserId: String = ""
     private var myUserName: String = ""
 
@@ -28,7 +41,7 @@ class ChatDetailActivity : AppCompatActivity() {
         binding = ActivityChatDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val chatDetailAdapter = ChatDetailAdapter()
+        chatDetailAdapter = ChatDetailAdapter()
 
         chatRoomId = intent.getStringExtra(EXTRA_CHAT_ROOM_ID) ?: return
         otherUserId = intent.getStringExtra(EXTRA_OTHER_USER_ID) ?: return
@@ -37,34 +50,9 @@ class ChatDetailActivity : AppCompatActivity() {
         Firebase.database.reference.child(Key.DB_USERS).child(myUserId).get().addOnSuccessListener {
             val myUserItem = it.getValue(UserItem::class.java)
             myUserName = myUserItem?.username ?: ""
+
+            getOtherUserData()
         }
-        Firebase.database.reference.child(Key.DB_USERS).child(otherUserId).get().addOnSuccessListener {
-            val otherUserItem = it.getValue(UserItem::class.java)
-            chatDetailAdapter.otherUserItem = otherUserItem
-        }
-
-        val chatRoomDB = Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId)
-
-        chatRoomDB.addChildEventListener(
-            object : ChildEventListener {
-                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    val chatDetailItem = snapshot.getValue(ChatDetailItem::class.java) ?: return
-
-                    val chatDetailItems = chatDetailAdapter.currentList + chatDetailItem
-                    chatDetailAdapter.submitList(chatDetailItems)
-                }
-
-                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) = Unit
-
-                override fun onChildRemoved(snapshot: DataSnapshot) = Unit
-
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) = Unit
-
-                override fun onCancelled(error: DatabaseError) {
-                    error.toException().printStackTrace()
-                }
-            }
-        )
 
         binding.chatRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -84,7 +72,7 @@ class ChatDetailActivity : AppCompatActivity() {
                 userId = myUserId
             )
 
-            chatRoomDB.push().apply {
+            Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId).push().apply {
                 newChatItem.chatId = key
                 setValue(newChatItem)
             }
@@ -99,11 +87,75 @@ class ChatDetailActivity : AppCompatActivity() {
 
             Firebase.database.reference.updateChildren(updates)
 
+            val client = OkHttpClient()
+
+            val root = JSONObject()
+            val notification = JSONObject()
+            notification.put("title", getString(R.string.app_name))
+            notification.put("body", message)
+
+            root.put("to", otherUserFcmToken)
+            root.put("priority", "high")
+            root.put("notification", notification)
+
+            val requestBody = root.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+            val request = Request.Builder()
+                .post(requestBody)
+                .url("https://fcm.googleapis.com/fcm/send")
+                .header("Authorization", "key=${Key.FCM_SERVER_KEY}")
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    Log.d(TAG, "onResponse: $response")
+                }
+            })
+
             binding.messageEditText.text?.clear()
         }
     }
 
+    private fun getOtherUserData() {
+        Firebase.database.reference.child(Key.DB_USERS).child(otherUserId).get().addOnSuccessListener {
+            val otherUserItem = it.getValue(UserItem::class.java)
+            otherUserFcmToken = otherUserItem?.fcmToken.orEmpty()
+            chatDetailAdapter.otherUserItem = otherUserItem
+
+            binding.sendButton.isEnabled = true
+            getChatData()
+        }
+    }
+
+    private fun getChatData() {
+        Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId).addChildEventListener(
+            object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val chatDetailItem = snapshot.getValue(ChatDetailItem::class.java) ?: return
+
+                    val chatDetailItems = chatDetailAdapter.currentList + chatDetailItem
+                    chatDetailAdapter.submitList(chatDetailItems)
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) = Unit
+
+                override fun onChildRemoved(snapshot: DataSnapshot) = Unit
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) = Unit
+
+                override fun onCancelled(error: DatabaseError) {
+                    error.toException().printStackTrace()
+                }
+            }
+        )
+    }
+
     companion object {
+        private const val TAG = "ChatDetailActivity"
+
         const val EXTRA_CHAT_ROOM_ID = "chatRoomId"
         const val EXTRA_OTHER_USER_ID = "otherUserId"
     }

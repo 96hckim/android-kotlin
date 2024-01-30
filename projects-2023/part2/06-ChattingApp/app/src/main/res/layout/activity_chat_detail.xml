@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toTopOf="@id/messageBoxLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_chat_detail" />
 
     <LinearLayout
         android:id="@+id/messageBoxLayout"
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         android:background="#D1C4E9"
         android:orientation="horizontal"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +38,7 @@
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="전송" />
 
     </LinearLayout>
