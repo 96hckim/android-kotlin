@@ -99,7 +99,21 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
+                    val list = forecastMap.values.toMutableList()
+                    list.sortWith { f1, f2 ->
+                        val f1DateTime = "${f1.forecastDate}${f1.forecastTime}"
+                        val f2DateTime = "${f2.forecastDate}${f2.forecastTime}"
+
+                        return@sortWith f1DateTime.compareTo(f2DateTime)
+                    }
+
                     Log.d(TAG, "onResponse: $forecastMap")
+
+                    val currentForecast = list.first()
+
+                    binding.temperatureTextView.text = getString(R.string.temperature_format, currentForecast.temperature)
+                    binding.skyTextView.text = currentForecast.weather
+                    binding.precipitationTextView.text = getString(R.string.precipitation_format, currentForecast.precipitation)
                 }
 
                 override fun onFailure(call: Call<WeatherEntity>, t: Throwable) {

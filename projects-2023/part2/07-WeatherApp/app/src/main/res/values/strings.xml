@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">WeatherApp</string>
+    <string name="app_name">날씨앱</string>
+    <string name="temperature_format">%.1fº</string>
+    <string name="precipitation_format">강수확률 : %d %%</string>
 </resources>
