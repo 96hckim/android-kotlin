@@ -1,10 +1,13 @@
 package com.hocheol.restaurantmap
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hocheol.restaurantmap.databinding.ActivityMainBinding
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.Tm128
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
@@ -20,6 +23,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var naverMap: NaverMap
 
+    private var restaurantListAdapter = RestaurantListAdapter { position ->
+        moveCamera(position)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -29,12 +36,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.mapView.getMapAsync(this)
 
+        binding.bottomSheetLayout.searchResultRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = restaurantListAdapter
+        }
+
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return if (!query.isNullOrEmpty()) {
                     SearchRepository.getGoodRestaurants(query).enqueue(object : Callback<SearchResult> {
                         override fun onResponse(call: Call<SearchResult>, response: Response<SearchResult>) {
                             val searchItems = response.body()?.items.orEmpty()
+                            Log.d(TAG, "onResponse: $searchItems")
 
                             if (searchItems.isEmpty()) {
                                 Toast.makeText(this@MainActivity, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
@@ -52,9 +65,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 }
                             }
 
-                            val cameraUpdate = CameraUpdate.scrollTo(markers.first().position)
-                                .animate(CameraAnimation.Easing)
-                            naverMap.moveCamera(cameraUpdate)
+                            restaurantListAdapter.setData(searchItems)
+
+                            moveCamera(markers.first().position)
                         }
 
                         override fun onFailure(call: Call<SearchResult>, t: Throwable) {
@@ -71,6 +84,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 return true
             }
         })
+    }
+
+    private fun moveCamera(position: LatLng) {
+        if (::naverMap.isInitialized.not()) return
+
+        val cameraUpdate = CameraUpdate.scrollTo(position)
+            .animate(CameraAnimation.Easing)
+        naverMap.moveCamera(cameraUpdate)
     }
 
     override fun onStart() {
