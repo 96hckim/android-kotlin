@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381619321051",
+    "project_id": "location-share-b8c9f",
+    "storage_bucket": "location-share-b8c9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381619321051:android:931d878325237daa99b4fe",
+        "android_client_info": {
+          "package_name": "com.hocheol.locationshare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlHMmZMVNke6Qd3YGPFuDohuCEU8QokAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
