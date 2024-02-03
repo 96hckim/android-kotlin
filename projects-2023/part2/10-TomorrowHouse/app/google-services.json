@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "819551958405",
+    "project_id": "tomorrow-house-c3ab1",
+    "storage_bucket": "tomorrow-house-c3ab1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819551958405:android:2a06bf501a417d34e380ec",
+        "android_client_info": {
+          "package_name": "com.hocheol.tomorrowhouse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrofcfHeHGEEdAWiTV2IuMdWukPrsTxis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
