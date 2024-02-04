@@ -27,5 +27,12 @@
         android:id="@+id/writeArticleFragment"
         android:name="com.hocheol.tomorrowhouse.ui.article.WriteArticleFragment"
         android:label="WriteArticleFragment"
-        tools:layout="@layout/fragment_write_article" />
+        tools:layout="@layout/fragment_write_article">
+        <action
+            android:id="@+id/action_writeArticleFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_back"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
