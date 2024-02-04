@@ -68,7 +68,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showSnackbar("회원가입에 성공했습니다.")
-                    initSignInState()
                 } else {
                     showSnackbar("회원가입에 실패했습니다.")
                 }
