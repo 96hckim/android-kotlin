@@ -1,10 +1,10 @@
 package com.hocheol.tomorrowhouse.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -22,19 +22,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
 
-        val db = Firebase.firestore
+        setupWriteButton(view)
 
-        db.collection("articles").document("EQf3HZ4twBA7QLV4Pd6J")
+        val articleAdapter = HomeArticleAdapter { article ->
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToArticleFragment(
+                    articleId = article.articleId.orEmpty()
+                )
+            )
+        }
+
+        binding.homeRecyclerView.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = articleAdapter
+        }
+
+        Firebase.firestore.collection("articles")
             .get()
             .addOnSuccessListener { result ->
-                val article = result.toObject<ArticleModel>()
-                Log.d("HomeFragment", "article: $article")
-            }
-            .addOnFailureListener {
-                it.printStackTrace()
-            }
+                val articles = result.map {
+                    it.toObject<ArticleModel>()
+                }
 
-        setupWriteButton(view)
+                articleAdapter.submitList(articles)
+            }
     }
 
     private fun setupWriteButton(view: View) {
