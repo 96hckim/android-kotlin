@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
@@ -20,14 +21,11 @@ import java.util.UUID
 class WriteArticleFragment : Fragment(R.layout.fragment_write_article) {
 
     private lateinit var binding: FragmentWriteArticleBinding
+    private lateinit var viewModel: WriteArticleViewModel
 
-    private var selectedImageUri: Uri? = null
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            selectedImageUri = uri
-            binding.photoImageView.setImageURI(uri)
-            binding.addButton.isVisible = false
-            binding.deleteButton.isVisible = true
+            viewModel.updateSelectedImageUri(uri)
         } else {
             showSnackbar("이미지가 선택되지 않았습니다.")
         }
@@ -37,12 +35,24 @@ class WriteArticleFragment : Fragment(R.layout.fragment_write_article) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentWriteArticleBinding.bind(view)
 
-        startPicker()
-
+        setupViewModel()
+        if (viewModel.selectedImageUri.value == null) {
+            startPicker()
+        }
         setupBackButton()
         setupSubmitButton()
         setupPhotoImageView()
         setupDeleteButton()
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(requireActivity())[WriteArticleViewModel::class.java]
+
+        viewModel.selectedImageUri.observe(viewLifecycleOwner) { uri ->
+            binding.photoImageView.setImageURI(uri)
+            binding.addButton.isVisible = uri == null
+            binding.deleteButton.isVisible = uri != null
+        }
     }
 
     private fun startPicker() {
@@ -57,7 +67,7 @@ class WriteArticleFragment : Fragment(R.layout.fragment_write_article) {
 
     private fun setupSubmitButton() {
         binding.submitButton.setOnClickListener {
-            selectedImageUri?.let { uri ->
+            viewModel.selectedImageUri.value?.let { uri ->
                 showProgress()
 
                 uploadImage(
@@ -125,7 +135,7 @@ class WriteArticleFragment : Fragment(R.layout.fragment_write_article) {
 
     private fun setupPhotoImageView() {
         binding.photoImageView.setOnClickListener {
-            if (selectedImageUri == null) {
+            if (viewModel.selectedImageUri.value == null) {
                 startPicker()
             }
         }
@@ -133,10 +143,7 @@ class WriteArticleFragment : Fragment(R.layout.fragment_write_article) {
 
     private fun setupDeleteButton() {
         binding.deleteButton.setOnClickListener {
-            binding.photoImageView.setImageURI(null)
-            selectedImageUri = null
-            binding.addButton.isVisible = true
-            binding.deleteButton.isVisible = false
+            viewModel.updateSelectedImageUri(null)
         }
     }
 
