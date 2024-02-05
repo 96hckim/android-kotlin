@@ -7,6 +7,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
@@ -27,15 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setupBookmarkImageButton()
         setupRecyclerView()
 
-        Firebase.firestore.collection("articles")
-            .get()
-            .addOnSuccessListener { result ->
-                val articles = result.map {
-                    it.toObject<ArticleModel>()
-                }
-
-                articleAdapter.submitList(articles)
-            }
+        fetchFirestoreData()
     }
 
     private fun setupWriteButton(view: View) {
@@ -56,17 +50,68 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupRecyclerView() {
-        articleAdapter = HomeArticleAdapter { article ->
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToArticleFragment(
-                    articleId = article.articleId.orEmpty()
+        articleAdapter = HomeArticleAdapter(
+            onItemClicked = { articleItem ->
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToArticleFragment(
+                        articleId = articleItem.articleId
+                    )
                 )
-            )
-        }
+            },
+            onBookmarkClicked = { articleId, isBookmark ->
+                val uid = Firebase.auth.currentUser?.uid ?: return@HomeArticleAdapter
+                Firebase.firestore.collection("bookmarks").document(uid)
+                    .update(
+                        "articleIds",
+                        if (isBookmark) {
+                            FieldValue.arrayUnion(articleId)
+                        } else {
+                            FieldValue.arrayRemove(articleId)
+                        }
+                    ).addOnFailureListener {
+                        if (it is FirebaseFirestoreException && it.code == FirebaseFirestoreException.Code.NOT_FOUND) {
+                            if (isBookmark) {
+                                Firebase.firestore.collection("bookmarks").document(uid)
+                                    .set(
+                                        hashMapOf(
+                                            "articleIds" to listOf(articleId)
+                                        )
+                                    )
+                            }
+                        }
+                    }
+            }
+        )
 
         binding.homeRecyclerView.apply {
             layoutManager = GridLayoutManager(context, 2)
             adapter = articleAdapter
         }
+    }
+
+    private fun fetchFirestoreData() {
+        val uid = Firebase.auth.currentUser?.uid ?: return
+        Firebase.firestore.collection("bookmarks").document(uid)
+            .get()
+            .addOnSuccessListener {
+                val bookmarkList = it.get("articleIds") as? List<*>
+
+                Firebase.firestore.collection("articles")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        val articleItems = result.map { snapshot ->
+                            snapshot.toObject<ArticleModel>()
+                        }.map { model ->
+                            ArticleItem(
+                                articleId = model.articleId.orEmpty(),
+                                description = model.description.orEmpty(),
+                                imageUrl = model.imageUrl.orEmpty(),
+                                isBookMark = bookmarkList?.contains(model.articleId.orEmpty()) ?: false
+                            )
+                        }
+
+                        articleAdapter.submitList(articleItems)
+                    }
+            }
     }
 }

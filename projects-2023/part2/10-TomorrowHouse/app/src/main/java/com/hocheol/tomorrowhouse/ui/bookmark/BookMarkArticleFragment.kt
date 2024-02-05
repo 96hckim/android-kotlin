@@ -3,13 +3,17 @@ package com.hocheol.tomorrowhouse.ui.bookmark
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import com.hocheol.tomorrowhouse.R
 import com.hocheol.tomorrowhouse.data.ArticleModel
 import com.hocheol.tomorrowhouse.databinding.FragmentBookmarkBinding
+import com.hocheol.tomorrowhouse.ui.home.ArticleItem
 
 class BookMarkArticleFragment : Fragment(R.layout.fragment_bookmark) {
 
@@ -20,8 +24,14 @@ class BookMarkArticleFragment : Fragment(R.layout.fragment_bookmark) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBookmarkBinding.bind(view)
 
-        articleAdapter = BookmarkArticleAdapter { article ->
+        binding.toolbar.setupWithNavController(findNavController())
 
+        articleAdapter = BookmarkArticleAdapter { articleItem ->
+            findNavController().navigate(
+                BookMarkArticleFragmentDirections.actionBookMarkArticleFragmentToArticleFragment(
+                    articleId = articleItem.articleId
+                )
+            )
         }
 
         binding.articleRecyclerView.apply {
@@ -30,23 +40,31 @@ class BookMarkArticleFragment : Fragment(R.layout.fragment_bookmark) {
         }
 
         val uid = Firebase.auth.currentUser?.uid.orEmpty()
-        Firebase.firestore.collection("bookmark").document(uid)
+        Firebase.firestore.collection("bookmarks").document(uid)
             .get()
             .addOnSuccessListener {
-                val articleIds = it.get("articleIds") as List<*>
+                val bookmarkList = it.get("articleIds") as? List<*>
 
-                if (articleIds.isNotEmpty()) {
+                if (!bookmarkList.isNullOrEmpty()) {
                     Firebase.firestore.collection("articles")
-                        .whereIn("articleId", articleIds)
+                        .whereIn("articleId", bookmarkList)
                         .get()
                         .addOnSuccessListener { result ->
-                            val articles = result.map { article ->
-                                article.toObject(ArticleModel::class.java)
+                            val articleItems = result.map { snapshot ->
+                                snapshot.toObject<ArticleModel>()
+                            }.map { model ->
+                                ArticleItem(
+                                    articleId = model.articleId.orEmpty(),
+                                    description = model.description.orEmpty(),
+                                    imageUrl = model.imageUrl.orEmpty(),
+                                    isBookMark = bookmarkList.contains(model.articleId.orEmpty())
+                                )
                             }
-                            articleAdapter.submitList(articles)
+
+                            articleAdapter.submitList(articleItems)
                         }
-                        .addOnFailureListener {
-                            it.printStackTrace()
+                        .addOnFailureListener { e ->
+                            e.printStackTrace()
                         }
                 }
             }

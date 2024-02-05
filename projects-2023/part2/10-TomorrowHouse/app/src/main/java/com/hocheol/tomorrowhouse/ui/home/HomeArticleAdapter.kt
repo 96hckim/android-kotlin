@@ -6,23 +6,44 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.hocheol.tomorrowhouse.data.ArticleModel
+import com.hocheol.tomorrowhouse.R
 import com.hocheol.tomorrowhouse.databinding.ItemArticleBinding
 
-class HomeArticleAdapter(private val onClick: (ArticleModel) -> Unit) : ListAdapter<ArticleModel, HomeArticleAdapter.ViewHolder>(diffCallback) {
+class HomeArticleAdapter(
+    private val onItemClicked: (ArticleItem) -> Unit,
+    private val onBookmarkClicked: (String, Boolean) -> Unit
+) : ListAdapter<ArticleItem, HomeArticleAdapter.ViewHolder>(diffCallback) {
 
     inner class ViewHolder(private val binding: ItemArticleBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ArticleModel) {
+        fun bind(item: ArticleItem) {
             binding.root.setOnClickListener {
-                onClick(item)
+                onItemClicked(item)
             }
 
             Glide.with(binding.thumbnailImageView)
                 .load(item.imageUrl)
                 .into(binding.thumbnailImageView)
 
+            setBookmarkButtonBackground(item.isBookMark)
+            binding.bookmarkImageButton.setOnClickListener {
+                onBookmarkClicked(item.articleId, item.isBookMark.not())
+
+                item.isBookMark = item.isBookMark.not()
+                setBookmarkButtonBackground(item.isBookMark)
+            }
+
             binding.descriptionTextView.text = item.description
+        }
+
+        private fun setBookmarkButtonBackground(isBookmark: Boolean) {
+            binding.bookmarkImageButton.setBackgroundResource(
+                if (isBookmark) {
+                    R.drawable.baseline_bookmark_24
+                } else {
+                    R.drawable.baseline_bookmark_border_24
+                }
+            )
         }
     }
 
@@ -41,12 +62,12 @@ class HomeArticleAdapter(private val onClick: (ArticleModel) -> Unit) : ListAdap
     }
 
     companion object {
-        val diffCallback = object : DiffUtil.ItemCallback<ArticleModel>() {
-            override fun areItemsTheSame(oldItem: ArticleModel, newItem: ArticleModel): Boolean {
+        val diffCallback = object : DiffUtil.ItemCallback<ArticleItem>() {
+            override fun areItemsTheSame(oldItem: ArticleItem, newItem: ArticleItem): Boolean {
                 return oldItem.articleId == newItem.articleId
             }
 
-            override fun areContentsTheSame(oldItem: ArticleModel, newItem: ArticleModel): Boolean {
+            override fun areContentsTheSame(oldItem: ArticleItem, newItem: ArticleItem): Boolean {
                 return oldItem == newItem
             }
         }
