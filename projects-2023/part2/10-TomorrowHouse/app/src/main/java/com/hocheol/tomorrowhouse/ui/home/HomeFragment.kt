@@ -17,25 +17,15 @@ import com.hocheol.tomorrowhouse.databinding.FragmentHomeBinding
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var articleAdapter: HomeArticleAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
 
         setupWriteButton(view)
-
-        val articleAdapter = HomeArticleAdapter { article ->
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToArticleFragment(
-                    articleId = article.articleId.orEmpty()
-                )
-            )
-        }
-
-        binding.homeRecyclerView.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = articleAdapter
-        }
+        setupBookmarkImageButton()
+        setupRecyclerView()
 
         Firebase.firestore.collection("articles")
             .get()
@@ -56,6 +46,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } else {
                 Snackbar.make(view, "로그인 후 사용해주세요.", Snackbar.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun setupBookmarkImageButton() {
+        binding.bookmarkImageButton.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBookMarkArticleFragment())
+        }
+    }
+
+    private fun setupRecyclerView() {
+        articleAdapter = HomeArticleAdapter { article ->
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToArticleFragment(
+                    articleId = article.articleId.orEmpty()
+                )
+            )
+        }
+
+        binding.homeRecyclerView.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = articleAdapter
         }
     }
 }
