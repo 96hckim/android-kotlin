@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Starbucks</string>
+    <string name="home">홈</string>
+    <string name="order">주문</string>
 </resources>
