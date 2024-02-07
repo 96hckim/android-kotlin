@@ -26,5 +26,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         Glide.with(binding.appBarImageView)
             .load(homeData.appBarImage)
             .into(binding.appBarImageView)
+
+        binding.recommendMenuList.titleTextView.text = getString(R.string.recommend_menu_title, homeData.user.nickname)
+        binding.recommendMenuList.menuLayout.addView(
+            MenuView(context = requireContext()).apply {
+                setTitle("아이스 아메리카노")
+                setImageUrl("https://picsum.photos/100/100")
+            }
+        )
     }
 }

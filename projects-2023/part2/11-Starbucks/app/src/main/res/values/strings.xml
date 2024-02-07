@@ -6,4 +6,5 @@
     <string name="app_bar_star_count">%d/%d★</string>
     <string name="coupon">Coupon</string>
     <string name="what_news">what news</string>
+    <string name="recommend_menu_title">%s님을 위한 추천 메뉴</string>
 </resources>
