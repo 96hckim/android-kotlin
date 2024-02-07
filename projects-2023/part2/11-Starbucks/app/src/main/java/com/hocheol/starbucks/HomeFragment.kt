@@ -21,10 +21,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val menuData = context.readData("menu.json", Menu::class.java) ?: return
 
         initAppBar(homeData)
-        initNestedScrollView()
         initRecommendMenu(homeData, menuData)
         initBanner(homeData)
         initFoodMenu(menuData)
+        initFloatingActionButton()
     }
 
     private fun initAppBar(homeData: Home) {
@@ -44,16 +44,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 binding.starProgressBar.progress = it.animatedValue as Int
             }
             start()
-        }
-    }
-
-    private fun initNestedScrollView() {
-        binding.nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            if (scrollY == 0) {
-                binding.floatingActionButton.extend()
-            } else {
-                binding.floatingActionButton.shrink()
-            }
         }
     }
 
@@ -87,6 +77,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     setImageUrl(menuItem.image)
                 }
             )
+        }
+    }
+
+    private fun initFloatingActionButton() {
+        binding.nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            if (scrollY == 0) {
+                binding.floatingActionButton.extend()
+            } else {
+                binding.floatingActionButton.shrink()
+            }
         }
     }
 }
