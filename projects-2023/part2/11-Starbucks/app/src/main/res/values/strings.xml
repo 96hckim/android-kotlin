@@ -3,4 +3,7 @@
     <string name="home">홈</string>
     <string name="order">주문</string>
     <string name="app_bar_title">%s님, \n오늘도 커피 한잔 어떠세요??</string>
+    <string name="app_bar_star_count">%d/%d★</string>
+    <string name="coupon">Coupon</string>
+    <string name="what_news">what news</string>
 </resources>

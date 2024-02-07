@@ -40,6 +40,7 @@
                     android:id="@+id/appBarImageView"
                     android:layout_width="0dp"
                     android:layout_height="170dp"
+                    android:alpha="0.5"
                     android:background="?attr/colorPrimary"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,6 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ProgressBar
+                    android:id="@+id/starProgressBar"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -79,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="50dp"
-                    android:text="5/12★"
+                    android:text="@string/app_bar_star_count"
                     android:textColor="@color/black"
                     android:textSize="28sp"
                     android:textStyle="bold"
@@ -106,7 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawablePadding="5dp"
-                        android:text="what news"
+                        android:text="@string/what_news"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         app:drawableStartCompat="@drawable/baseline_newspaper_24" />
@@ -117,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:drawablePadding="5dp"
-                        android:text="Coupon"
+                        android:text="@string/coupon"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         app:drawableStartCompat="@drawable/baseline_discount_24" />
