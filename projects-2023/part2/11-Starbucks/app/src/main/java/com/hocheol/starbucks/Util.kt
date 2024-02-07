@@ -7,11 +7,11 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
-fun Context.readData(): Home? {
+fun <T> Context.readData(fileName: String, classT: Class<T>): T? {
     return try {
-        this.resources.assets.open("home.json").use { inputStream ->
+        this.resources.assets.open(fileName).use { inputStream ->
             val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-            Gson().fromJson(bufferedReader, Home::class.java)
+            Gson().fromJson(bufferedReader, classT)
         }
     } catch (e: IOException) {
         e.printStackTrace()
