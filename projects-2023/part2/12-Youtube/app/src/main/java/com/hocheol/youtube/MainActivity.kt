@@ -27,5 +27,10 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = videoAdapter
         }
+
+        binding.playerRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter
+        }
     }
 }
