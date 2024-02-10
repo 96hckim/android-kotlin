@@ -8,6 +8,11 @@
         motion:duration="300"
         motion:motionInterpolator="linear">
 
+        <OnSwipe motion:touchAnchorId="@id/videoPlayerContainer" />
+        <OnClick
+            motion:clickAction="transitionToEnd"
+            motion:targetId="@id/videoPlayerContainer" />
+
         <KeyFrameSet>
 
             <KeyPosition
