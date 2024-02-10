@@ -4,4 +4,8 @@
     <string name="home">홈</string>
     <string name="storage">보관함</string>
     <string name="header_sub_title_video_info">%s · %s</string>
+    <string name="play_a11y">재생</string>
+    <string name="pause_a11y">일시정지</string>
+    <string name="forward_a11y">앞으로감기</string>
+    <string name="rewind_a11y">뒤로감기</string>
 </resources>
