@@ -10,12 +10,17 @@ import com.bumptech.glide.Glide
 import com.hocheol.youtube.databinding.ItemVideoBinding
 
 class VideoAdapter(
-    private val context: Context
+    private val context: Context,
+    private val onClick: (Video) -> Unit
 ) : ListAdapter<Video, VideoAdapter.ViewHolder>(diffCallback) {
 
     inner class ViewHolder(private val binding: ItemVideoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Video) {
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
+
             Glide.with(binding.videoThumbnailImageView)
                 .load(item.videoThumb)
                 .into(binding.videoThumbnailImageView)
