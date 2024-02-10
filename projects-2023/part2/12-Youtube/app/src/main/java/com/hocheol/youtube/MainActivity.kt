@@ -17,8 +17,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var videoAdapter: VideoAdapter
+    private lateinit var playerVideoAdapter: PlayerVideoAdapter
 
     private var player: ExoPlayer? = null
+
+    private val videos by lazy {
+        readData("videos.json", Videos::class.java) ?: Videos(videos = emptyList())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         initControlButton()
         initHideButton()
         initPlayerRecyclerView()
+
+        videoAdapter.submitList(videos.videos)
     }
 
     private fun initMotionLayout() {
@@ -53,15 +60,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initVideoRecyclerView() {
-        val videos = readData("videos.json", Videos::class.java) ?: Videos(videos = emptyList())
-
         videoAdapter = VideoAdapter(context = this) { video ->
             binding.motionLayout.setTransition(R.id.collapse, R.id.expand)
             binding.motionLayout.transitionToEnd()
 
+            val newVideos = listOf(video) + videos.videos.filter {
+                it.id != video.id
+            }
+            playerVideoAdapter.submitList(newVideos)
+
             play(video)
-        }.apply {
-            submitList(videos.videos)
         }
 
         binding.videoRecyclerView.apply {
@@ -90,9 +98,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initPlayerRecyclerView() {
+        playerVideoAdapter = PlayerVideoAdapter(context = this) { video ->
+            val newVideos = listOf(video) + videos.videos.filter {
+                it.id != video.id
+            }
+            playerVideoAdapter.submitList(newVideos)
+
+            play(video)
+        }
+
         binding.playerRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter
+            adapter = playerVideoAdapter
         }
     }
 
