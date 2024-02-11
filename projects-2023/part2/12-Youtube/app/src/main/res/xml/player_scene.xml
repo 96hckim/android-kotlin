@@ -8,7 +8,9 @@
         motion:duration="300"
         motion:motionInterpolator="linear">
 
-        <OnSwipe motion:touchAnchorId="@id/videoPlayerContainer" />
+        <OnSwipe
+            motion:touchAnchorId="@id/videoPlayerContainer"
+            motion:touchRegionId="@id/videoPlayerContainer" />
         <OnClick
             motion:clickAction="transitionToEnd"
             motion:targetId="@id/videoPlayerContainer" />
@@ -87,6 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
+            android:visibility="invisible"
             motion:layout_constraintBottom_toBottomOf="@id/videoPlayerContainer"
             motion:layout_constraintEnd_toStartOf="@id/hideButton"
             motion:layout_constraintTop_toTopOf="@id/videoPlayerContainer" />
@@ -96,6 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
+            android:visibility="invisible"
             motion:layout_constraintBottom_toBottomOf="@id/videoPlayerContainer"
             motion:layout_constraintEnd_toEndOf="@id/videoPlayerContainer"
             motion:layout_constraintTop_toTopOf="@id/videoPlayerContainer" />

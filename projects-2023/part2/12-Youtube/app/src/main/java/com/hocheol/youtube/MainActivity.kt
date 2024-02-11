@@ -9,6 +9,9 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.hocheol.youtube.databinding.ActivityMainBinding
+import com.hocheol.youtube.player.PlayerHeader
+import com.hocheol.youtube.player.PlayerVideoAdapter
+import com.hocheol.youtube.player.transform
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,11 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         initMotionLayout()
         initVideoRecyclerView()
+        initPlayerRecyclerView()
         initControlButton()
         initHideButton()
-        initPlayerRecyclerView()
-
-        videoAdapter.submitList(videos.videos)
     }
 
     private fun initMotionLayout() {
@@ -64,17 +65,62 @@ class MainActivity : AppCompatActivity() {
             binding.motionLayout.setTransition(R.id.collapse, R.id.expand)
             binding.motionLayout.transitionToEnd()
 
-            val newVideos = listOf(video) + videos.videos.filter {
-                it.id != video.id
-            }
-            playerVideoAdapter.submitList(newVideos)
+            val playerHeader = PlayerHeader(
+                id = "H${video.id}",
+                description = video.description,
+                channelName = video.channelName,
+                viewCount = video.viewCount,
+                dateText = video.dateText,
+                channelThumb = video.channelThumb,
+                title = video.title
+            )
 
-            play(video)
+            val playerVideoModels = listOf(playerHeader) + videos.videos.filter {
+                it.id != video.id
+            }.map {
+                it.transform()
+            }
+            playerVideoAdapter.submitList(playerVideoModels)
+
+            play(video.videoUrl, video.title)
         }
 
         binding.videoRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = videoAdapter
+        }
+
+        videoAdapter.submitList(videos.videos)
+    }
+
+    private fun initPlayerRecyclerView() {
+        playerVideoAdapter = PlayerVideoAdapter(context = this) { playerVideo ->
+            val playerHeader = PlayerHeader(
+                id = "H${playerVideo.id}",
+                description = playerVideo.description,
+                channelName = playerVideo.channelName,
+                viewCount = playerVideo.viewCount,
+                dateText = playerVideo.dateText,
+                channelThumb = playerVideo.channelThumb,
+                title = playerVideo.title
+            )
+
+            val playerVideoModels = listOf(playerHeader) + videos.videos.filter {
+                it.id != playerVideo.id
+            }.map {
+                it.transform()
+            }
+            playerVideoAdapter.submitList(playerVideoModels) {
+                binding.playerRecyclerView.scrollToPosition(0)
+            }
+
+            play(playerVideo.videoUrl, playerVideo.title)
+        }
+
+        binding.playerRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = playerVideoAdapter
+            itemAnimator = null
         }
     }
 
@@ -94,22 +140,6 @@ class MainActivity : AppCompatActivity() {
         binding.hideButton.setOnClickListener {
             binding.motionLayout.transitionToState(R.id.hide)
             player?.pause()
-        }
-    }
-
-    private fun initPlayerRecyclerView() {
-        playerVideoAdapter = PlayerVideoAdapter(context = this) { video ->
-            val newVideos = listOf(video) + videos.videos.filter {
-                it.id != video.id
-            }
-            playerVideoAdapter.submitList(newVideos)
-
-            play(video)
-        }
-
-        binding.playerRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = playerVideoAdapter
         }
     }
 
@@ -133,14 +163,14 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    private fun play(video: Video) {
+    private fun play(url: String, title: String) {
         player?.let {
-            it.setMediaItem(MediaItem.fromUri(Uri.parse(video.videoUrl)))
+            it.setMediaItem(MediaItem.fromUri(Uri.parse(url)))
             it.prepare()
             it.play()
         }
 
-        binding.videoTitleTextView.text = video.title
+        binding.videoTitleTextView.text = title
     }
 
     override fun onStart() {
