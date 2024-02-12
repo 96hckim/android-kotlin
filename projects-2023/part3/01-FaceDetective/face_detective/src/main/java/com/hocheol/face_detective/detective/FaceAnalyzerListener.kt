@@ -6,11 +6,11 @@ import android.util.SizeF
 
 interface FaceAnalyzerListener {
 
-    fun detect()
+    fun detected()
 
     fun stopDetect()
 
-    fun notDetect()
+    fun notDetected()
 
     fun detectProgress(progress: Float, message: String)
 

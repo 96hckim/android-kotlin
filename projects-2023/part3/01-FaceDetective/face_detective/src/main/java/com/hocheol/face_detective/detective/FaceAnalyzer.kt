@@ -38,18 +38,18 @@ internal class FaceAnalyzer(
         .build()
 
     private val detector = FaceDetection.getClient(options)
-    private var detectStatus = FaceAnalyzerStatus.UnDetect
+    private var detectStatus = FaceAnalyzerStatus.UnDetected
 
     private val successListener = OnSuccessListener<List<Face>> { faces ->
         val face = faces.firstOrNull()
         if (face != null) {
-            if (detectStatus == FaceAnalyzerStatus.UnDetect) {
-                detectStatus = FaceAnalyzerStatus.Detect
+            if (detectStatus == FaceAnalyzerStatus.UnDetected) {
+                detectStatus = FaceAnalyzerStatus.Detected
                 listener?.let {
-                    it.detect()
+                    it.detected()
                     it.detectProgress(25F, "얼굴을 인식했습니다.\n왼쪽 눈만 깜빡여주세요.")
                 }
-            } else if (detectStatus == FaceAnalyzerStatus.Detect
+            } else if (detectStatus == FaceAnalyzerStatus.Detected
                 && (face.leftEyeOpenProbability ?: 0F) > EYE_SUCCESS_VALUE
                 && (face.rightEyeOpenProbability ?: 0F) < EYE_SUCCESS_VALUE
             ) {
@@ -72,17 +72,17 @@ internal class FaceAnalyzer(
                 detector.close()
             }
             calculateDetectSize(face)
-        } else if (detectStatus != FaceAnalyzerStatus.UnDetect && detectStatus != FaceAnalyzerStatus.Smile) {
-            detectStatus = FaceAnalyzerStatus.UnDetect
+        } else if (detectStatus != FaceAnalyzerStatus.UnDetected && detectStatus != FaceAnalyzerStatus.Smile) {
+            detectStatus = FaceAnalyzerStatus.UnDetected
             listener?.let {
-                it.notDetect()
+                it.notDetected()
                 it.detectProgress(0F, "얼굴을 인식하지 못했습니다.\n처음으로 돌아갑니다.")
             }
         }
     }
 
     private val failureListener = OnFailureListener { e ->
-        detectStatus = FaceAnalyzerStatus.UnDetect
+        detectStatus = FaceAnalyzerStatus.UnDetected
     }
 
     init {
@@ -147,7 +147,7 @@ internal class FaceAnalyzer(
     private fun Int.translateY() = this.toFloat() * heightScaleFactor
 
     companion object {
-        private const val EYE_SUCCESS_VALUE = 0.1F
+        private const val EYE_SUCCESS_VALUE = 0.05F
         private const val SMILE_SUCCESS_VALUE = 0.8F
 
         private const val PIVOT_OFFSET = 15
