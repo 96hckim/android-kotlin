@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FaceDetective"
 include(":app")
- 
+include(":face_detective")
