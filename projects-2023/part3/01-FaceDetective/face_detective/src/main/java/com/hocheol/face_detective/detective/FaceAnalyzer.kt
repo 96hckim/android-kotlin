@@ -1,6 +1,9 @@
 package com.hocheol.face_detective.detective
 
+import android.graphics.PointF
+import android.graphics.RectF
 import android.media.Image
+import android.util.SizeF
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
@@ -11,6 +14,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import kotlin.math.abs
 
 internal class FaceAnalyzer(
     lifecycle: Lifecycle,
@@ -20,6 +24,11 @@ internal class FaceAnalyzer(
 
     private var widthScaleFactor = 1F
     private var heightScaleFactor = 1F
+
+    private var preCenterX = 0F
+    private var preCenterY = 0F
+    private var preWidth = 0F
+    private var preHeight = 0F
 
     private val options = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -62,6 +71,7 @@ internal class FaceAnalyzer(
                 }
                 detector.close()
             }
+            calculateDetectSize(face)
         } else if (detectStatus != FaceAnalyzerStatus.UnDetect && detectStatus != FaceAnalyzerStatus.Smile) {
             detectStatus = FaceAnalyzerStatus.UnDetect
             listener?.let {
@@ -100,8 +110,47 @@ internal class FaceAnalyzer(
             }
     }
 
+    private fun calculateDetectSize(face: Face) {
+        val rect = face.boundingBox
+        val boxWidth = rect.width()
+        val boxHeight = rect.height()
+
+        val left = rect.right.translateX() - (boxWidth / 2)
+        val top = rect.top.translateY() - (boxHeight / 2)
+        val right = rect.left.translateX() + (boxWidth / 2)
+        val bottom = rect.bottom.translateY()
+
+        val width = right - left
+        val height = bottom - top
+        val centerX = left + width / 2
+        val centerY = top + height / 2
+
+        if (abs(preCenterX - centerX) > PIVOT_OFFSET
+            || abs(preCenterY - centerY) > PIVOT_OFFSET
+            || abs(preWidth - width) > SIZE_OFFSET
+            || abs(preHeight - height) > SIZE_OFFSET
+        ) {
+            listener?.faceSize(
+                rectF = RectF(left, top, right, bottom),
+                sizeF = SizeF(width, height),
+                pointF = PointF(centerX, centerY)
+            )
+
+            preCenterX = centerX
+            preCenterY = centerY
+            preWidth = width
+            preHeight = height
+        }
+    }
+
+    private fun Int.translateX() = previewView.width - (this.toFloat() * widthScaleFactor)
+    private fun Int.translateY() = this.toFloat() * heightScaleFactor
+
     companion object {
         private const val EYE_SUCCESS_VALUE = 0.1F
         private const val SMILE_SUCCESS_VALUE = 0.8F
+
+        private const val PIVOT_OFFSET = 15
+        private const val SIZE_OFFSET = 30
     }
 }
