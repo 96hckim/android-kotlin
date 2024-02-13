@@ -1,6 +1,7 @@
 package com.hocheol.financial
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.financial.databinding.ActivityPinBinding
@@ -20,6 +21,10 @@ class PinActivity : AppCompatActivity(), ShuffleNumberKeyboard.KeyPadListener {
         binding.lifecycleOwner = this
 
         binding.shuffleKeyboard.setKeyPadListener(this)
+
+        viewModel.messageLiveData.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onClickNumber(num: String) {
