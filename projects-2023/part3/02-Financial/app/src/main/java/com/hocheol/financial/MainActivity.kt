@@ -1,5 +1,6 @@
 package com.hocheol.financial
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.financial.databinding.ActivityMainBinding
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openShuffle() {
-
+        startActivity(Intent(this, PinActivity::class.java))
     }
 
     fun openVerifyOtp() {
