@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Financial"
         tools:targetApi="31">
         <activity
+            android:name=".VerifyOtpActivity"
+            android:exported="false" />
+        <activity
             android:name=".PinActivity"
             android:exported="false" />
         <activity
@@ -24,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.hocheol.financial.IdentityInputActivity" />
+        <activity android:name=".IdentityInputActivity" />
     </application>
 
 </manifest>
