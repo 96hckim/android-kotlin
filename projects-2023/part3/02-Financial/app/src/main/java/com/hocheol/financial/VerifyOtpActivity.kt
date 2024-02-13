@@ -1,18 +1,22 @@
 package com.hocheol.financial
 
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.hocheol.financial.databinding.ActivityVerifyOtpBinding
 import com.hocheol.financial.util.ViewUtil.setOnEditorActionListener
 import com.hocheol.financial.util.ViewUtil.showKeyboardDelay
 
-class VerifyOtpActivity : AppCompatActivity() {
+class VerifyOtpActivity : AppCompatActivity(), AuthOtpReceiver.OtpReceiveListener {
 
     private lateinit var binding: ActivityVerifyOtpBinding
+
+    private var smsReceiver: AuthOtpReceiver? = null
 
     private var timer: CountDownTimer? = object : CountDownTimer((3 * 60 * 1000), 1000L) {
         override fun onTick(millisUntilFinished: Long) {
@@ -31,10 +35,12 @@ class VerifyOtpActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.otpCodeEdit.showKeyboardDelay()
+        startSmsReceiver()
     }
 
     override fun onDestroy() {
         clearTimer()
+        stopSmsReceiver()
         super.onDestroy()
     }
 
@@ -53,6 +59,7 @@ class VerifyOtpActivity : AppCompatActivity() {
             otpCodeEdit.doAfterTextChanged {
                 if (otpCodeEdit.length() >= 6) {
                     stopTimer()
+                    Toast.makeText(this@VerifyOtpActivity, "인증번호 입력이 완료되었습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -73,5 +80,37 @@ class VerifyOtpActivity : AppCompatActivity() {
     private fun clearTimer() {
         stopTimer()
         timer = null
+    }
+
+    override fun onOtpReceived(otp: String) {
+        binding.otpCodeEdit.setText(otp)
+    }
+
+    private fun startSmsReceiver() {
+        SmsRetriever.getClient(this).startSmsRetriever().also { task ->
+            task.addOnSuccessListener {
+                val receiver = smsReceiver ?: AuthOtpReceiver().apply {
+                    setOtpListener(this@VerifyOtpActivity)
+                }.also {
+                    smsReceiver = it
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    registerReceiver(receiver, receiver.doFilter(), RECEIVER_EXPORTED)
+                } else {
+                    registerReceiver(receiver, receiver.doFilter())
+                }
+            }
+
+            task.addOnFailureListener {
+                stopSmsReceiver()
+            }
+        }
+    }
+
+    private fun stopSmsReceiver() {
+        if (smsReceiver != null) {
+            unregisterReceiver(smsReceiver)
+            smsReceiver = null
+        }
     }
 }
