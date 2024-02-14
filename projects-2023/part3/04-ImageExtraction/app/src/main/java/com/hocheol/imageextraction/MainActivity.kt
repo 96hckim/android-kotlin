@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hocheol.imageextraction.databinding.ActivityMainBinding
 import com.hocheol.imageextraction.mvc.MvcActivity
+import com.hocheol.imageextraction.mvp.MvpActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openMVP() {
+        startActivity(Intent(this, MvpActivity::class.java))
     }
 
     fun openMVVM() {
