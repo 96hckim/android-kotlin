@@ -11,4 +11,7 @@ interface ImageService {
 
     @GET("photos/random")
     fun getRandomImageRx(): Single<ImageResponse>
+
+    @GET("photos/random")
+    suspend fun getRandomImageSuspend(): ImageResponse
 }

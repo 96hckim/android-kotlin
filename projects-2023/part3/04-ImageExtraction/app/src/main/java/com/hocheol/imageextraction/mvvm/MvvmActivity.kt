@@ -23,6 +23,10 @@ class MvvmActivity : AppCompatActivity() {
         binding.view = this
         binding.viewModel = viewModel
 
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
         viewModel.countLiveData.observe(this) { count ->
             binding.imageCountTextView.text = getString(R.string.loaded_image_count, count)
         }
