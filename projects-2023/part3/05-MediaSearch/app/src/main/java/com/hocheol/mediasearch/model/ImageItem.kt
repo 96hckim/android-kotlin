@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 data class ImageListResponse(
-    val document: List<ImageItem>
+    val documents: List<ImageItem>
 )
 
 data class ImageItem(
