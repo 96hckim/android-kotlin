@@ -8,7 +8,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.hocheol.mediasearch.databinding.FragmentSearchBinding
+import com.hocheol.mediasearch.list.ItemHandler
 import com.hocheol.mediasearch.list.ListAdapter
+import com.hocheol.mediasearch.model.ListItem
 import com.hocheol.mediasearch.repository.SearchRepositoryImpl
 
 class SearchFragment : Fragment() {
@@ -19,7 +21,7 @@ class SearchFragment : Fragment() {
         SearchViewModel.SearchViewModelFactory(SearchRepositoryImpl(RetrofitManager.searchService))
     }
 
-    private val adapter by lazy { ListAdapter() }
+    private val adapter by lazy { ListAdapter(Handler(viewModel)) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return FragmentSearchBinding.inflate(inflater, container, false).apply {
@@ -55,6 +57,12 @@ class SearchFragment : Fragment() {
                 it.recyclerView.isVisible = isEmpty.not()
             }
             adapter.submitList(list)
+        }
+    }
+
+    class Handler(private val viewModel: SearchViewModel) : ItemHandler {
+        override fun onClickFavorite(item: ListItem) {
+            viewModel.toggleFavorite(item)
         }
     }
 }

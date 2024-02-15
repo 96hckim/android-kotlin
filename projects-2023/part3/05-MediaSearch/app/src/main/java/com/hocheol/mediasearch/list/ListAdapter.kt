@@ -12,13 +12,15 @@ import com.hocheol.mediasearch.list.viewholder.VideoViewHolder
 import com.hocheol.mediasearch.model.ImageItem
 import com.hocheol.mediasearch.model.ListItem
 
-class ListAdapter : ListAdapter<ListItem, RecyclerView.ViewHolder>(diffCallback) {
+class ListAdapter(
+    private val itemHandler: ItemHandler? = null
+) : ListAdapter<ListItem, RecyclerView.ViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            IMAGE -> ImageViewHolder(ItemImageBinding.inflate(inflater, parent, false))
-            else -> VideoViewHolder(ItemVideoBinding.inflate(inflater, parent, false))
+            IMAGE -> ImageViewHolder(ItemImageBinding.inflate(inflater, parent, false), itemHandler)
+            else -> VideoViewHolder(ItemVideoBinding.inflate(inflater, parent, false), itemHandler)
         }
     }
 
