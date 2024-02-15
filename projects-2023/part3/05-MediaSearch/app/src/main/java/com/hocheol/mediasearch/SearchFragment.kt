@@ -4,19 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.hocheol.mediasearch.databinding.FragmentSearchBinding
 import com.hocheol.mediasearch.list.ListAdapter
+import com.hocheol.mediasearch.repository.SearchRepositoryImpl
 
 class SearchFragment : Fragment() {
 
     private var binding: FragmentSearchBinding? = null
+
+    private val viewModel: SearchViewModel by viewModels {
+        SearchViewModel.SearchViewModelFactory(SearchRepositoryImpl(RetrofitManager.searchService))
+    }
 
     private val adapter by lazy { ListAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return FragmentSearchBinding.inflate(inflater, container, false).apply {
             binding = this
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@SearchFragment.viewModel
         }.root
     }
 
@@ -26,6 +35,7 @@ class SearchFragment : Fragment() {
         binding?.let {
             it.recyclerView.adapter = adapter
         }
+        observeViewModel()
     }
 
     override fun onDestroyView() {
@@ -34,6 +44,17 @@ class SearchFragment : Fragment() {
     }
 
     fun searchKeyword(text: String) {
+        viewModel.search(text)
+    }
 
+    private fun observeViewModel() {
+        viewModel.listLiveData.observe(viewLifecycleOwner) { list ->
+            binding?.let {
+                val isEmpty = list.isEmpty()
+                it.emptyTextView.isVisible = isEmpty
+                it.recyclerView.isVisible = isEmpty.not()
+            }
+            adapter.submitList(list)
+        }
     }
 }
