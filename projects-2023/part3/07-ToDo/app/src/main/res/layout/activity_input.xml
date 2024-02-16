@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.hocheol.todo.InputViewModel" />
+            name="view"
+            type="com.hocheol.todo.InputActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,8 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="할 일"
-                android:inputType="textMultiLine"
-                android:text="@{viewModel.content}">
+                android:inputType="textMultiLine">
 
                 <requestFocus />
             </com.google.android.material.textfield.TextInputEditText>
@@ -54,8 +53,7 @@
                 android:layout_height="match_parent"
                 android:hint="메모"
                 android:imeOptions="actionDone"
-                android:inputType="text"
-                android:text="@{viewModel.memo}" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,8 +62,8 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:enabled="@{!viewModel.content.empty}"
-            android:onClick="@{() -> viewModel.insertData()}"
+            android:enabled="false"
+            android:onClick="@{() -> view.onClickConfirm()}"
             android:paddingStart="16dp"
             android:paddingTop="8dp"
             android:paddingEnd="16dp"

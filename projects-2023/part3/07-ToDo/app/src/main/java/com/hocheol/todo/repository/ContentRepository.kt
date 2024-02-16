@@ -10,4 +10,6 @@ interface ContentRepository {
     suspend fun insert(item: ContentEntity)
 
     suspend fun modify(item: ContentEntity)
+
+    suspend fun delete(item: ContentEntity)
 }

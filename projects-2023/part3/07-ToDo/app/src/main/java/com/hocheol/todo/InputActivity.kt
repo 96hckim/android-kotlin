@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.hocheol.todo.databinding.ActivityInputBinding
 import com.hocheol.todo.model.ContentEntity
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,14 +20,21 @@ class InputActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityInputBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding = ActivityInputBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            lifecycleOwner = this@InputActivity
+            view = this@InputActivity
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.contentEditText.addTextChangedListener {
+            binding.confirmButton.isEnabled = !it?.toString().isNullOrEmpty()
+        }
 
         (intent.getSerializableExtra(ITEM) as? ContentEntity)?.let {
             viewModel.initData(it)
+            binding.contentEditText.setText(it.content)
+            binding.memoEditText.setText(it.memo)
         }
 
         viewModel.doneEvent.observe(this) {
@@ -38,6 +46,12 @@ class InputActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    fun onClickConfirm() {
+        val content = binding.contentEditText.text?.toString().orEmpty()
+        val memo = binding.memoEditText.text?.toString()
+        viewModel.insertData(content, memo)
     }
 
     companion object {

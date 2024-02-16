@@ -28,4 +28,10 @@ class MainViewModel @Inject constructor(
             contentRepository.modify(item)
         }
     }
+
+    fun deleteItem(item: ContentEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            contentRepository.delete(item)
+        }
+    }
 }

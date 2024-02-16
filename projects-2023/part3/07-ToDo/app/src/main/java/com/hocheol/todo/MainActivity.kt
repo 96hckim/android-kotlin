@@ -2,6 +2,7 @@ package com.hocheol.todo
 
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -55,8 +56,14 @@ class MainActivity : AppCompatActivity() {
             InputActivity.launch(this@MainActivity, item)
         }
 
-        fun onCheckedItem(item: ContentEntity) {
-            viewModel.updateItem(item)
+        fun onLongClickItem(item: ContentEntity): Boolean {
+            viewModel.deleteItem(item)
+            Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        fun onCheckedItem(item: ContentEntity, isChecked: Boolean) {
+            viewModel.updateItem(item.copy(isDone = isChecked))
         }
     }
 }
