@@ -7,11 +7,16 @@
         <variable
             name="item"
             type="com.hocheol.todo.model.ContentEntity" />
+
+        <variable
+            name="handler"
+            type="com.hocheol.todo.MainActivity.Handler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> handler.onClickItem(item)}"
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
@@ -22,6 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:checked="@{item.isDone}"
+            android:onCheckedChanged="@{(buttonView, isChecked) -> handler.onCheckedItem(item)}"
             android:text="@{item.content}"
             android:textSize="18sp"
             android:textStyle="bold"

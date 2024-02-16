@@ -10,6 +10,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.hocheol.todo.databinding.ActivityMainBinding
+import com.hocheol.todo.model.ContentEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private val adapter by lazy { ContentListAdapter() }
+    private val adapter by lazy { ContentListAdapter(Handler()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +47,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickAdd() {
+        InputActivity.launch(this)
+    }
 
+    inner class Handler {
+        fun onClickItem(item: ContentEntity) {
+            InputActivity.launch(this@MainActivity, item)
+        }
+
+        fun onCheckedItem(item: ContentEntity) {
+            viewModel.updateItem(item)
+        }
     }
 }
