@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.hocheol.todo.model.ContentEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/contentCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:checked="@{item.isDone}"
+            android:text="@{item.content}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/memoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/baseline_comment_24"
+            android:drawablePadding="8dp"
+            android:hint="없음"
+            android:text="@{item.memo}"
+            android:textColorHint="#CCCCCC"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contentCheckBox" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
