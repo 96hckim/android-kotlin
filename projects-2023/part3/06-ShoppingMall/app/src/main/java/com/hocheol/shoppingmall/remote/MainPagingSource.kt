@@ -3,6 +3,7 @@ package com.hocheol.shoppingmall.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.hocheol.shoppingmall.model.ListItem
+import com.hocheol.shoppingmall.remote.mock.SampleMock
 
 class MainPagingSource(
     private val mainService: MainService
@@ -13,12 +14,12 @@ class MainPagingSource(
         return try {
             val page = params.key ?: 1
             val size = params.loadSize
-            val result = mainService.getList(page, size).data
+            val result = SampleMock.mockChapter6List() // mainService.getList(page, size).data
 
             LoadResult.Page(
-                data = result.list,
+                data = result, // result.list,
                 prevKey = null,
-                nextKey = result.page.nextPage
+                nextKey = null // result.page.nextPage
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
