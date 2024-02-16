@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:padding="@dimen/padding"
         tools:context=".InputActivity">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -30,7 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="할 일"
-                android:inputType="textMultiLine">
+                android:inputType="textMultiLine"
+                android:textAppearance="@style/TextAppearance.App.Large">
 
                 <requestFocus />
             </com.google.android.material.textfield.TextInputEditText>
@@ -42,7 +43,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/contentTextInputLayout">
@@ -53,7 +54,8 @@
                 android:layout_height="match_parent"
                 android:hint="메모"
                 android:imeOptions="actionDone"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textAppearance="@style/TextAppearance.App.Large" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,11 +66,12 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:onClick="@{() -> view.onClickConfirm()}"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp"
+            android:paddingStart="@dimen/padding"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding"
+            android:paddingBottom="@dimen/padding_small"
             android:text="입력 완료"
+            android:textAppearance="@style/TextAppearance.App.Large.Bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

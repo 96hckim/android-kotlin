@@ -18,10 +18,10 @@
         android:layout_height="wrap_content"
         android:onClick="@{() -> handler.onClickItem(item)}"
         android:onLongClick="@{() -> handler.onLongClickItem(item)}"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="@dimen/padding"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding"
+        android:paddingBottom="@dimen/padding_small">
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/contentCheckBox"
@@ -30,8 +30,8 @@
             android:checked="@{item.isDone}"
             android:onCheckedChanged="@{(buttonView, isChecked) -> handler.onCheckedItem(item, isChecked)}"
             android:text="@{item.content}"
+            android:textAppearance="@style/TextAppearance.App.Large.Bold"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,11 +40,12 @@
             android:id="@+id/memoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_small"
             android:drawableStart="@drawable/baseline_comment_24"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:hint="없음"
             android:text="@{item.memo}"
+            android:textAppearance="@style/TextAppearance.App.Small"
             android:textColorHint="#CCCCCC"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/contentCheckBox" />
