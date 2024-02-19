@@ -2,18 +2,28 @@ package com.hocheol.blind.presentation.ui
 
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.hocheol.blind.databinding.ActivityMainBinding
 import com.hocheol.blind.domain.model.Content
 import com.hocheol.blind.presentation.ui.list.ContentListAdapter
+import com.hocheol.blind.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val viewModel: MainViewModel by viewModels()
 
     private val adapter by lazy { ContentListAdapter(Handler()) }
 
@@ -27,10 +37,27 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+
+        observeViewModel()
     }
 
     fun onClickAdd() {
         InputActivity.start(this)
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            viewModel.contentList
+                .flowWithLifecycle(lifecycle, Lifecycle.State.RESUMED)
+                .collectLatest {
+                    binding.apply {
+                        progressBar.isVisible = false
+                        emptyTextView.isVisible = it.isEmpty()
+                        recyclerView.isVisible = it.isNotEmpty()
+                    }
+                    adapter.submitList(it)
+                }
+        }
     }
 
     inner class Handler {
