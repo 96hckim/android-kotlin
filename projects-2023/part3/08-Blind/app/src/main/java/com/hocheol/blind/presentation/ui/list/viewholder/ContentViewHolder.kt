@@ -1,9 +1,9 @@
-package com.hocheol.blind.presenter.ui.list.viewholder
+package com.hocheol.blind.presentation.ui.list.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.hocheol.blind.databinding.ItemContentBinding
 import com.hocheol.blind.domain.model.Content
-import com.hocheol.blind.presenter.ui.MainActivity
+import com.hocheol.blind.presentation.ui.MainActivity
 
 class ContentViewHolder(
     private val binding: ItemContentBinding,

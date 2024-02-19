@@ -11,7 +11,7 @@
 
         <variable
             name="handler"
-            type="com.hocheol.blind.presenter.ui.MainActivity.Handler" />
+            type="com.hocheol.blind.presentation.ui.MainActivity.Handler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

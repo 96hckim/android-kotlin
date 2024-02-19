@@ -1,4 +1,4 @@
-package com.hocheol.blind.presenter.ui.list
+package com.hocheol.blind.presentation.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.hocheol.blind.databinding.ItemContentBinding
 import com.hocheol.blind.domain.model.Content
-import com.hocheol.blind.presenter.ui.MainActivity
-import com.hocheol.blind.presenter.ui.list.viewholder.ContentViewHolder
+import com.hocheol.blind.presentation.ui.MainActivity
+import com.hocheol.blind.presentation.ui.list.viewholder.ContentViewHolder
 
 class ContentListAdapter(
     private val handler: MainActivity.Handler
