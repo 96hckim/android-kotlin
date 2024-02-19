@@ -2,6 +2,7 @@ package com.hocheol.blind.presentation.ui
 
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +59,12 @@ class MainActivity : AppCompatActivity() {
                     adapter.submitList(it)
                 }
         }
+
+        viewModel.doneEvent.observe(this) {
+            if (it.first) {
+                Toast.makeText(this, it.second, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     inner class Handler {
@@ -69,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             AlertDialog.Builder(this@MainActivity)
                 .setTitle("정말 삭제 하시겠습니까?")
                 .setPositiveButton("네") { _, _ ->
-
+                    viewModel.deleteItem(item)
                 }
                 .setNegativeButton("아니오") { _, _ ->
 

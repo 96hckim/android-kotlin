@@ -41,9 +41,8 @@ class InputActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.doneEvent.observe(this) {
-            val (isFinish, message) = it
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            if (isFinish) {
+            Toast.makeText(this, it.second, Toast.LENGTH_SHORT).show()
+            if (it.first) {
                 finish()
             }
         }
