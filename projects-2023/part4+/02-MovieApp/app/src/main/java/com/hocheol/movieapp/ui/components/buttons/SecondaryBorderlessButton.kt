@@ -34,7 +34,8 @@ fun SecondaryBorderlessButton(
             contentColor = MaterialTheme.myColorScheme.secondary,
             disabledContentColor = MaterialTheme.myColorScheme.background,
             disabledContainerColor = MaterialTheme.myColorScheme.disabledSecondary
-        )
+        ),
+        elevation = null
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
