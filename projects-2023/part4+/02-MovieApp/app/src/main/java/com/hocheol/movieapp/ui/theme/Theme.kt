@@ -3,6 +3,8 @@ package com.hocheol.movieapp.ui.theme
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -16,7 +18,9 @@ private val LocalColors = staticCompositionLocalOf { ColorSet.Red.LightColors }
 
 @Composable
 fun MovieAppTheme(
-    myColors: ColorSet,
+    myColors: ColorSet = ColorSet.Red,
+    shapes: Shapes = Shapes,
+    typography: Typography = Typography,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -36,7 +40,8 @@ fun MovieAppTheme(
     CompositionLocalProvider(LocalColors provides colors) {
         MaterialTheme(
             colorScheme = colors.material,
-            typography = Typography,
+            shapes = shapes,
+            typography = typography,
             content = content
         )
     }
