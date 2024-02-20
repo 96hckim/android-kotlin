@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 fun CategoryRow() {
     Column {
         CategoryTitle("Action")
+
         LazyRow(
             contentPadding = PaddingValues(
                 horizontal = 10.dp

@@ -32,10 +32,7 @@ fun MovieItem() {
             .width(CARD_WIDTH)
             .padding(10.dp)
     ) {
-        Poster(
-            modifier = Modifier
-                .width(CARD_WIDTH)
-        )
+        Poster()
 
         Text(
             text = "The Lord of the Ring 1",
@@ -71,9 +68,7 @@ fun MovieItem() {
 }
 
 @Composable
-fun Poster(
-    modifier: Modifier
-) {
+fun Poster() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
