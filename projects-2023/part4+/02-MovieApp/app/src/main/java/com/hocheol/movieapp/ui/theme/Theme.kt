@@ -7,12 +7,14 @@ import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.hocheol.movieapp.ui.theme.color.ColorSet
+import com.hocheol.movieapp.ui.theme.color.MyColors
 
 private val LocalColors = staticCompositionLocalOf { ColorSet.Red.LightColors }
 
@@ -46,3 +48,8 @@ fun MovieAppTheme(
         )
     }
 }
+
+val MaterialTheme.myColorScheme: MyColors
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalColors.current

@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hocheol.movieapp.R
 import com.hocheol.movieapp.ui.theme.Paddings
+import com.hocheol.movieapp.ui.theme.myColorScheme
 
 private val CARD_WIDTH = 150.dp
 private val ICON_SIZE = 12.dp
@@ -67,7 +68,7 @@ fun MovieItem() {
             Text(
                 text = "5.0",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(
+                color = MaterialTheme.myColorScheme.onSurface.copy(
                     alpha = 0.5f
                 )
             )
