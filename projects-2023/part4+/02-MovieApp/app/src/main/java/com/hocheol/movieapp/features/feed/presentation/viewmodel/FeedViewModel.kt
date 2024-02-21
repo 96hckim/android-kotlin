@@ -2,6 +2,8 @@ package com.hocheol.movieapp.features.feed.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hocheol.movieapp.features.common.entity.EntityWrapper
+import com.hocheol.movieapp.features.feed.domain.usecase.IGetFeedCategoryUseCase
 import com.hocheol.movieapp.features.feed.presentation.input.IFeedViewModelInput
 import com.hocheol.movieapp.features.feed.presentation.output.FeedState
 import com.hocheol.movieapp.features.feed.presentation.output.FeedUiEffect
@@ -16,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
+    private val getFeedCategoryUseCase: IGetFeedCategoryUseCase
 ) : ViewModel(), IFeedViewModelOutput, IFeedViewModelInput {
 
     val output: IFeedViewModelOutput = this
@@ -30,6 +33,31 @@ class FeedViewModel @Inject constructor(
     private val _feedUiEffect = MutableSharedFlow<FeedUiEffect>(replay = 0)
     override val feedUiEffect: SharedFlow<FeedUiEffect>
         get() = _feedUiEffect
+
+    init {
+        fetchFeed()
+    }
+
+    private fun fetchFeed() {
+        viewModelScope.launch {
+            _feedState.value = FeedState.Loading
+
+            val categories = getFeedCategoryUseCase()
+            _feedState.value = when (categories) {
+                is EntityWrapper.Success -> {
+                    FeedState.Main(
+                        categories = categories.entity
+                    )
+                }
+
+                is EntityWrapper.Fail -> {
+                    FeedState.Failed(
+                        reason = categories.error.message ?: "Unknown Error"
+                    )
+                }
+            }
+        }
+    }
 
     override fun openDetail(movieName: String) {
         viewModelScope.launch {
