@@ -1,12 +1,14 @@
 package com.hocheol.movieapp.features.detail.presentation.screen
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +27,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -65,7 +68,6 @@ fun MovieDetailScreen(
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetail(
@@ -81,105 +83,114 @@ fun MovieDetail(
                     .requiredHeight(70.dp)
                     .shadow(elevation = 0.dp),
                 navigationIcon = {
-                    IconButton(onClick = { input.goBackToFeed() }) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
-                            contentDescription = null
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { input.goBackToFeed() }) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
+                                contentDescription = null
+                            )
+                        }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.myColorScheme.surface
-                )
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.myColorScheme.surface)
             )
         }
-    ) {
-        Column(
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
-                .padding(
-                    horizontal = Paddings.extra
-                )
-                .scrollable(
-                    state = scrollState,
-                    orientation = Orientation.Vertical
-                )
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            Row {
-                // Poster
-                BigPoster(
-                    movie = movie
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Paddings.extra
+                    )
+                    .scrollable(
+                        state = scrollState,
+                        orientation = Orientation.Vertical
+                    )
+            ) {
+                Row {
+                    // Poster
+                    BigPoster(
+                        movie = movie
+                    )
+
+                    // Meta
+                    Column(
+                        modifier = Modifier.padding(start = Paddings.xlarge)
+                    ) {
+                        // Rating
+                        MovieMeta(
+                            key = "Rating",
+                            value = movie.rating.toString()
+                        )
+
+                        // Director
+                        MovieMeta(
+                            key = "Director",
+                            value = movie.directors.joinToString(separator = ", ")
+                        )
+
+                        // Starring
+                        MovieMeta(
+                            key = "Starring",
+                            value = movie.actors.joinToString(separator = ", ")
+                        )
+
+                        // Genre
+                        MovieMeta(
+                            key = "Genre",
+                            value = movie.genre.joinToString(separator = ", ")
+                        )
+                    }
+                }
+
+                // Title
+                Text(
+                    text = getAnnotatedText(text = movie.title),
+                    modifier = Modifier.padding(
+                        top = Paddings.extra,
+                        bottom = Paddings.large
+                    ),
+                    style = MaterialTheme.typography.displaySmall
                 )
 
-                // Meta
-                Column(
-                    modifier = Modifier.padding(start = Paddings.xlarge)
-                ) {
-                    // Rating
-                    MovieMeta(
-                        key = "Rating",
-                        value = movie.rating.toString()
-                    )
+                // Desc
+                Text(
+                    text = getAnnotatedText(text = movie.desc),
+                    modifier = Modifier.padding(
+                        bottom = Paddings.xlarge
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
 
-                    // Director
-                    MovieMeta(
-                        key = "Director",
-                        value = movie.directors.joinToString(separator = ", ")
-                    )
+                // Rating
+                PrimaryButton(
+                    modifier = Modifier
+                        .padding(top = Paddings.xlarge)
+                        .fillMaxWidth(),
+                    text = "Add Rating Score",
+                    onClick = {
+                        input.rateClicked()
+                    }
+                )
 
-                    // Starring
-                    MovieMeta(
-                        key = "Starring",
-                        value = movie.actors.joinToString(separator = ", ")
-                    )
-
-                    // Genre
-                    MovieMeta(
-                        key = "Genre",
-                        value = movie.genre.joinToString(separator = ", ")
-                    )
-                }
+                // IMDB Button
+                SecondaryButton(
+                    modifier = Modifier
+                        .padding(top = Paddings.xlarge)
+                        .fillMaxWidth(),
+                    text = "OPEN IMDB",
+                    onClick = {
+                        input.openImdbClicked()
+                    }
+                )
             }
-
-            // Title
-            Text(
-                text = getAnnotatedText(text = movie.title),
-                modifier = Modifier.padding(
-                    top = Paddings.extra,
-                    bottom = Paddings.large
-                ),
-                style = MaterialTheme.typography.displaySmall
-            )
-
-            // Desc
-            Text(
-                text = getAnnotatedText(text = movie.desc),
-                modifier = Modifier.padding(
-                    bottom = Paddings.xlarge
-                ),
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            // Rating
-            PrimaryButton(
-                modifier = Modifier
-                    .padding(top = Paddings.xlarge)
-                    .fillMaxWidth(),
-                text = "Add Rating Score",
-                onClick = {
-                    input.rateClicked()
-                }
-            )
-
-            // IMDB Button
-            SecondaryButton(
-                modifier = Modifier
-                    .padding(top = Paddings.xlarge)
-                    .fillMaxWidth(),
-                text = "OPEN IMDB",
-                onClick = {
-                    input.openImdbClicked()
-                }
-            )
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.hocheol.movieapp.features.feed.presentation.screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -49,7 +50,6 @@ import timber.log.Timber
 
 val COMMON_HORIZONTAL_PADDING = Paddings.medium
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedScreen(
@@ -64,32 +64,50 @@ fun FeedScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier
-                    .background(MaterialTheme.myColorScheme.surface)
                     .requiredHeight(70.dp)
                     .shadow(elevation = 0.dp),
                 title = {
-                    Text(
-                        modifier = Modifier.padding(
-                            start = COMMON_HORIZONTAL_PADDING
-                        ),
-                        text = stringResource(id = R.string.app_name),
-                        style = MaterialTheme.typography.displaySmall
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(
+                                    start = COMMON_HORIZONTAL_PADDING
+                                ),
+                            text = stringResource(id = R.string.app_name),
+                            style = MaterialTheme.typography.displaySmall,
+                            color = MaterialTheme.myColorScheme.onPrimary
+                        )
+                    }
                 },
                 actions = {
-                    AppBarMenu(
-                        btnColor = btnColor,
-                        changeAppColor = changeAppColor,
-                        input = input
-                    )
-                }
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AppBarMenu(
+                            btnColor = btnColor,
+                            changeAppColor = changeAppColor,
+                            input = input
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.myColorScheme.primary)
             )
         }
-    ) {
-        BodyContent(
-            feedState = feedStateHolder.value,
-            input = input
-        )
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            BodyContent(
+                feedState = feedStateHolder.value,
+                input = input
+            )
+        }
     }
 }
 
