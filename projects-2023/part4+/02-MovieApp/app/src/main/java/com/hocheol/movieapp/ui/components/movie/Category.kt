@@ -4,26 +4,33 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.hocheol.movieapp.ui.theme.MovieAppTheme
+import com.hocheol.movieapp.features.common.entity.CategoryEntity
+import com.hocheol.movieapp.features.feed.presentation.input.IFeedViewModelInput
 import com.hocheol.movieapp.ui.theme.Paddings
 
 @Composable
-fun CategoryRow() {
+fun CategoryRow(
+    categoryEntity: CategoryEntity,
+    input: IFeedViewModelInput
+) {
     Column {
-        CategoryTitle("Action")
+        CategoryTitle(categoryEntity.genre)
 
         LazyRow(
             contentPadding = PaddingValues(
                 horizontal = Paddings.large
             )
         ) {
-            item {
-                MovieItem()
+            itemsIndexed(categoryEntity.movieFeedEntities) { _, item ->
+                MovieItem(
+                    movie = item,
+                    input = input
+                )
             }
         }
     }
@@ -32,19 +39,12 @@ fun CategoryRow() {
 @Composable
 fun CategoryTitle(genre: String) {
     Text(
-        text = "Action",
-        modifier = Modifier.padding(
-            vertical = Paddings.large,
-            horizontal = Paddings.extra
-        ),
+        text = genre,
+        modifier = Modifier
+            .padding(
+                vertical = Paddings.large,
+                horizontal = Paddings.extra
+            ),
         style = MaterialTheme.typography.headlineSmall
     )
-}
-
-@Preview
-@Composable
-fun CategoryRowPreview() {
-    MovieAppTheme {
-        CategoryRow()
-    }
 }

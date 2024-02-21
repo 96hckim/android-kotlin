@@ -62,7 +62,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     // Coil
-    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
