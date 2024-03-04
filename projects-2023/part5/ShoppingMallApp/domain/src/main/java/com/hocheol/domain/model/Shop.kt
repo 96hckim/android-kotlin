@@ -1,7 +1,7 @@
 package com.hocheol.domain.model
 
 data class Shop(
-    val id: String,
-    val name: String,
+    val shopId: String,
+    val shopName: String,
     val imageUrl: String
 )

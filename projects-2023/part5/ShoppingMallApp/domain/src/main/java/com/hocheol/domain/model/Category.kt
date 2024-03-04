@@ -1,8 +1,8 @@
 package com.hocheol.domain.model
 
 sealed class Category(
-    val id: String,
-    val name: String
+    val categoryId: String,
+    val categoryName: String
 ) {
     data object Top : Category("1", "상의")
     data object Outerwear : Category("2", "아우터")

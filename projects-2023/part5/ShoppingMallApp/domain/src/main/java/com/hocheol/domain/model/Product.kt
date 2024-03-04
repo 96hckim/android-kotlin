@@ -1,8 +1,8 @@
 package com.hocheol.domain.model
 
 data class Product(
-    val id: String,
-    val name: String,
+    val productId: String,
+    val productName: String,
     val imageUrl: String,
     val price: Price,
     val category: Category,
