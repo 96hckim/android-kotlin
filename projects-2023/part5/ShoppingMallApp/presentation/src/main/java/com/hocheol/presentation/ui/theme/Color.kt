@@ -1,4 +1,4 @@
-package com.hocheol.shoppingmallapp.ui.theme
+package com.hocheol.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
