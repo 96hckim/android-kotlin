@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,7 +13,7 @@
         android:theme="@style/Theme.ShoppingMallApp"
         tools:targetApi="31">
         <activity
-            android:name="com.hocheol.presentation.ui.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ShoppingMallApp">
