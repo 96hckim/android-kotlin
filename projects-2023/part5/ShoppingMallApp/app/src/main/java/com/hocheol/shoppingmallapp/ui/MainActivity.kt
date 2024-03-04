@@ -1,4 +1,4 @@
-package com.hocheol.shoppingmallapp
+package com.hocheol.shoppingmallapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
