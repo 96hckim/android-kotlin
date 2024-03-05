@@ -16,8 +16,12 @@ import com.hocheol.domain.model.Banner
 import com.hocheol.presentation.R
 
 @Composable
-fun BannerCard(model: Banner) {
+fun BannerCard(
+    model: Banner,
+    onClick: (Banner) -> Unit
+) {
     Card(
+        onClick = { onClick(model) },
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()

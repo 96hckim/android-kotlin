@@ -26,7 +26,10 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BannerListCard(model: BannerList) {
+fun BannerListCard(
+    model: BannerList,
+    onClick: (BannerList) -> Unit
+) {
     val pagerState = rememberPagerState { model.imageList.size }
 
     LaunchedEffect(key1 = pagerState) {
@@ -35,6 +38,7 @@ fun BannerListCard(model: BannerList) {
 
     HorizontalPager(state = pagerState) { page ->
         Card(
+            onClick = { onClick(model) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()

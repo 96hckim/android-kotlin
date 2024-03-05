@@ -8,10 +8,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.hocheol.domain.model.Banner
 import com.hocheol.domain.model.BannerList
+import com.hocheol.domain.model.Carousel
 import com.hocheol.domain.model.ModelType
 import com.hocheol.domain.model.Product
 import com.hocheol.presentation.ui.component.BannerCard
 import com.hocheol.presentation.ui.component.BannerListCard
+import com.hocheol.presentation.ui.component.CarouselCard
 import com.hocheol.presentation.ui.component.ProductCard
 import com.hocheol.presentation.viewmodel.MainViewModel
 
@@ -32,13 +34,21 @@ fun HomeScreen(
             }
         ) { index ->
             when (val item = modelList[index]) {
-                is Product -> ProductCard(product = item) {
-                    // TODO 상세화면 개발 시 추가
+                is Product -> ProductCard(model = item) { product ->
+                    viewModel.openProduct(product)
                 }
 
-                is Banner -> BannerCard(model = item)
+                is Banner -> BannerCard(model = item) { banner ->
+                    viewModel.openBanner(banner)
+                }
 
-                is BannerList -> BannerListCard(model = item)
+                is BannerList -> BannerListCard(model = item) { bannerList ->
+                    viewModel.openBannerList(bannerList)
+                }
+
+                is Carousel -> CarouselCard(model = item) { product ->
+                    viewModel.openCarouselProduct(product)
+                }
             }
         }
     }
@@ -47,6 +57,6 @@ fun HomeScreen(
 private fun getSpanCountByType(type: ModelType, defaultColumnCount: Int): Int {
     return when (type) {
         ModelType.PRODUCT -> 1
-        ModelType.BANNER, ModelType.BANNER_LIST -> defaultColumnCount
+        ModelType.BANNER, ModelType.BANNER_LIST, ModelType.CAROUSEL -> defaultColumnCount
     }
 }

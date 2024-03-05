@@ -33,8 +33,8 @@ import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 
 @Composable
 fun ProductCard(
-    product: Product,
-    onClick: (Product) -> Unit?
+    model: Product,
+    onClick: (Product) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -63,34 +63,34 @@ fun ProductCard(
             Text(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = product.shop.shopName
+                text = model.shop.shopName
             )
 
             Text(
                 fontSize = 14.sp,
-                text = product.productName
+                text = model.productName
             )
 
-            Price(product = product)
+            Price(model = model)
         }
     }
 }
 
 @Composable
-private fun Price(product: Product) {
-    when (product.price.salesStatus) {
+fun Price(model: Product) {
+    when (model.price.salesStatus) {
         SalesStatus.ON_SALE -> {
             Text(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                text = "${product.price.originPrice}원"
+                text = "${model.price.originPrice}원"
             )
         }
 
         SalesStatus.ON_DISCOUNT -> {
             Text(
                 fontSize = 14.sp,
-                text = "${product.price.originPrice}원",
+                text = "${model.price.originPrice}원",
                 style = TextStyle(textDecoration = TextDecoration.LineThrough)
             )
 
@@ -98,7 +98,7 @@ private fun Price(product: Product) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.error,
-                text = "${product.price.finalPrice}원"
+                text = "${model.price.finalPrice}원"
             )
         }
 
