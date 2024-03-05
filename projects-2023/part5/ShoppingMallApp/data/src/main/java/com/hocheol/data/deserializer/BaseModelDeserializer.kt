@@ -10,6 +10,7 @@ import com.hocheol.domain.model.BaseModel
 import com.hocheol.domain.model.Carousel
 import com.hocheol.domain.model.ModelType
 import com.hocheol.domain.model.Product
+import com.hocheol.domain.model.Ranking
 import java.lang.reflect.Type
 
 class BaseModelDeserializer : JsonDeserializer<BaseModel> {
@@ -25,6 +26,7 @@ class BaseModelDeserializer : JsonDeserializer<BaseModel> {
             ModelType.BANNER -> gson.fromJson(root, Product::class.java)
             ModelType.BANNER_LIST -> gson.fromJson(root, BannerList::class.java)
             ModelType.CAROUSEL -> gson.fromJson(root, Carousel::class.java)
+            ModelType.RANKING -> gson.fromJson(root, Ranking::class.java)
         }
     }
 

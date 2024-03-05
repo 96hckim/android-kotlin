@@ -36,15 +36,19 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun openCarouselProduct(product: Product) {
-
-    }
-
     fun openBanner(banner: Banner) {
 
     }
 
     fun openBannerList(bannerList: BannerList) {
+
+    }
+
+    fun openCarouselProduct(product: Product) {
+
+    }
+
+    fun openRankingProduct(product: Product) {
 
     }
 

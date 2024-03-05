@@ -11,10 +11,12 @@ import com.hocheol.domain.model.BannerList
 import com.hocheol.domain.model.Carousel
 import com.hocheol.domain.model.ModelType
 import com.hocheol.domain.model.Product
+import com.hocheol.domain.model.Ranking
 import com.hocheol.presentation.ui.component.BannerCard
 import com.hocheol.presentation.ui.component.BannerListCard
 import com.hocheol.presentation.ui.component.CarouselCard
 import com.hocheol.presentation.ui.component.ProductCard
+import com.hocheol.presentation.ui.component.RankingCard
 import com.hocheol.presentation.viewmodel.MainViewModel
 
 @Composable
@@ -49,6 +51,10 @@ fun HomeScreen(
                 is Carousel -> CarouselCard(model = item) { product ->
                     viewModel.openCarouselProduct(product)
                 }
+
+                is Ranking -> RankingCard(model = item) { product ->
+                    viewModel.openRankingProduct(product)
+                }
             }
         }
     }
@@ -57,6 +63,6 @@ fun HomeScreen(
 private fun getSpanCountByType(type: ModelType, defaultColumnCount: Int): Int {
     return when (type) {
         ModelType.PRODUCT -> 1
-        ModelType.BANNER, ModelType.BANNER_LIST, ModelType.CAROUSEL -> defaultColumnCount
+        ModelType.BANNER, ModelType.BANNER_LIST, ModelType.CAROUSEL, ModelType.RANKING -> defaultColumnCount
     }
 }
