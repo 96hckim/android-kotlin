@@ -38,14 +38,6 @@ sealed class MainNavigationItem(var route: String, val icon: ImageVector, var na
     data object MyPage : MainNavigationItem("MyPage", Icons.Filled.AccountBox, "MyPage")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ShoppingMallAppTheme {
-        MainScreen()
-    }
-}
-
 @Composable
 fun MainScreen() {
     val viewModel = hiltViewModel<MainViewModel>()
@@ -140,5 +132,13 @@ fun MainNavigationScreen(navController: NavHostController) {
         composable(MainNavigationItem.MyPage.route) {
             Text(text = "Hello MyPage")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    ShoppingMallAppTheme {
+        MainScreen()
     }
 }
