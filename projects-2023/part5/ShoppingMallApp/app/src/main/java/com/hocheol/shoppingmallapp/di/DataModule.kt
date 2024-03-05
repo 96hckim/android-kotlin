@@ -1,6 +1,8 @@
 package com.hocheol.shoppingmallapp.di
 
+import com.hocheol.data.repository.CategoryRepositoryImpl
 import com.hocheol.data.repository.MainRepositoryImpl
+import com.hocheol.domain.repository.CategoryRepository
 import com.hocheol.domain.repository.MainRepository
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindMainRepository(mainRepositoryImpl: MainRepositoryImpl): MainRepository
+
+    @Binds
+    @Singleton
+    fun bindCategoryRepository(categoryRepositoryImpl: CategoryRepositoryImpl): CategoryRepository
 }

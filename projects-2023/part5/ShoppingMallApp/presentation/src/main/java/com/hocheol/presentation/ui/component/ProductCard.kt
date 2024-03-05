@@ -37,6 +37,7 @@ fun ProductCard(
     onClick: (Product) -> Unit
 ) {
     Card(
+        onClick = { onClick(model) },
         modifier = Modifier
             .fillMaxWidth()
             .height(intrinsicSize = IntrinsicSize.Max)
