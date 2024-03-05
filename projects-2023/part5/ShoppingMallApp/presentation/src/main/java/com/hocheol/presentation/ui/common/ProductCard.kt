@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +56,8 @@ fun ProductCard(
                 contentDescription = "ProductImage",
                 modifier = Modifier
                     .fillMaxWidth()
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop
             )
 
             Text(
@@ -80,33 +83,23 @@ private fun Price(product: Product) {
             Text(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                text = "${product.price.originPrice}"
+                text = "${product.price.originPrice}원"
             )
         }
 
         SalesStatus.ON_DISCOUNT -> {
             Text(
                 fontSize = 14.sp,
-                text = "${product.price.originPrice}",
+                text = "${product.price.originPrice}원",
                 style = TextStyle(textDecoration = TextDecoration.LineThrough)
             )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    text = "할인가: "
-                )
-
-                Text(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.error,
-                    text = "${product.price.finalPrice}"
-                )
-            }
+            Text(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error,
+                text = "${product.price.finalPrice}원"
+            )
         }
 
         SalesStatus.SOLD_OUT -> {

@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hocheol.presentation.ui.main.HomeScreen
 import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 import com.hocheol.presentation.viewmodel.MainViewModel
 
@@ -57,7 +58,10 @@ fun MainScreen() {
             modifier = Modifier
                 .padding(paddingValues = paddingValues)
         ) {
-            MainNavigationScreen(navController = navController)
+            MainNavigationScreen(
+                mainViewModel = viewModel,
+                navController = navController
+            )
         }
     }
 }
@@ -121,10 +125,15 @@ fun MainBottomNavigationBar(navController: NavHostController) {
 }
 
 @Composable
-fun MainNavigationScreen(navController: NavHostController) {
+fun MainNavigationScreen(
+    mainViewModel: MainViewModel,
+    navController: NavHostController
+) {
     NavHost(navController = navController, startDestination = MainNavigationItem.Main.route) {
         composable(MainNavigationItem.Main.route) {
-            Text(text = "Hello Main")
+            HomeScreen(
+                viewModel = mainViewModel
+            )
         }
         composable(MainNavigationItem.Category.route) {
             Text(text = "Hello Category")
