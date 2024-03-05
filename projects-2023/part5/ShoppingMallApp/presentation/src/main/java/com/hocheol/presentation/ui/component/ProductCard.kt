@@ -1,4 +1,4 @@
-package com.hocheol.presentation.ui.common
+package com.hocheol.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
