@@ -12,16 +12,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.hocheol.domain.model.Banner
 import com.hocheol.presentation.R
+import com.hocheol.presentation.model.BannerVM
 
 @Composable
 fun BannerCard(
-    model: Banner,
-    onClick: (Banner) -> Unit
+    presentationVM: BannerVM
 ) {
     Card(
-        onClick = { onClick(model) },
+        onClick = { presentationVM.openBanner(presentationVM.model.bannerId) },
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()

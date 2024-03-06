@@ -21,22 +21,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hocheol.domain.model.Product
-import com.hocheol.domain.model.Ranking
 import com.hocheol.presentation.R
+import com.hocheol.presentation.model.RankingVM
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RankingCard(
-    model: Ranking,
-    onClick: (Product) -> Unit
+    presentationVM: RankingVM
 ) {
     val pagerState = rememberPagerState {
-        model.productList.size / DEFAULT_RANKING_ITEM_COUNT
+        presentationVM.model.productList.size / DEFAULT_RANKING_ITEM_COUNT
     }
 
     Column {
         Text(
-            text = model.title,
+            text = presentationVM.model.title,
             modifier = Modifier.padding(start = 10.dp),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold
@@ -49,7 +48,9 @@ fun RankingCard(
             Column {
                 repeat(DEFAULT_RANKING_ITEM_COUNT) { count ->
                     val index = page * DEFAULT_RANKING_ITEM_COUNT + count
-                    RankingProductCard(index, model.productList[index], onClick)
+                    RankingProductCard(index, presentationVM.model.productList[index]) { product ->
+                        presentationVM.openRankingProduct(product)
+                    }
                 }
             }
         }

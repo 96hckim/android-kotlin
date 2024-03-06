@@ -20,17 +20,16 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.hocheol.domain.model.BannerList
 import com.hocheol.presentation.R
+import com.hocheol.presentation.model.BannerListVM
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BannerListCard(
-    model: BannerList,
-    onClick: (BannerList) -> Unit
+    presentationVM: BannerListVM
 ) {
-    val pagerState = rememberPagerState { model.imageList.size }
+    val pagerState = rememberPagerState { presentationVM.model.imageList.size }
 
     LaunchedEffect(key1 = pagerState) {
         autoScrollInfinity(pagerState)
@@ -38,7 +37,7 @@ fun BannerListCard(
 
     HorizontalPager(state = pagerState) { page ->
         Card(
-            onClick = { onClick(model) },
+            onClick = { presentationVM.openBannerList(presentationVM.model.bannerId) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()

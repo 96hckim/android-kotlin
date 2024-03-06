@@ -29,15 +29,16 @@ import com.hocheol.domain.model.Product
 import com.hocheol.domain.model.SalesStatus
 import com.hocheol.domain.model.Shop
 import com.hocheol.presentation.R
+import com.hocheol.presentation.delegate.ProductDelegate
+import com.hocheol.presentation.model.ProductVM
 import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 
 @Composable
 fun ProductCard(
-    model: Product,
-    onClick: (Product) -> Unit
+    presentationVM: ProductVM
 ) {
     Card(
-        onClick = { onClick(model) },
+        onClick = { presentationVM.openProduct(presentationVM.model) },
         modifier = Modifier
             .fillMaxWidth()
             .height(intrinsicSize = IntrinsicSize.Max)
@@ -64,15 +65,15 @@ fun ProductCard(
             Text(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = model.shop.shopName
+                text = presentationVM.model.shop.shopName
             )
 
             Text(
                 fontSize = 14.sp,
-                text = model.productName
+                text = presentationVM.model.productName
             )
 
-            Price(model = model)
+            Price(model = presentationVM.model)
         }
     }
 }
@@ -118,26 +119,31 @@ fun Price(model: Product) {
 private fun ProductCardSalePreview() {
     ShoppingMallAppTheme {
         ProductCard(
-            Product(
-                productId = "1",
-                productName = "상품 이름",
-                imageUrl = "",
-                price = com.hocheol.domain.model.Price(
-                    30000,
-                    30000,
-                    SalesStatus.ON_SALE,
+            ProductVM(
+                model = Product(
+                    productId = "1",
+                    productName = "상품 이름",
+                    imageUrl = "",
+                    price = com.hocheol.domain.model.Price(
+                        30000,
+                        30000,
+                        SalesStatus.ON_SALE,
+                    ),
+                    category = Category.Top,
+                    shop = Shop(
+                        "1",
+                        "샵 이름",
+                        "",
+                    ),
+                    isNew = false,
+                    isFreeShipping = false,
                 ),
-                category = Category.Top,
-                shop = Shop(
-                    "1",
-                    "샵 이름",
-                    "",
-                ),
-                isNew = false,
-                isFreeShipping = false,
+                productDelegate = object : ProductDelegate {
+                    override fun openProduct(product: Product) {
+                    }
+                }
             )
-        ) {
-        }
+        )
     }
 }
 
@@ -146,26 +152,31 @@ private fun ProductCardSalePreview() {
 private fun ProductCardDisCountPreview() {
     ShoppingMallAppTheme {
         ProductCard(
-            Product(
-                productId = "1",
-                productName = "상품 이름",
-                imageUrl = "",
-                price = com.hocheol.domain.model.Price(
-                    30000,
-                    20000,
-                    SalesStatus.ON_DISCOUNT,
+            ProductVM(
+                model = Product(
+                    productId = "1",
+                    productName = "상품 이름",
+                    imageUrl = "",
+                    price = com.hocheol.domain.model.Price(
+                        30000,
+                        20000,
+                        SalesStatus.ON_DISCOUNT,
+                    ),
+                    category = Category.Top,
+                    shop = Shop(
+                        "1",
+                        "샵 이름",
+                        "",
+                    ),
+                    isNew = false,
+                    isFreeShipping = false,
                 ),
-                category = Category.Top,
-                shop = Shop(
-                    "1",
-                    "샵 이름",
-                    "",
-                ),
-                isNew = false,
-                isFreeShipping = false,
+                productDelegate = object : ProductDelegate {
+                    override fun openProduct(product: Product) {
+                    }
+                }
             )
-        ) {
-        }
+        )
     }
 }
 
@@ -174,25 +185,30 @@ private fun ProductCardDisCountPreview() {
 private fun ProductCardSoldOutPreview() {
     ShoppingMallAppTheme {
         ProductCard(
-            Product(
-                productId = "1",
-                productName = "상품 이름",
-                imageUrl = "",
-                price = com.hocheol.domain.model.Price(
-                    30000,
-                    30000,
-                    SalesStatus.SOLD_OUT,
+            ProductVM(
+                model = Product(
+                    productId = "1",
+                    productName = "상품 이름",
+                    imageUrl = "",
+                    price = com.hocheol.domain.model.Price(
+                        30000,
+                        30000,
+                        SalesStatus.SOLD_OUT,
+                    ),
+                    category = Category.Top,
+                    shop = Shop(
+                        "1",
+                        "샵 이름",
+                        "",
+                    ),
+                    isNew = false,
+                    isFreeShipping = false,
                 ),
-                category = Category.Top,
-                shop = Shop(
-                    "1",
-                    "샵 이름",
-                    "",
-                ),
-                isNew = false,
-                isFreeShipping = false,
+                productDelegate = object : ProductDelegate {
+                    override fun openProduct(product: Product) {
+                    }
+                }
             )
-        ) {
-        }
+        )
     }
 }

@@ -6,12 +6,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.hocheol.domain.model.Banner
-import com.hocheol.domain.model.BannerList
-import com.hocheol.domain.model.Carousel
 import com.hocheol.domain.model.ModelType
-import com.hocheol.domain.model.Product
-import com.hocheol.domain.model.Ranking
+import com.hocheol.presentation.model.BannerListVM
+import com.hocheol.presentation.model.BannerVM
+import com.hocheol.presentation.model.CarouselVM
+import com.hocheol.presentation.model.ProductVM
+import com.hocheol.presentation.model.RankingVM
 import com.hocheol.presentation.ui.component.BannerCard
 import com.hocheol.presentation.ui.component.BannerListCard
 import com.hocheol.presentation.ui.component.CarouselCard
@@ -31,30 +31,16 @@ fun HomeScreen(
             count = modelList.size,
             span = { index ->
                 val item = modelList[index]
-                val spanCount = getSpanCountByType(item.type, columnCount)
+                val spanCount = getSpanCountByType(item.model.type, columnCount)
                 GridItemSpan(spanCount)
             }
         ) { index ->
             when (val item = modelList[index]) {
-                is Product -> ProductCard(model = item) { product ->
-                    viewModel.openProduct(product)
-                }
-
-                is Banner -> BannerCard(model = item) { banner ->
-                    viewModel.openBanner(banner)
-                }
-
-                is BannerList -> BannerListCard(model = item) { bannerList ->
-                    viewModel.openBannerList(bannerList)
-                }
-
-                is Carousel -> CarouselCard(model = item) { product ->
-                    viewModel.openCarouselProduct(product)
-                }
-
-                is Ranking -> RankingCard(model = item) { product ->
-                    viewModel.openRankingProduct(product)
-                }
+                is ProductVM -> ProductCard(presentationVM = item)
+                is BannerVM -> BannerCard(presentationVM = item)
+                is BannerListVM -> BannerListCard(presentationVM = item)
+                is CarouselVM -> CarouselCard(presentationVM = item)
+                is RankingVM -> RankingCard(presentationVM = item)
             }
         }
     }
