@@ -33,6 +33,7 @@ import com.hocheol.presentation.ui.category.CategoryDetailScreen
 import com.hocheol.presentation.ui.main.CategoryScreen
 import com.hocheol.presentation.ui.main.HomeScreen
 import com.hocheol.presentation.ui.product_detail.ProductDetailScreen
+import com.hocheol.presentation.ui.search.SearchScreen
 import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 import com.hocheol.presentation.viewmodel.MainViewModel
 
@@ -46,7 +47,12 @@ fun MainScreen() {
 
     Scaffold(
         topBar = {
-            MainHeader(viewModel)
+            if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
+                MainHeader(
+                    viewModel = viewModel,
+                    navController = navController
+                )
+            }
         },
         bottomBar = {
             if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
@@ -63,7 +69,7 @@ fun MainScreen() {
                 .padding(paddingValues = paddingValues)
         ) {
             MainNavigationScreen(
-                mainViewModel = viewModel,
+                viewModel = viewModel,
                 navController = navController
             )
         }
@@ -72,13 +78,16 @@ fun MainScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainHeader(viewModel: MainViewModel) {
+fun MainHeader(
+    viewModel: MainViewModel,
+    navController: NavHostController
+) {
     TopAppBar(
         title = { Text("My App") },
         actions = {
             IconButton(
                 onClick = {
-                    viewModel.openSearchForm()
+                    viewModel.openSearchForm(navController)
                 }
             ) {
                 Icon(
@@ -130,16 +139,16 @@ fun MainBottomNavigationBar(
 
 @Composable
 fun MainNavigationScreen(
-    mainViewModel: MainViewModel,
+    viewModel: MainViewModel,
     navController: NavHostController
 ) {
     NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
         composable(NavigationRouteName.MAIN_HOME) {
-            HomeScreen(navHostController = navController, viewModel = mainViewModel)
+            HomeScreen(navHostController = navController, viewModel = viewModel)
         }
 
         composable(NavigationRouteName.MAIN_CATEGORY) {
-            CategoryScreen(viewModel = mainViewModel, navController)
+            CategoryScreen(viewModel = viewModel, navController)
         }
 
         composable(NavigationRouteName.MAIN_MY_PAGE) {
@@ -165,6 +174,10 @@ fun MainNavigationScreen(
             if (productId != null) {
                 ProductDetailScreen(productId)
             }
+        }
+
+        composable(NavigationRouteName.SEARCH) {
+            SearchScreen(navController)
         }
     }
 }

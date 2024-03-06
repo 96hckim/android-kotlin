@@ -24,7 +24,7 @@ class CategoryRepositoryImpl @Inject constructor(
     }
 
     override fun getProductsByCategory(category: Category): Flow<List<Product>> {
-        return productDataSource.getProducts().map { modelList ->
+        return productDataSource.getHomeComponents().map { modelList ->
             modelList.filterIsInstance(Product::class.java)
                 .filter { it.category.categoryId == category.categoryId }
         }

@@ -12,6 +12,7 @@ import com.hocheol.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_HOME
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_MY_PAGE
 import com.hocheol.presentation.ui.NavigationRouteName.PRODUCT_DETAIL
+import com.hocheol.presentation.ui.NavigationRouteName.SEARCH
 
 sealed class NavigationItem(open val route: String) {
     sealed class MainNav(override val route: String, val icon: ImageVector, val name: String) : NavigationItem(route) {
@@ -32,6 +33,8 @@ sealed class NavigationItem(open val route: String) {
     data class CategoryNav(val category: Category) : NavigationItem(CATEGORY_DETAIL)
 
     data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
+
+    data object SearchNav : NavigationItem(SEARCH)
 }
 
 object NavigationRouteName {
@@ -40,4 +43,5 @@ object NavigationRouteName {
     const val MAIN_MY_PAGE = "main_my_page"
     const val CATEGORY_DETAIL = "category_detail"
     const val PRODUCT_DETAIL = "product_detail"
+    const val SEARCH = "search"
 }

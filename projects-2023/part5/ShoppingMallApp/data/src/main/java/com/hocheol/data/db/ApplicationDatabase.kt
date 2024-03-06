@@ -5,15 +5,18 @@ import androidx.room.RoomDatabase
 import com.hocheol.data.db.dao.BasketDao
 import com.hocheol.data.db.dao.LikeDao
 import com.hocheol.data.db.dao.PurchaseDao
+import com.hocheol.data.db.dao.SearchDao
 import com.hocheol.data.db.entity.BasketProductEntity
 import com.hocheol.data.db.entity.LikeProductEntity
 import com.hocheol.data.db.entity.PurchaseProductEntity
+import com.hocheol.data.db.entity.SearchKeywordEntity
 
 @Database(
     entities = [
         PurchaseProductEntity::class,
         LikeProductEntity::class,
-        BasketProductEntity::class
+        BasketProductEntity::class,
+        SearchKeywordEntity::class
     ],
     version = 1
 )
@@ -24,6 +27,8 @@ abstract class ApplicationDatabase : RoomDatabase() {
     abstract fun likeDao(): LikeDao
 
     abstract fun basketDao(): BasketDao
+
+    abstract fun searchDao(): SearchDao
 
     companion object {
         const val DB_NAME = "ApplicationDatabase.db"

@@ -11,6 +11,6 @@ class MainRepositoryImpl @Inject constructor(
 ) : MainRepository {
 
     override fun getModelList(): Flow<List<BaseModel>> {
-        return productDataSource.getProducts()
+        return productDataSource.getHomeComponents()
     }
 }
