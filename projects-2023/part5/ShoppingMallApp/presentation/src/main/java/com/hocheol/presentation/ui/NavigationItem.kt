@@ -6,10 +6,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.hocheol.domain.model.Category
+import com.hocheol.domain.model.Product
 import com.hocheol.presentation.ui.NavigationRouteName.CATEGORY_DETAIL
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_HOME
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_MY_PAGE
+import com.hocheol.presentation.ui.NavigationRouteName.PRODUCT_DETAIL
 
 sealed class NavigationItem(open val route: String) {
     sealed class MainNav(override val route: String, val icon: ImageVector, val name: String) : NavigationItem(route) {
@@ -28,6 +30,8 @@ sealed class NavigationItem(open val route: String) {
     }
 
     data class CategoryNav(val category: Category) : NavigationItem(CATEGORY_DETAIL)
+
+    data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
 }
 
 object NavigationRouteName {
@@ -35,4 +39,5 @@ object NavigationRouteName {
     const val MAIN_CATEGORY = "main_category"
     const val MAIN_MY_PAGE = "main_my_page"
     const val CATEGORY_DETAIL = "category_detail"
+    const val PRODUCT_DETAIL = "product_detail"
 }

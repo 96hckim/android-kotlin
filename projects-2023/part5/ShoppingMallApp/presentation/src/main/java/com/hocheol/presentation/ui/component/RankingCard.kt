@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.hocheol.domain.model.Product
 import com.hocheol.presentation.R
 import com.hocheol.presentation.model.RankingVM
@@ -27,6 +28,7 @@ import com.hocheol.presentation.model.RankingVM
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RankingCard(
+    navHostController: NavHostController,
     presentationVM: RankingVM
 ) {
     val pagerState = rememberPagerState {
@@ -49,7 +51,7 @@ fun RankingCard(
                 repeat(DEFAULT_RANKING_ITEM_COUNT) { count ->
                     val index = page * DEFAULT_RANKING_ITEM_COUNT + count
                     RankingProductCard(index, presentationVM.model.productList[index]) { product ->
-                        presentationVM.openRankingProduct(product)
+                        presentationVM.openRankingProduct(navHostController, product)
                     }
                 }
             }

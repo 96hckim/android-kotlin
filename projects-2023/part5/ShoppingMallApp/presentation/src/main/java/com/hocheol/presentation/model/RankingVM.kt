@@ -1,5 +1,6 @@
 package com.hocheol.presentation.model
 
+import androidx.navigation.NavHostController
 import com.hocheol.domain.model.Product
 import com.hocheol.domain.model.Ranking
 import com.hocheol.presentation.delegate.ProductDelegate
@@ -9,8 +10,8 @@ class RankingVM(
     private val productDelegate: ProductDelegate
 ) : PresentationVM<Ranking>(model) {
 
-    fun openRankingProduct(product: Product) {
-        productDelegate.openProduct(product)
+    fun openRankingProduct(navController: NavHostController, product: Product) {
+        productDelegate.openProduct(navController, product)
         sendRankingLog()
     }
 

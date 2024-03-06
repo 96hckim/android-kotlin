@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hocheol.domain.model.Category
 import com.hocheol.domain.model.Product
 import com.hocheol.domain.model.SalesStatus
@@ -35,10 +37,11 @@ import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 
 @Composable
 fun ProductCard(
+    navHostController: NavHostController,
     presentationVM: ProductVM
 ) {
     Card(
-        onClick = { presentationVM.openProduct(presentationVM.model) },
+        onClick = { presentationVM.openProduct(navHostController, presentationVM.model) },
         modifier = Modifier
             .fillMaxWidth()
             .height(intrinsicSize = IntrinsicSize.Max)
@@ -119,6 +122,7 @@ fun Price(model: Product) {
 private fun ProductCardSalePreview() {
     ShoppingMallAppTheme {
         ProductCard(
+            rememberNavController(),
             ProductVM(
                 model = Product(
                     productId = "1",
@@ -139,7 +143,7 @@ private fun ProductCardSalePreview() {
                     isFreeShipping = false,
                 ),
                 productDelegate = object : ProductDelegate {
-                    override fun openProduct(product: Product) {
+                    override fun openProduct(navController: NavHostController, product: Product) {
                     }
                 }
             )
@@ -152,6 +156,7 @@ private fun ProductCardSalePreview() {
 private fun ProductCardDisCountPreview() {
     ShoppingMallAppTheme {
         ProductCard(
+            rememberNavController(),
             ProductVM(
                 model = Product(
                     productId = "1",
@@ -172,7 +177,7 @@ private fun ProductCardDisCountPreview() {
                     isFreeShipping = false,
                 ),
                 productDelegate = object : ProductDelegate {
-                    override fun openProduct(product: Product) {
+                    override fun openProduct(navController: NavHostController, product: Product) {
                     }
                 }
             )
@@ -185,6 +190,7 @@ private fun ProductCardDisCountPreview() {
 private fun ProductCardSoldOutPreview() {
     ShoppingMallAppTheme {
         ProductCard(
+            rememberNavController(),
             ProductVM(
                 model = Product(
                     productId = "1",
@@ -205,7 +211,7 @@ private fun ProductCardSoldOutPreview() {
                     isFreeShipping = false,
                 ),
                 productDelegate = object : ProductDelegate {
-                    override fun openProduct(product: Product) {
+                    override fun openProduct(navController: NavHostController, product: Product) {
                     }
                 }
             )

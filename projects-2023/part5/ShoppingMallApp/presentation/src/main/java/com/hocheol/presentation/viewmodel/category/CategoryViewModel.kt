@@ -1,11 +1,14 @@
 package com.hocheol.presentation.viewmodel.category
 
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.hocheol.domain.model.Category
 import com.hocheol.domain.model.Product
 import com.hocheol.domain.usecase.CategoryUseCase
 import com.hocheol.presentation.delegate.ProductDelegate
 import com.hocheol.presentation.model.ProductVM
+import com.hocheol.presentation.ui.NavigationRouteName
+import com.hocheol.presentation.utils.NavigationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,8 +29,8 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    override fun openProduct(product: Product) {
-
+    override fun openProduct(navController: NavHostController, product: Product) {
+        NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
     }
 
     private fun convertToPresentationVM(productList: List<Product>): List<ProductVM> {

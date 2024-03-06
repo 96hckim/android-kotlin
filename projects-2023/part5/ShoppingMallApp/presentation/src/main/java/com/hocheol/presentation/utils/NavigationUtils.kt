@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.hocheol.domain.model.Category
+import com.hocheol.domain.model.Product
 
 object NavigationUtils {
 
@@ -20,6 +21,10 @@ object NavigationUtils {
             when (args) {
                 is Category -> {
                     argument = String.format("/%s", Uri.parse(Gson().toJson(args)))
+                }
+
+                is Product -> {
+                    argument = String.format("/%s", args.productId)
                 }
             }
         }

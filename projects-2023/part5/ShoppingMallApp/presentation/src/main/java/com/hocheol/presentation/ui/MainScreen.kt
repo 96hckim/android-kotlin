@@ -32,6 +32,7 @@ import com.hocheol.domain.model.Category
 import com.hocheol.presentation.ui.category.CategoryDetailScreen
 import com.hocheol.presentation.ui.main.CategoryScreen
 import com.hocheol.presentation.ui.main.HomeScreen
+import com.hocheol.presentation.ui.product_detail.ProductDetailScreen
 import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 import com.hocheol.presentation.viewmodel.MainViewModel
 
@@ -134,7 +135,7 @@ fun MainNavigationScreen(
 ) {
     NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
         composable(NavigationRouteName.MAIN_HOME) {
-            HomeScreen(viewModel = mainViewModel)
+            HomeScreen(navHostController = navController, viewModel = mainViewModel)
         }
 
         composable(NavigationRouteName.MAIN_CATEGORY) {
@@ -146,13 +147,23 @@ fun MainNavigationScreen(
         }
 
         composable(
-            NavigationRouteName.CATEGORY_DETAIL + "/{category}",
+            route = NavigationRouteName.CATEGORY_DETAIL + "/{category}",
             arguments = listOf(navArgument("category") { type = NavType.StringType })
         ) { navBackStackEntry ->
             val jsonString = navBackStackEntry.arguments?.getString("category")
             val category = Gson().fromJson(jsonString, Category::class.java)
             if (category != null) {
-                CategoryDetailScreen(category = category)
+                CategoryDetailScreen(navHostController = navController, category = category)
+            }
+        }
+
+        composable(
+            route = NavigationRouteName.PRODUCT_DETAIL + "/{product}",
+            arguments = listOf(navArgument("product") { type = NavType.StringType })
+        ) { navBackStackEntry ->
+            val productId = navBackStackEntry.arguments?.getString("product")
+            if (productId != null) {
+                ProductDetailScreen(productId)
             }
         }
     }
