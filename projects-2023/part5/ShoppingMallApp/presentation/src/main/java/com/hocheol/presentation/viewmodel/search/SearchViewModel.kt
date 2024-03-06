@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.hocheol.domain.model.Product
+import com.hocheol.domain.model.SearchFilter
 import com.hocheol.domain.model.SearchKeyword
 import com.hocheol.domain.usecase.SearchUseCase
 import com.hocheol.presentation.delegate.ProductDelegate
@@ -22,6 +23,9 @@ class SearchViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase
 ) : ViewModel(), ProductDelegate {
 
+    private val searchManager = SearchManager()
+    val searchFilters = searchManager.filters
+
     private val _searchResult = MutableStateFlow<List<ProductVM>>(emptyList())
     val searchResult: StateFlow<List<ProductVM>> = _searchResult
 
@@ -29,9 +33,31 @@ class SearchViewModel @Inject constructor(
 
     fun search(keyword: String) {
         viewModelScope.launch {
-            searchUseCase.search(SearchKeyword(keyword)).collectLatest {
-                _searchResult.emit(it.map(::convertToProductVM))
-            }
+            searchInternalNewSearchKeyword(keyword)
+        }
+    }
+
+    fun updateFilter(filter: SearchFilter) {
+        viewModelScope.launch {
+            searchManager.updateFilter(filter)
+
+            searchInternal()
+        }
+    }
+
+    private suspend fun searchInternal() {
+        searchUseCase.search(searchManager.searchKeyword, searchManager.currentFilters()).collectLatest {
+            _searchResult.emit(it.map(::convertToProductVM))
+        }
+    }
+
+    private suspend fun searchInternalNewSearchKeyword(newSearchKeyword: String = "") {
+        searchManager.clearFilter()
+
+        searchUseCase.search(SearchKeyword(newSearchKeyword), searchManager.currentFilters()).collectLatest {
+            searchManager.initSearchManager(newSearchKeyword, it)
+
+            _searchResult.emit(it.map(::convertToProductVM))
         }
     }
 

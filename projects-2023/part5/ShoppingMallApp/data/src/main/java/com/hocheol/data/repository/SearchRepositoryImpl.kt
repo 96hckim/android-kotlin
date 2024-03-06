@@ -5,6 +5,7 @@ import com.hocheol.data.db.dao.SearchDao
 import com.hocheol.data.db.entity.SearchKeywordEntity
 import com.hocheol.data.db.entity.toDomainModel
 import com.hocheol.domain.model.Product
+import com.hocheol.domain.model.SearchFilter
 import com.hocheol.domain.model.SearchKeyword
 import com.hocheol.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
@@ -16,13 +17,19 @@ class SearchRepositoryImpl @Inject constructor(
     private val searchDao: SearchDao
 ) : SearchRepository {
 
-    override suspend fun search(searchKeyword: SearchKeyword): Flow<List<Product>> {
+    override suspend fun search(searchKeyword: SearchKeyword, filters: List<SearchFilter>): Flow<List<Product>> {
         searchDao.insert(SearchKeywordEntity(searchKeyword.keyword))
         return productDataSource.getProducts().map { products ->
             products.filter { product ->
-                product.productName.contains(searchKeyword.keyword)
+                isAvailableProduct(product, searchKeyword, filters)
             }
         }
+    }
+
+    private fun isAvailableProduct(product: Product, searchKeyword: SearchKeyword, filters: List<SearchFilter>): Boolean {
+        val isProductAvailable = filters.all { it.isAvailableProduct(product) }
+        val isProductNameMatched = product.productName.contains(searchKeyword.keyword)
+        return isProductAvailable && isProductNameMatched
     }
 
     override fun getSearchKeywords(): Flow<List<SearchKeyword>> {
