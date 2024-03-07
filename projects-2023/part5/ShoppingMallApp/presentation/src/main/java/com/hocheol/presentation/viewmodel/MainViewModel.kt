@@ -57,15 +57,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun signInGoogle(accountInfo: AccountInfo) {
+    fun signIn(accountInfo: AccountInfo) {
         viewModelScope.launch {
-            accountUseCase.signInGoogle(accountInfo)
+            accountUseCase.signIn(accountInfo)
         }
     }
 
-    fun signOutGoogle() {
+    fun signOut() {
         viewModelScope.launch {
-            accountUseCase.signOutGoogle()
+            accountUseCase.signOut()
         }
     }
 

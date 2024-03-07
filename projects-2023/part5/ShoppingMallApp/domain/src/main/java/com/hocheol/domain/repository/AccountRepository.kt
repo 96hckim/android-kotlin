@@ -7,7 +7,7 @@ interface AccountRepository {
 
     fun getAccountInfo(): StateFlow<AccountInfo?>
 
-    suspend fun signInGoogle(accountInfo: AccountInfo)
+    suspend fun signIn(accountInfo: AccountInfo)
 
-    suspend fun signOutGoogle()
+    suspend fun signOut()
 }
