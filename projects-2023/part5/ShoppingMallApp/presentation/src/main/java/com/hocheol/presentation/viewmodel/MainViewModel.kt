@@ -3,6 +3,7 @@ package com.hocheol.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.hocheol.domain.model.AccountInfo
 import com.hocheol.domain.model.Banner
 import com.hocheol.domain.model.BannerList
 import com.hocheol.domain.model.BaseModel
@@ -10,6 +11,7 @@ import com.hocheol.domain.model.Carousel
 import com.hocheol.domain.model.Category
 import com.hocheol.domain.model.Product
 import com.hocheol.domain.model.Ranking
+import com.hocheol.domain.usecase.AccountUseCase
 import com.hocheol.domain.usecase.CategoryUseCase
 import com.hocheol.domain.usecase.MainUseCase
 import com.hocheol.presentation.delegate.BannerDelegate
@@ -33,7 +35,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     mainUseCase: MainUseCase,
-    categoryUseCase: CategoryUseCase
+    categoryUseCase: CategoryUseCase,
+    private val accountUseCase: AccountUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
 
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
@@ -42,6 +45,8 @@ class MainViewModel @Inject constructor(
     val modelList = mainUseCase.getModelList().map(::convertToPresentationVM)
     val categories = categoryUseCase.getCategories()
 
+    val accountInfo = accountUseCase.getAccountInfo()
+
     fun openSearchForm(navController: NavHostController) {
         NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
     }
@@ -49,6 +54,18 @@ class MainViewModel @Inject constructor(
     fun updateColumnCount(count: Int) {
         viewModelScope.launch {
             _columnCount.emit(count)
+        }
+    }
+
+    fun signInGoogle(accountInfo: AccountInfo) {
+        viewModelScope.launch {
+            accountUseCase.signInGoogle(accountInfo)
+        }
+    }
+
+    fun signOutGoogle() {
+        viewModelScope.launch {
+            accountUseCase.signOutGoogle()
         }
     }
 

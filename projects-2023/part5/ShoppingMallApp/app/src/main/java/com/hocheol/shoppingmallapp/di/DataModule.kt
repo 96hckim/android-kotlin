@@ -1,9 +1,11 @@
 package com.hocheol.shoppingmallapp.di
 
+import com.hocheol.data.repository.AccountRepositoryImpl
 import com.hocheol.data.repository.CategoryRepositoryImpl
 import com.hocheol.data.repository.MainRepositoryImpl
 import com.hocheol.data.repository.ProductDetailRepositoryImpl
 import com.hocheol.data.repository.SearchRepositoryImpl
+import com.hocheol.domain.repository.AccountRepository
 import com.hocheol.domain.repository.CategoryRepository
 import com.hocheol.domain.repository.MainRepository
 import com.hocheol.domain.repository.ProductDetailRepository
@@ -33,4 +35,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
+
+    @Binds
+    @Singleton
+    fun bindAccountRepository(accountRepositoryImpl: AccountRepositoryImpl): AccountRepository
 }

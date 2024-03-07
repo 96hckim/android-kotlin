@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "860020487278",
+    "project_id": "shopping-mall-app-62dbe",
+    "storage_bucket": "shopping-mall-app-62dbe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860020487278:android:040277371aa4f58a31a27f",
+        "android_client_info": {
+          "package_name": "com.hocheol.shoppingmallapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860020487278-3beg1q59kcs522opgra92uc894728i76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hocheol.shoppingmallapp",
+            "certificate_hash": "3f31b1d04ccac24f70773f92ca444baf8625f98b"
+          }
+        },
+        {
+          "client_id": "860020487278-qaf1j294ft0sv78pffdpj7mqmc4gu116.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBooVyLazSGxmVlIEnc1cUJKRvOBAmr8X4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860020487278-qaf1j294ft0sv78pffdpj7mqmc4gu116.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

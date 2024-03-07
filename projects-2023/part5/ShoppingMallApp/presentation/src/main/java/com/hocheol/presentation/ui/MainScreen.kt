@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -27,18 +26,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.gson.Gson
 import com.hocheol.domain.model.Category
 import com.hocheol.presentation.ui.category.CategoryDetailScreen
 import com.hocheol.presentation.ui.main.CategoryScreen
 import com.hocheol.presentation.ui.main.HomeScreen
+import com.hocheol.presentation.ui.main.MyPageScreen
 import com.hocheol.presentation.ui.product_detail.ProductDetailScreen
 import com.hocheol.presentation.ui.search.SearchScreen
-import com.hocheol.presentation.ui.theme.ShoppingMallAppTheme
 import com.hocheol.presentation.viewmodel.MainViewModel
 
 @Composable
-fun MainScreen() {
+fun MainScreen(googleSignInClient: GoogleSignInClient) {
     val viewModel = hiltViewModel<MainViewModel>()
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
@@ -70,7 +70,8 @@ fun MainScreen() {
         ) {
             MainNavigationScreen(
                 viewModel = viewModel,
-                navController = navController
+                navController = navController,
+                googleSignInClient = googleSignInClient
             )
         }
     }
@@ -140,7 +141,8 @@ fun MainBottomNavigationBar(
 @Composable
 fun MainNavigationScreen(
     viewModel: MainViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    googleSignInClient: GoogleSignInClient
 ) {
     NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
         composable(NavigationRouteName.MAIN_HOME) {
@@ -148,11 +150,11 @@ fun MainNavigationScreen(
         }
 
         composable(NavigationRouteName.MAIN_CATEGORY) {
-            CategoryScreen(viewModel = viewModel, navController)
+            CategoryScreen(viewModel = viewModel, navController = navController)
         }
 
         composable(NavigationRouteName.MAIN_MY_PAGE) {
-            Text(text = "Hello MyPage")
+            MyPageScreen(viewModel = viewModel, googleSignInClient = googleSignInClient)
         }
 
         composable(
@@ -179,13 +181,5 @@ fun MainNavigationScreen(
         composable(NavigationRouteName.SEARCH) {
             SearchScreen(navController)
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    ShoppingMallAppTheme {
-        MainScreen()
     }
 }
