@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProductDetailUseCase @Inject constructor(
-    private val repository: ProductDetailRepository
+    private val productDetailRepository: ProductDetailRepository
 ) {
 
     fun getProductDetail(productId: String): Flow<Product> {
-        return repository.getProductDetail(productId)
+        return productDetailRepository.getProductDetail(productId)
     }
 }

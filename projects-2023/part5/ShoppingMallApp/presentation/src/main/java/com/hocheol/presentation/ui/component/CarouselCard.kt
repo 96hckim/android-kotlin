@@ -2,6 +2,7 @@ package com.hocheol.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +12,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,7 +54,10 @@ fun CarouselCard(
                 .wrapContentHeight()
         ) {
             items(count = presentationVM.model.productList.size) { index ->
-                CarouselProductCard(model = presentationVM.model.productList[index]) { product ->
+                CarouselProductCard(
+                    presentationVM = presentationVM,
+                    model = presentationVM.model.productList[index]
+                ) { product ->
                     presentationVM.openCarouselProduct(navHostController, product)
                 }
             }
@@ -58,6 +67,7 @@ fun CarouselCard(
 
 @Composable
 private fun CarouselProductCard(
+    presentationVM: CarouselVM,
     model: Product,
     onClick: (Product) -> Unit
 ) {
@@ -69,28 +79,42 @@ private fun CarouselProductCard(
             .padding(10.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.product_image),
-                contentDescription = "ProductImage",
+            IconButton(
+                onClick = { presentationVM.likeProduct(model) },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    if (model.isLike) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    "FavoriteIcon"
+                )
+            }
+
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f),
-                contentScale = ContentScale.Crop
-            )
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.product_image),
+                    contentDescription = "ProductImage",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    contentScale = ContentScale.Crop
+                )
 
-            Text(
-                fontSize = 14.sp,
-                text = model.productName
-            )
+                Text(
+                    fontSize = 14.sp,
+                    text = model.productName
+                )
 
-            Price(model = model)
+                Price(model = model)
+            }
         }
     }
 }

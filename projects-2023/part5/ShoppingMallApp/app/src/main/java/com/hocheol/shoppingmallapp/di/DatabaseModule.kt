@@ -3,6 +3,7 @@ package com.hocheol.shoppingmallapp.di
 import android.content.Context
 import androidx.room.Room
 import com.hocheol.data.db.ApplicationDatabase
+import com.hocheol.data.db.dao.LikeDao
 import com.hocheol.data.db.dao.SearchDao
 import dagger.Module
 import dagger.Provides
@@ -32,5 +33,11 @@ object DatabaseModule {
     @Singleton
     fun provideSearchDao(database: ApplicationDatabase): SearchDao {
         return database.searchDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLikeDao(database: ApplicationDatabase): LikeDao {
+        return database.likeDao()
     }
 }

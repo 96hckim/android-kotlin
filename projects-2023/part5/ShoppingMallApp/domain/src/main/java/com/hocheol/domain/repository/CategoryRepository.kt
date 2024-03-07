@@ -9,4 +9,6 @@ interface CategoryRepository {
     fun getCategories(): Flow<List<Category>>
 
     fun getProductsByCategory(category: Category): Flow<List<Product>>
+
+    suspend fun likeProduct(product: Product)
 }

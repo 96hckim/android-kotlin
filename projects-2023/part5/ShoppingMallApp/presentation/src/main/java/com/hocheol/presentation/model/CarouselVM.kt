@@ -15,6 +15,10 @@ class CarouselVM(
         sendCarouselLog()
     }
 
+    fun likeProduct(product: Product) {
+        productDelegate.likeProduct(product)
+    }
+
     fun sendCarouselLog() {
 
     }

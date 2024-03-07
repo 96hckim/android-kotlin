@@ -20,7 +20,8 @@ data class LikeProductEntity(
     val category: Category,
     val shop: Shop,
     val isNew: Boolean,
-    val isFreeShipping: Boolean
+    val isFreeShipping: Boolean,
+    val isLike: Boolean
 )
 
 fun LikeProductEntity.toDomainModel(): Product {
@@ -32,6 +33,21 @@ fun LikeProductEntity.toDomainModel(): Product {
         category = category,
         shop = shop,
         isNew = isNew,
-        isFreeShipping = isFreeShipping
+        isFreeShipping = isFreeShipping,
+        isLike = isLike
+    )
+}
+
+fun Product.toLikeProductEntity(): LikeProductEntity {
+    return LikeProductEntity(
+        productId = productId,
+        productName = productName,
+        imageUrl = imageUrl,
+        price = price,
+        category = category,
+        shop = shop,
+        isNew = isNew,
+        isFreeShipping = isFreeShipping,
+        isLike = isLike
     )
 }
