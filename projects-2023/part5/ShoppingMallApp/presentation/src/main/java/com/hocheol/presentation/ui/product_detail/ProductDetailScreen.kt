@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hocheol.presentation.R
+import com.hocheol.presentation.utils.NumberUtils
 import com.hocheol.presentation.viewmodel.product_detail.ProductDetailViewModel
 
 @Composable
@@ -81,7 +82,6 @@ fun ProductDetailScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 Row(
-                    modifier = Modifier.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Card(
@@ -130,7 +130,7 @@ fun ProductDetailScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${product?.price?.finalPrice} 원",
+                text = "${NumberUtils.numberFormatPrice(product?.price?.finalPrice)} 원",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -138,7 +138,7 @@ fun ProductDetailScreen(
             Spacer(modifier = Modifier.width(12.dp))
 
             Button(
-                onClick = { viewModel.addCart(productId) },
+                onClick = { viewModel.addBasket(product) },
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary

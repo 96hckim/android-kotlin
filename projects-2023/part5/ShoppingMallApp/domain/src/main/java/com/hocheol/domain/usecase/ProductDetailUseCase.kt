@@ -12,4 +12,8 @@ class ProductDetailUseCase @Inject constructor(
     fun getProductDetail(productId: String): Flow<Product> {
         return productDetailRepository.getProductDetail(productId)
     }
+
+    suspend fun addBasket(product: Product) {
+        productDetailRepository.addBasket(product)
+    }
 }

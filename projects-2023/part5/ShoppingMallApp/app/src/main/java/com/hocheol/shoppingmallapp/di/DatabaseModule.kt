@@ -3,6 +3,7 @@ package com.hocheol.shoppingmallapp.di
 import android.content.Context
 import androidx.room.Room
 import com.hocheol.data.db.ApplicationDatabase
+import com.hocheol.data.db.dao.BasketDao
 import com.hocheol.data.db.dao.LikeDao
 import com.hocheol.data.db.dao.SearchDao
 import dagger.Module
@@ -22,10 +23,11 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): ApplicationDatabase {
         return Room.databaseBuilder(
-            context.applicationContext,
-            ApplicationDatabase::class.java,
-            ApplicationDatabase.DB_NAME
-        ).fallbackToDestructiveMigration()
+            context = context.applicationContext,
+            klass = ApplicationDatabase::class.java,
+            name = ApplicationDatabase.DB_NAME
+        )
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -39,5 +41,11 @@ object DatabaseModule {
     @Singleton
     fun provideLikeDao(database: ApplicationDatabase): LikeDao {
         return database.likeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBasketDao(database: ApplicationDatabase): BasketDao {
+        return database.basketDao()
     }
 }
