@@ -32,6 +32,7 @@ import com.hocheol.domain.model.Category
 import com.hocheol.presentation.ui.category.CategoryDetailScreen
 import com.hocheol.presentation.ui.main.CategoryScreen
 import com.hocheol.presentation.ui.main.HomeScreen
+import com.hocheol.presentation.ui.main.LikeScreen
 import com.hocheol.presentation.ui.main.MyPageScreen
 import com.hocheol.presentation.ui.product_detail.ProductDetailScreen
 import com.hocheol.presentation.ui.search.SearchScreen
@@ -109,7 +110,8 @@ fun MainBottomNavigationBar(
     val bottomNavigationItems = listOf(
         NavigationItem.MainNav.Home,
         NavigationItem.MainNav.Category,
-        NavigationItem.MainNav.MyPage
+        NavigationItem.MainNav.MyPage,
+        NavigationItem.MainNav.Like
     )
 
     NavigationBar {
@@ -155,6 +157,10 @@ fun MainNavigationScreen(
 
         composable(NavigationRouteName.MAIN_MY_PAGE) {
             MyPageScreen(viewModel = viewModel, googleSignInClient = googleSignInClient)
+        }
+
+        composable(NavigationRouteName.MAIN_LIKE) {
+            LikeScreen(navHostController = navController, viewModel = viewModel)
         }
 
         composable(

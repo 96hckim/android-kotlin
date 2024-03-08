@@ -13,6 +13,7 @@ import com.hocheol.domain.model.Product
 import com.hocheol.domain.model.Ranking
 import com.hocheol.domain.usecase.AccountUseCase
 import com.hocheol.domain.usecase.CategoryUseCase
+import com.hocheol.domain.usecase.LikeUseCase
 import com.hocheol.domain.usecase.MainUseCase
 import com.hocheol.presentation.delegate.BannerDelegate
 import com.hocheol.presentation.delegate.CategoryDelegate
@@ -36,7 +37,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val mainUseCase: MainUseCase,
     categoryUseCase: CategoryUseCase,
-    private val accountUseCase: AccountUseCase
+    private val accountUseCase: AccountUseCase,
+    likeUseCase: LikeUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
 
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
@@ -46,6 +48,8 @@ class MainViewModel @Inject constructor(
     val categories = categoryUseCase.getCategories()
 
     val accountInfo = accountUseCase.getAccountInfo()
+
+    val likeProducts = likeUseCase.getLikeProducts().map(::convertToPresentationVM)
 
     fun openSearchForm(navController: NavHostController) {
         NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
