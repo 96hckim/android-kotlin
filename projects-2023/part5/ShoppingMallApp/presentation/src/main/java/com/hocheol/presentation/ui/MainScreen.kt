@@ -3,6 +3,7 @@ package com.hocheol.presentation.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,15 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.gson.Gson
-import com.hocheol.domain.model.Category
 import com.hocheol.presentation.ui.basket.BasketScreen
 import com.hocheol.presentation.ui.category.CategoryDetailScreen
 import com.hocheol.presentation.ui.main.CategoryScreen
@@ -38,6 +35,7 @@ import com.hocheol.presentation.ui.main.LikeScreen
 import com.hocheol.presentation.ui.main.MyPageScreen
 import com.hocheol.presentation.ui.product_detail.ProductDetailScreen
 import com.hocheol.presentation.ui.search.SearchScreen
+import com.hocheol.presentation.utils.NavigationUtils
 import com.hocheol.presentation.viewmodel.MainViewModel
 
 @Composable
@@ -50,15 +48,14 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
 
     Scaffold(
         topBar = {
-            if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
-                MainHeader(
-                    viewModel = viewModel,
-                    navController = navController
-                )
-            }
+            MainHeader(
+                viewModel = viewModel,
+                navController = navController,
+                currentRoute = currentRoute
+            )
         },
         bottomBar = {
-            if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
+            if (MainNav.isMainRoute(currentRoute)) {
                 MainBottomNavigationBar(
                     navController = navController,
                     currentRoute = currentRoute
@@ -84,31 +81,41 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
 @Composable
 fun MainHeader(
     viewModel: MainViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    currentRoute: String?
 ) {
     TopAppBar(
-        title = { Text("My App") },
-        actions = {
-            IconButton(
-                onClick = {
-                    viewModel.openSearchForm(navController)
+        title = { Text(NavigationUtils.findDestination(currentRoute).title) },
+        navigationIcon = {
+            if (MainNav.isMainRoute(currentRoute).not()) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "BackIcon")
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "SearchIcon"
-                )
             }
-
-            IconButton(
-                onClick = {
-                    viewModel.openBasket(navController)
+        },
+        actions = {
+            if (MainNav.isMainRoute(currentRoute)) {
+                IconButton(
+                    onClick = {
+                        viewModel.openSearchForm(navController)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "SearchIcon"
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ShoppingCart,
-                    contentDescription = "ShoppingCartIcon"
-                )
+
+                IconButton(
+                    onClick = {
+                        viewModel.openBasket(navController)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
+                        contentDescription = "ShoppingCartIcon"
+                    )
+                }
             }
         }
     )
@@ -121,10 +128,10 @@ fun MainBottomNavigationBar(
     currentRoute: String?
 ) {
     val bottomNavigationItems = listOf(
-        NavigationItem.MainNav.Home,
-        NavigationItem.MainNav.Category,
-        NavigationItem.MainNav.MyPage,
-        NavigationItem.MainNav.Like
+        MainNav.Home,
+        MainNav.Category,
+        MainNav.MyPage,
+        MainNav.Like
     )
 
     NavigationBar {
@@ -132,15 +139,11 @@ fun MainBottomNavigationBar(
             NavigationBarItem(
                 selected = item.route == currentRoute,
                 onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let {
-                            popUpTo(it) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    NavigationUtils.navigate(
+                        controller = navController,
+                        routeName = item.route,
+                        backStackRouteName = navController.graph.startDestinationRoute
+                    )
                 },
                 icon = {
                     Icon(
@@ -159,50 +162,69 @@ fun MainNavigationScreen(
     navController: NavHostController,
     googleSignInClient: GoogleSignInClient
 ) {
-    NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
-        composable(NavigationRouteName.MAIN_HOME) {
+    NavHost(navController = navController, startDestination = MainNav.Home.route) {
+        composable(
+            route = MainNav.Home.route,
+            deepLinks = MainNav.Home.deepLinks
+        ) {
             HomeScreen(navHostController = navController, viewModel = viewModel)
         }
 
-        composable(NavigationRouteName.MAIN_CATEGORY) {
+        composable(
+            route = MainNav.Category.route,
+            deepLinks = MainNav.Category.deepLinks
+        ) {
             CategoryScreen(viewModel = viewModel, navController = navController)
         }
 
-        composable(NavigationRouteName.MAIN_MY_PAGE) {
-            MyPageScreen(viewModel = viewModel, googleSignInClient = googleSignInClient)
-        }
-
-        composable(NavigationRouteName.MAIN_LIKE) {
+        composable(
+            route = MainNav.Like.route,
+            deepLinks = MainNav.Like.deepLinks
+        ) {
             LikeScreen(navHostController = navController, viewModel = viewModel)
         }
 
-        composable(NavigationRouteName.BASKET) {
-            BasketScreen()
+        composable(
+            route = MainNav.MyPage.route,
+            deepLinks = MainNav.MyPage.deepLinks
+        ) {
+            MyPageScreen(viewModel = viewModel, googleSignInClient = googleSignInClient)
         }
 
         composable(
-            route = NavigationRouteName.CATEGORY_DETAIL + "/{category}",
-            arguments = listOf(navArgument("category") { type = NavType.StringType })
+            route = CategoryDetailNav.routeWithArgName(),
+            arguments = CategoryDetailNav.arguments,
+            deepLinks = CategoryDetailNav.deepLinks
         ) { navBackStackEntry ->
-            val jsonString = navBackStackEntry.arguments?.getString("category")
-            val category = Gson().fromJson(jsonString, Category::class.java)
+            val category = CategoryDetailNav.findArgument(navBackStackEntry)
             if (category != null) {
                 CategoryDetailScreen(navHostController = navController, category = category)
             }
         }
 
         composable(
-            route = NavigationRouteName.PRODUCT_DETAIL + "/{product}",
-            arguments = listOf(navArgument("product") { type = NavType.StringType })
+            route = ProductDetailNav.routeWithArgName(),
+            arguments = ProductDetailNav.arguments,
+            deepLinks = ProductDetailNav.deepLinks
         ) { navBackStackEntry ->
-            val productId = navBackStackEntry.arguments?.getString("product")
+            val productId = ProductDetailNav.findArgument(navBackStackEntry)
             if (productId != null) {
-                ProductDetailScreen(productId)
+                ProductDetailScreen(productId = productId)
             }
         }
 
-        composable(NavigationRouteName.SEARCH) {
-            SearchScreen(navController)
+        composable(
+            route = SearchNav.route,
+            deepLinks = SearchNav.deepLinks
+        ) {
+            SearchScreen(navHostController = navController)
+        }
+
+        composable(
+            route = BasketNav.route,
+            deepLinks = BasketNav.deepLinks
+        ) {
+            BasketScreen()
         }
     }
 }

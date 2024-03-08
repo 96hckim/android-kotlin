@@ -24,7 +24,10 @@ import com.hocheol.presentation.model.CarouselVM
 import com.hocheol.presentation.model.PresentationVM
 import com.hocheol.presentation.model.ProductVM
 import com.hocheol.presentation.model.RankingVM
-import com.hocheol.presentation.ui.NavigationRouteName
+import com.hocheol.presentation.ui.BasketNav
+import com.hocheol.presentation.ui.CategoryDetailNav
+import com.hocheol.presentation.ui.ProductDetailNav
+import com.hocheol.presentation.ui.SearchNav
 import com.hocheol.presentation.utils.NavigationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,7 +55,7 @@ class MainViewModel @Inject constructor(
     val likeProducts = likeUseCase.getLikeProducts().map(::convertToPresentationVM)
 
     fun openSearchForm(navController: NavHostController) {
-        NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
+        NavigationUtils.navigate(navController, SearchNav.route)
     }
 
     fun updateColumnCount(count: Int) {
@@ -62,7 +65,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun openBasket(navHostController: NavHostController) {
-        NavigationUtils.navigate(navHostController, NavigationRouteName.BASKET)
+        NavigationUtils.navigate(navHostController, BasketNav.route)
     }
 
     fun signIn(accountInfo: AccountInfo) {
@@ -78,7 +81,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openProduct(navController: NavHostController, product: Product) {
-        NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
+        NavigationUtils.navigate(navController, ProductDetailNav.navigateWithArg(product.productId))
     }
 
     override fun likeProduct(product: Product) {
@@ -92,7 +95,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openCategory(navController: NavHostController, category: Category) {
-        NavigationUtils.navigate(navController, NavigationRouteName.CATEGORY_DETAIL, category)
+        NavigationUtils.navigate(navController, CategoryDetailNav.navigateWithArg(category))
     }
 
     private fun convertToPresentationVM(modelList: List<BaseModel>): List<PresentationVM<out BaseModel>> {

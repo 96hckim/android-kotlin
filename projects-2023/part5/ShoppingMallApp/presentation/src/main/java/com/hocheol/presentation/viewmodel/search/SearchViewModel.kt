@@ -9,7 +9,7 @@ import com.hocheol.domain.model.SearchKeyword
 import com.hocheol.domain.usecase.SearchUseCase
 import com.hocheol.presentation.delegate.ProductDelegate
 import com.hocheol.presentation.model.ProductVM
-import com.hocheol.presentation.ui.NavigationRouteName
+import com.hocheol.presentation.ui.ProductDetailNav
 import com.hocheol.presentation.utils.NavigationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +66,7 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun openProduct(navController: NavHostController, product: Product) {
-        NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
+        NavigationUtils.navigate(navController, ProductDetailNav.navigateWithArg(product.productId))
     }
 
     override fun likeProduct(product: Product) {
