@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +30,7 @@ import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.gson.Gson
 import com.hocheol.domain.model.Category
+import com.hocheol.presentation.ui.basket.BasketScreen
 import com.hocheol.presentation.ui.category.CategoryDetailScreen
 import com.hocheol.presentation.ui.main.CategoryScreen
 import com.hocheol.presentation.ui.main.HomeScreen
@@ -97,6 +99,17 @@ fun MainHeader(
                     contentDescription = "SearchIcon"
                 )
             }
+
+            IconButton(
+                onClick = {
+                    viewModel.openBasket(navController)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ShoppingCart,
+                    contentDescription = "ShoppingCartIcon"
+                )
+            }
         }
     )
 }
@@ -161,6 +174,10 @@ fun MainNavigationScreen(
 
         composable(NavigationRouteName.MAIN_LIKE) {
             LikeScreen(navHostController = navController, viewModel = viewModel)
+        }
+
+        composable(NavigationRouteName.BASKET) {
+            BasketScreen()
         }
 
         composable(

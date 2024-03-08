@@ -21,4 +21,7 @@ interface BasketDao {
 
     @Query("DELETE FROM basket WHERE productId=:id")
     suspend fun delete(id: String)
+
+    @Query("DELETE FROM basket")
+    suspend fun deleteAll()
 }

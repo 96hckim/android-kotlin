@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.hocheol.domain.model.Category
 import com.hocheol.domain.model.Product
+import com.hocheol.presentation.ui.NavigationRouteName.BASKET
 import com.hocheol.presentation.ui.NavigationRouteName.CATEGORY_DETAIL
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import com.hocheol.presentation.ui.NavigationRouteName.MAIN_HOME
@@ -38,6 +39,8 @@ sealed class NavigationItem(open val route: String) {
     data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
 
     data object SearchNav : NavigationItem(SEARCH)
+
+    data object BasketNav : NavigationItem(BASKET)
 }
 
 object NavigationRouteName {
@@ -48,4 +51,5 @@ object NavigationRouteName {
     const val CATEGORY_DETAIL = "category_detail"
     const val PRODUCT_DETAIL = "product_detail"
     const val SEARCH = "search"
+    const val BASKET = "basket"
 }
