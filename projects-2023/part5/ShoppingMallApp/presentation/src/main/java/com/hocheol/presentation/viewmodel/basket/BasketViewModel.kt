@@ -37,6 +37,7 @@ class BasketViewModel @Inject constructor(
     private fun checkoutBasket(products: List<BasketProduct>) {
         viewModelScope.launch {
             basketUseCase.checkoutBasket(products)
+            _eventFlow.emit(BasketEvent.ShowSnackbar)
         }
     }
 }
