@@ -2,6 +2,7 @@ package com.hocheol.presentation.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -12,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -38,6 +41,8 @@ import com.hocheol.presentation.ui.purchase_history.PurchaseHistoryScreen
 import com.hocheol.presentation.ui.search.SearchScreen
 import com.hocheol.presentation.utils.NavigationUtils
 import com.hocheol.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(googleSignInClient: GoogleSignInClient) {
@@ -63,7 +68,17 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
                 )
             }
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            ) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    modifier = Modifier.padding(50.dp),
+                    shape = RoundedCornerShape(10.dp)
+                )
+            }
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -72,7 +87,8 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
             MainNavigationScreen(
                 viewModel = viewModel,
                 navController = navController,
-                googleSignInClient = googleSignInClient
+                googleSignInClient = googleSignInClient,
+                snackbarHostState = snackbarHostState
             )
         }
     }
@@ -161,7 +177,8 @@ fun MainBottomNavigationBar(
 fun MainNavigationScreen(
     viewModel: MainViewModel,
     navController: NavHostController,
-    googleSignInClient: GoogleSignInClient
+    googleSignInClient: GoogleSignInClient,
+    snackbarHostState: SnackbarHostState
 ) {
     NavHost(navController = navController, startDestination = MainNav.Home.route) {
         composable(
@@ -225,7 +242,7 @@ fun MainNavigationScreen(
             route = BasketNav.route,
             deepLinks = BasketNav.deepLinks
         ) {
-            BasketScreen()
+            BasketScreen(snackbarHostState = snackbarHostState)
         }
 
         composable(
@@ -234,5 +251,17 @@ fun MainNavigationScreen(
         ) {
             PurchaseHistoryScreen()
         }
+    }
+}
+
+fun popupSnackBar(
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    message: String,
+    onDismissCallback: () -> Unit = {}
+) {
+    scope.launch {
+        snackbarHostState.showSnackbar(message)
+        onDismissCallback()
     }
 }
