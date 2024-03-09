@@ -5,6 +5,7 @@ import com.hocheol.domain.model.SearchFilter
 import com.hocheol.domain.model.SearchKeyword
 import com.hocheol.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SearchUseCase @Inject constructor(
@@ -12,7 +13,11 @@ class SearchUseCase @Inject constructor(
 ) {
 
     suspend fun search(searchKeyword: SearchKeyword, filters: List<SearchFilter>): Flow<List<Product>> {
-        return searchRepository.search(searchKeyword, filters)
+        return searchRepository.search(searchKeyword).map { products ->
+            products.filter { product ->
+                isAvailableProduct(product, searchKeyword, filters)
+            }
+        }
     }
 
     fun getSearchKeywords(): Flow<List<SearchKeyword>> {
@@ -21,5 +26,11 @@ class SearchUseCase @Inject constructor(
 
     suspend fun likeProduct(product: Product) {
         return searchRepository.likeProduct(product)
+    }
+
+    private fun isAvailableProduct(product: Product, searchKeyword: SearchKeyword, filters: List<SearchFilter>): Boolean {
+        val isProductAvailable = filters.all { it.isAvailableProduct(product) }
+        val isProductNameMatched = product.productName.contains(searchKeyword.keyword)
+        return isProductAvailable && isProductNameMatched
     }
 }
