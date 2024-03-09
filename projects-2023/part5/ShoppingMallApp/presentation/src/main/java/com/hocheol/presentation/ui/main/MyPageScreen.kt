@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -45,7 +49,8 @@ import com.kakao.sdk.user.UserApiClient
 @Composable
 fun MyPageScreen(
     viewModel: MainViewModel,
-    googleSignInClient: GoogleSignInClient
+    googleSignInClient: GoogleSignInClient,
+    navHostController: NavHostController
 ) {
     val accountInfo by viewModel.accountInfo.collectAsState()
     val firebaseAuth by lazy { FirebaseAuth.getInstance() }
@@ -104,6 +109,28 @@ fun MyPageScreen(
                     .padding(10.dp),
                 textAlign = TextAlign.Center
             )
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Button(
+                onClick = {
+                    viewModel.openPurchaseHistory(navHostController = navHostController)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = "결제내역 보기",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "PurchaseHistoryIcon"
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 

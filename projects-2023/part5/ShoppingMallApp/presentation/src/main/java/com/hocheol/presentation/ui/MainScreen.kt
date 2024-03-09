@@ -34,6 +34,7 @@ import com.hocheol.presentation.ui.main.HomeScreen
 import com.hocheol.presentation.ui.main.LikeScreen
 import com.hocheol.presentation.ui.main.MyPageScreen
 import com.hocheol.presentation.ui.product_detail.ProductDetailScreen
+import com.hocheol.presentation.ui.purchase_history.PurchaseHistoryScreen
 import com.hocheol.presentation.ui.search.SearchScreen
 import com.hocheol.presentation.utils.NavigationUtils
 import com.hocheol.presentation.viewmodel.MainViewModel
@@ -188,7 +189,7 @@ fun MainNavigationScreen(
             route = MainNav.MyPage.route,
             deepLinks = MainNav.MyPage.deepLinks
         ) {
-            MyPageScreen(viewModel = viewModel, googleSignInClient = googleSignInClient)
+            MyPageScreen(viewModel = viewModel, googleSignInClient = googleSignInClient, navHostController = navController)
         }
 
         composable(
@@ -225,6 +226,13 @@ fun MainNavigationScreen(
             deepLinks = BasketNav.deepLinks
         ) {
             BasketScreen()
+        }
+
+        composable(
+            route = PurchaseHistoryNav.route,
+            deepLinks = PurchaseHistoryNav.deepLinks
+        ) {
+            PurchaseHistoryScreen()
         }
     }
 }

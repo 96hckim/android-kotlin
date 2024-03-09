@@ -7,6 +7,7 @@ import com.hocheol.presentation.ui.Destination
 import com.hocheol.presentation.ui.MainNav
 import com.hocheol.presentation.ui.NavigationRouteName
 import com.hocheol.presentation.ui.ProductDetailNav
+import com.hocheol.presentation.ui.PurchaseHistoryNav
 import com.hocheol.presentation.ui.SearchNav
 
 object NavigationUtils {
@@ -39,6 +40,7 @@ object NavigationUtils {
 
             NavigationRouteName.SEARCH -> SearchNav
             NavigationRouteName.BASKET -> BasketNav
+            NavigationRouteName.PURCHASE_HISTORY -> PurchaseHistoryNav
 
             else -> MainNav.Home
         }

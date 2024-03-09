@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.hocheol.data.db.ApplicationDatabase
 import com.hocheol.data.db.dao.BasketDao
 import com.hocheol.data.db.dao.LikeDao
+import com.hocheol.data.db.dao.PurchaseHistoryDao
 import com.hocheol.data.db.dao.SearchDao
 import dagger.Module
 import dagger.Provides
@@ -47,5 +48,11 @@ object DatabaseModule {
     @Singleton
     fun provideBasketDao(database: ApplicationDatabase): BasketDao {
         return database.basketDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePurchaseHistoryDao(database: ApplicationDatabase): PurchaseHistoryDao {
+        return database.purchaseHistoryDao()
     }
 }
