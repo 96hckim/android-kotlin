@@ -25,6 +25,7 @@ import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,7 +56,11 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val searchFilters by viewModel.searchFilters.collectAsState()
-    val sheetState = rememberBottomSheetScaffoldState()
+    val sheetState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            skipHiddenState = false
+        )
+    )
     val scope = rememberCoroutineScope()
     var currentFilterType by remember { mutableStateOf<SearchFilter.Type?>(null) }
 
@@ -197,18 +202,18 @@ fun SearchFilterPriceContent(
                 )
             }
         }
+
+        RangeSlider(
+            value = sliderValues,
+            onValueChange = {
+                sliderValues = it
+            },
+            valueRange = filter.priceRange.first..filter.priceRange.second,
+            steps = 9
+        )
+
+        Text(text = "최저가: ${sliderValues.start} ~ 최고가: ${sliderValues.endInclusive}")
     }
-
-    RangeSlider(
-        value = sliderValues,
-        onValueChange = {
-            sliderValues = it
-        },
-        valueRange = filter.priceRange.first..filter.priceRange.second,
-        steps = 9
-    )
-
-    Text(text = "최저가: ${sliderValues.start} ~ 최고가: ${sliderValues.endInclusive}")
 }
 
 @Composable
