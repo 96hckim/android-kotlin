@@ -22,8 +22,8 @@ class BaseModelDeserializer : JsonDeserializer<BaseModel> {
         val typeString = root?.get(TYPE)?.asString ?: ""
 
         return when (ModelType.valueOf(typeString)) {
-            ModelType.PRODUCT -> gson.fromJson(root, Banner::class.java)
-            ModelType.BANNER -> gson.fromJson(root, Product::class.java)
+            ModelType.PRODUCT -> gson.fromJson(root, Product::class.java)
+            ModelType.BANNER -> gson.fromJson(root, Banner::class.java)
             ModelType.BANNER_LIST -> gson.fromJson(root, BannerList::class.java)
             ModelType.CAROUSEL -> gson.fromJson(root, Carousel::class.java)
             ModelType.RANKING -> gson.fromJson(root, Ranking::class.java)
