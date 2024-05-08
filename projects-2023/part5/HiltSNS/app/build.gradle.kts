@@ -76,7 +76,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization.converter)
 
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.serialization.json)
     implementation(libs.okhttp)
 
     implementation(libs.hilt.android)

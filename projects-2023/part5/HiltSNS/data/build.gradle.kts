@@ -44,7 +44,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // serialization
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.serialization.json)
 
     // retrofit
     implementation(libs.retrofit)
