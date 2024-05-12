@@ -17,7 +17,9 @@ import com.hocheol.hiltsns.ui.theme.HiltSNSTheme
 import com.hocheol.presentation.component.SNSButton
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(
+    onNavigateToLoginScreen: () -> Unit
+) {
     Surface {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -43,7 +45,7 @@ fun WelcomeScreen() {
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
                 text = "로그인",
-                onClick = {}
+                onClick = onNavigateToLoginScreen
             )
         }
     }
@@ -53,6 +55,8 @@ fun WelcomeScreen() {
 @Composable
 private fun WelcomeScreenPreview() {
     HiltSNSTheme {
-        WelcomeScreen()
+        WelcomeScreen(
+            onNavigateToLoginScreen = {}
+        )
     }
 }

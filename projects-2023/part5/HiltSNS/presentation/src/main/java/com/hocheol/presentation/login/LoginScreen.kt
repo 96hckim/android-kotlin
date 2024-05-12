@@ -15,12 +15,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hocheol.hiltsns.ui.theme.HiltSNSTheme
 import com.hocheol.presentation.component.SNSButton
 import com.hocheol.presentation.component.SNSTextField
 
 @Composable
 fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel()
+) {
+    LoginScreen(
+        id = "",
+        password = "",
+        onIdChange = {},
+        onPasswordChange = {},
+        onNavigateToSignUpScreen = viewModel::onLoginClick
+    )
+}
+
+@Composable
+private fun LoginScreen(
     id: String,
     password: String,
     onIdChange: (String) -> Unit,
