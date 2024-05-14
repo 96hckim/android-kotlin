@@ -20,10 +20,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hocheol.hiltsns.ui.theme.HiltSNSTheme
-import com.hocheol.presentation.MainActivity
+import com.hocheol.hiltsns.ui.theme.ConnectedTheme
 import com.hocheol.presentation.component.SNSButton
 import com.hocheol.presentation.component.SNSTextField
+import com.hocheol.presentation.main.MainActivity
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -152,7 +152,7 @@ private fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    HiltSNSTheme {
+    ConnectedTheme {
         LoginScreen(
             id = "admin",
             password = "1234",

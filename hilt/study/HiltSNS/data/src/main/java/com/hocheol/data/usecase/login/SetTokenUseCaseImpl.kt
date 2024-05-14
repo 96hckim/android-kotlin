@@ -1,4 +1,4 @@
-package com.hocheol.data.usecase
+package com.hocheol.data.usecase.login
 
 import com.hocheol.data.UserDataStore
 import com.hocheol.domain.usecase.login.SetTokenUseCase

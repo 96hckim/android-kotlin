@@ -1,15 +1,17 @@
 package com.hocheol.data.di
 
-import com.hocheol.data.usecase.ClearTokenUseCaseImpl
-import com.hocheol.data.usecase.GetTokenUseCaseImpl
-import com.hocheol.data.usecase.LoginUseCaseImpl
-import com.hocheol.data.usecase.SetTokenUseCaseImpl
-import com.hocheol.data.usecase.SignUpUseCaseImpl
+import com.hocheol.data.usecase.login.ClearTokenUseCaseImpl
+import com.hocheol.data.usecase.login.GetTokenUseCaseImpl
+import com.hocheol.data.usecase.login.LoginUseCaseImpl
+import com.hocheol.data.usecase.login.SetTokenUseCaseImpl
+import com.hocheol.data.usecase.login.SignUpUseCaseImpl
+import com.hocheol.data.usecase.main.setting.GetMyUserCaseImpl
 import com.hocheol.domain.usecase.login.ClearTokenUseCase
 import com.hocheol.domain.usecase.login.GetTokenUseCase
 import com.hocheol.domain.usecase.login.LoginUseCase
 import com.hocheol.domain.usecase.login.SetTokenUseCase
 import com.hocheol.domain.usecase.login.SignUpUseCase
+import com.hocheol.domain.usecase.main.setting.GetMyUserUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,7 @@ abstract class UserModule {
 
     @Binds
     abstract fun bindClearTokenUseCase(clearTokenUseCaseImpl: ClearTokenUseCaseImpl): ClearTokenUseCase
+
+    @Binds
+    abstract fun bindGetMyUserUseCase(getMyUserCaseImpl: GetMyUserCaseImpl): GetMyUserUseCase
 }

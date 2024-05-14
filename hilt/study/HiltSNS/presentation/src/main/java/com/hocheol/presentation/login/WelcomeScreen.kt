@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hocheol.hiltsns.ui.theme.HiltSNSTheme
+import com.hocheol.hiltsns.ui.theme.ConnectedTheme
 import com.hocheol.presentation.component.SNSButton
 
 @Composable
@@ -54,7 +54,7 @@ fun WelcomeScreen(
 @Preview
 @Composable
 private fun WelcomeScreenPreview() {
-    HiltSNSTheme {
+    ConnectedTheme {
         WelcomeScreen(
             onNavigateToLoginScreen = {}
         )

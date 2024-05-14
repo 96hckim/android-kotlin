@@ -1,5 +1,6 @@
 package com.hocheol.data.di
 
+import com.hocheol.data.retrofit.SNSInterceptor
 import com.hocheol.data.retrofit.UserService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -19,8 +20,9 @@ const val SERVER_HOST = "http://175.209.108.213:8080"
 class RetrofitModule {
 
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(interceptor: SNSInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .build()
     }
 
