@@ -1,5 +1,6 @@
 package com.hocheol.presentation.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,24 +14,55 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hocheol.hiltsns.ui.theme.HiltSNSTheme
 import com.hocheol.presentation.component.SNSButton
 import com.hocheol.presentation.component.SNSTextField
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
+
+@Composable
+fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
+    onNavigateToLoginScreen: () -> Unit
+) {
+    val state = viewModel.collectAsState().value
+    val context = LocalContext.current
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is SignUpSideEffect.Toast -> Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+            SignUpSideEffect.NavigateToLoginScreen -> onNavigateToLoginScreen()
+        }
+    }
+
+    SignUpScreen(
+        id = state.id,
+        username = state.username,
+        password = state.password,
+        repeatPassword = state.repeatPassword,
+        onIdChange = viewModel::onIdChange,
+        onUsernameChange = viewModel::onUsernameChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
+        onSignUpClick = viewModel::onSignUpClick
+    )
+}
 
 @Composable
 fun SignUpScreen(
     id: String,
     username: String,
-    password1: String,
-    password2: String,
-
+    password: String,
+    repeatPassword: String,
     onIdChange: (String) -> Unit,
     onUsernameChange: (String) -> Unit,
-    onPassword1Change: (String) -> Unit,
-    onPassword2Change: (String) -> Unit,
-
+    onPasswordChange: (String) -> Unit,
+    onRepeatPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit
 ) {
     Surface {
@@ -99,8 +131,9 @@ fun SignUpScreen(
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth(),
-                    value = password1,
-                    onValueChange = onPassword1Change
+                    value = password,
+                    visualTransformation = PasswordVisualTransformation(),
+                    onValueChange = onPasswordChange
                 )
 
                 Text(
@@ -112,8 +145,9 @@ fun SignUpScreen(
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth(),
-                    value = password2,
-                    onValueChange = onPassword2Change
+                    value = repeatPassword,
+                    visualTransformation = PasswordVisualTransformation(),
+                    onValueChange = onRepeatPasswordChange
                 )
 
                 SNSButton(
@@ -135,12 +169,12 @@ private fun SignUpScreenPreview() {
         SignUpScreen(
             id = "admin",
             username = "khc",
-            password1 = "1234",
-            password2 = "1234",
+            password = "1234",
+            repeatPassword = "1234",
             onIdChange = {},
             onUsernameChange = {},
-            onPassword1Change = {},
-            onPassword2Change = {},
+            onPasswordChange = {},
+            onRepeatPasswordChange = {},
             onSignUpClick = {}
         )
     }
