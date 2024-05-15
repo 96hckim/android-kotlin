@@ -5,6 +5,7 @@ import com.hocheol.data.model.UserDTO
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface UserService {
@@ -20,5 +21,10 @@ interface UserService {
     ): CommonResponse<Long>
 
     @GET("users/my-page")
-    suspend fun myPage(): CommonResponse<UserDTO>
+    suspend fun getMyPage(): CommonResponse<UserDTO>
+
+    @PATCH("users/my-page")
+    suspend fun patchMyPage(
+        @Body requestBody: RequestBody
+    ): CommonResponse<Long>
 }

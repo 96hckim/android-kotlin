@@ -1,5 +1,6 @@
 package com.hocheol.data.di
 
+import com.hocheol.data.retrofit.FileService
 import com.hocheol.data.retrofit.SNSInterceptor
 import com.hocheol.data.retrofit.UserService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -13,7 +14,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
 
-const val SERVER_HOST = "http://175.209.108.213:8080"
+const val SERVER_HOST = "http://10.0.2.2:8080"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,5 +51,10 @@ class RetrofitModule {
     @Provides
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    fun provideFileService(retrofit: Retrofit): FileService {
+        return retrofit.create(FileService::class.java)
     }
 }

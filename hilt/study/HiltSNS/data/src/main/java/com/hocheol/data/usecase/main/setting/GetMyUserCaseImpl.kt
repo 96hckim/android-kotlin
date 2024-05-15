@@ -11,6 +11,6 @@ class GetMyUserCaseImpl @Inject constructor(
 ) : GetMyUserUseCase {
 
     override suspend fun invoke(): Result<User> = runCatching {
-        userService.myPage().data.toDomainModel()
+        userService.getMyPage().data.toDomainModel()
     }
 }

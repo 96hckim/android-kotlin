@@ -1,6 +1,6 @@
 [versions]
 agp = "8.4.0"
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 androidJunit = "1.1.5"
@@ -11,7 +11,7 @@ composeBom = "2024.05.00"
 appcompat = "1.6.1"
 material = "1.12.0"
 
-ksp = "1.9.23-1.0.20"
+ksp = "1.9.24-1.0.20"
 navigationCompose = "2.7.7"
 datastorePreferences = "1.1.1"
 retrofit = "2.11.0"
@@ -22,12 +22,12 @@ hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 orbit = "7.1.0"
 coil = "2.6.0"
-paging = "3.2.1"
+paging = "3.3.0"
 room = "2.6.1"
 
 splashScreen = "1.0.1"
 coroutinesCore = "1.8.0"
-annotation = "1.7.1"
+annotation = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
