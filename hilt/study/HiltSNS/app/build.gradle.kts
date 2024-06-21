@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.symbol.processing)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
@@ -38,9 +39,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
