@@ -1,5 +1,6 @@
 package com.hocheol.presentation.main.writing
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,18 +38,29 @@ import coil.compose.rememberAsyncImagePainter
 import com.hocheol.domain.model.Image
 import com.hocheol.hiltsns.ui.theme.ConnectedTheme
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun ImageSelectScreen(
-    viewModel: WritingViewModel
+    viewModel: WritingViewModel,
+    onBackClick: () -> Unit,
+    onNavigateToWritingScreen: () -> Unit
 ) {
     val state = viewModel.collectAsState().value
+    val context = LocalContext.current
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is WritingSideEffect.Toast -> Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+            WritingSideEffect.NavigateToWritingScreen -> onNavigateToWritingScreen()
+        }
+    }
 
     ImageSelectScreen(
         images = state.images,
         selectedImages = state.selectedImages,
-        onBackClick = {},
-        onNextClick = {},
+        onBackClick = onBackClick,
+        onNextClick = viewModel::onNextClick,
         onItemClick = viewModel::onItemClick
     )
 }
@@ -96,7 +109,7 @@ private fun ImageSelectScreen(
                             .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (images.isEmpty()) {
+                        if (selectedImages.isEmpty()) {
                             Text(
                                 text = "선택된 이미지가 없습니다.",
                                 textAlign = TextAlign.Center

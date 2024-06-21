@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -54,14 +55,34 @@ class WritingViewModel @Inject constructor(
             state.copy(selectedImages = newSelectedImages)
         }
     }
+
+    fun onNextClick() = intent {
+        if (state.selectedImages.isEmpty()) {
+            postSideEffect(WritingSideEffect.Toast(message = "이미지를 선택해 주세요."))
+        } else {
+            postSideEffect(WritingSideEffect.NavigateToWritingScreen)
+        }
+    }
+
+    fun onTextChange(newText: String) = blockingIntent {
+        reduce {
+            state.copy(text = newText)
+        }
+    }
+
+    fun onPostClick() = intent {
+    }
 }
 
 @Immutable
 data class WritingState(
     val images: List<Image> = emptyList(),
-    val selectedImages: List<Image> = emptyList()
+    val selectedImages: List<Image> = emptyList(),
+    val text: String = ""
 )
 
 sealed interface WritingSideEffect {
     class Toast(val message: String) : WritingSideEffect
+
+    data object NavigateToWritingScreen : WritingSideEffect
 }
