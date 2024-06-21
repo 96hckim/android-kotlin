@@ -1,6 +1,13 @@
 package com.hocheol.presentation.main
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.READ_MEDIA_IMAGES
+import android.Manifest.permission.READ_MEDIA_VIDEO
+import android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
 import android.content.Intent
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -40,13 +47,25 @@ fun MainBottomBar(
         ?.let { currentRoute -> MainRoute.entries.find { route -> route.route == currentRoute } }
         ?: MainRoute.BOARD
 
+    val requestPermissions = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        context.startActivity(
+            Intent(context, WritingActivity::class.java)
+        )
+    }
+
     MainBottomBar(
         currentRoute = currentRoute,
         onItemClick = { newRoute ->
             if (newRoute == MainRoute.WRITING) {
-                context.startActivity(
-                    Intent(context, WritingActivity::class.java)
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    requestPermissions.launch(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_VISUAL_USER_SELECTED))
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissions.launch(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO))
+                } else {
+                    requestPermissions.launch(arrayOf(READ_EXTERNAL_STORAGE))
+                }
             } else {
                 navController.navigate(route = newRoute.route) {
                     navController.graph.startDestinationRoute?.let {
