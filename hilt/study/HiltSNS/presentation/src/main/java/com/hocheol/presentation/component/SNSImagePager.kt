@@ -11,6 +11,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -56,7 +57,11 @@ fun SNSImagePager(
                 .align(Alignment.TopEnd)
         ) {
             Text(
-                text = "${pagerState.currentPage + 1}/${images.size}",
+                text = if (images.isNotEmpty()) {
+                    "${pagerState.currentPage + 1}/${images.size}"
+                } else {
+                    "0/0"
+                },
                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.labelSmall
@@ -69,9 +74,11 @@ fun SNSImagePager(
 @Composable
 private fun SNSImagePagerPreview() {
     ConnectedTheme {
-        SNSImagePager(
-            modifier = Modifier.fillMaxSize(),
-            images = emptyList()
-        )
+        Surface {
+            SNSImagePager(
+                modifier = Modifier.fillMaxSize(),
+                images = emptyList()
+            )
+        }
     }
 }
