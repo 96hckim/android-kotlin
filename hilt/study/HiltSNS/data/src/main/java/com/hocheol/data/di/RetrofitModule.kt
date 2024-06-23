@@ -1,5 +1,6 @@
 package com.hocheol.data.di
 
+import com.hocheol.data.retrofit.BoardService
 import com.hocheol.data.retrofit.FileService
 import com.hocheol.data.retrofit.SNSInterceptor
 import com.hocheol.data.retrofit.UserService
@@ -56,5 +57,10 @@ class RetrofitModule {
     @Provides
     fun provideFileService(retrofit: Retrofit): FileService {
         return retrofit.create(FileService::class.java)
+    }
+
+    @Provides
+    fun provideBoardService(retrofit: Retrofit): BoardService {
+        return retrofit.create(BoardService::class.java)
     }
 }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.symbol.processing)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
+    alias(libs.plugins.jetbrains.kotlin.plugin.parcelize)
 }
 
 android {
