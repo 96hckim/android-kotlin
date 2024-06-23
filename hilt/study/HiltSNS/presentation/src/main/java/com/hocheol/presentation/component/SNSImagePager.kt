@@ -19,7 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.hocheol.hiltsns.ui.theme.ConnectedTheme
+import com.hocheol.presentation.theme.ConnectedTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

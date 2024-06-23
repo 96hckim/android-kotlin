@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hocheol.hiltsns.ui.theme.ConnectedTheme
+import com.hocheol.presentation.theme.ConnectedTheme
 import com.hocheol.presentation.component.SNSButton
 import com.hocheol.presentation.component.SNSTextField
 import com.hocheol.presentation.main.MainActivity

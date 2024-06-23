@@ -1,4 +1,4 @@
-package com.hocheol.hiltsns.ui.theme
+package com.hocheol.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hocheol.hiltsns.ui.theme.ConnectedTheme
+import com.hocheol.presentation.theme.ConnectedTheme
 import com.hocheol.presentation.component.SNSProfileImage
 import com.hocheol.presentation.login.LoginActivity
 import org.orbitmvi.orbit.compose.collectAsState
