@@ -46,6 +46,17 @@ fun BoardOptionDialog(
                 ) {
                     Text(text = "삭제")
                 }
+
+                TextButton(
+                    onClick = { onDismissRequest() },
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Text(text = "취소")
+                }
             }
         }
     }

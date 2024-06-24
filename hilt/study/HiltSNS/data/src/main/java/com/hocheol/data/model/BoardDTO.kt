@@ -2,6 +2,7 @@ package com.hocheol.data.model
 
 import com.hocheol.domain.model.Board
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Serializable
 data class BoardDTO(
@@ -16,11 +17,13 @@ data class BoardDTO(
 )
 
 fun BoardDTO.toDomainModel(): Board {
+    val contentParam = Json.decodeFromString<ContentParam>(content)
+
     return Board(
         id = id,
         title = title,
-        content = content,
-        images = emptyList(),
+        content = contentParam.text,
+        images = contentParam.images,
         username = createUserName,
         profileImageUrl = createUserProfileFilePath
     )

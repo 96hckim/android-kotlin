@@ -13,6 +13,7 @@ import com.hocheol.data.model.BoardParam
 import com.hocheol.data.model.BoardParcel
 import com.hocheol.data.model.ContentParam
 import com.hocheol.data.retrofit.BoardService
+import com.hocheol.domain.model.ACTION_POSTED
 import com.hocheol.domain.usecase.file.UploadImageUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +61,8 @@ class PostingService : LifecycleService() {
 
     private fun startForeground() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID).build()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             startForeground(
                 FOREGROUND_NOTIFICATION_ID,
                 notification,
@@ -91,6 +93,14 @@ class PostingService : LifecycleService() {
 
         val requestBody = boardParam.toRequestBody()
         boardService.postBoard(requestBody)
+
+        sendBroadcast(
+            Intent(
+                ACTION_POSTED
+            ).apply {
+                setPackage(packageName)
+            }
+        )
 
         stopForeground(STOP_FOREGROUND_DETACH)
     }

@@ -2,6 +2,7 @@ package com.hocheol.presentation.main.board
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -56,7 +57,9 @@ fun BoardCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SNSImagePager(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
                     images = images
                 )
             }

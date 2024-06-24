@@ -20,7 +20,6 @@ fun WritingNavHost(
     sharedViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is WritingSideEffect.Toast -> Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
-            WritingSideEffect.NavigateToWritingScreen -> navController.navigate(WritingRoute.WRITING.route)
             WritingSideEffect.Finish -> onFinish()
         }
     }
@@ -32,7 +31,8 @@ fun WritingNavHost(
         composable(route = WritingRoute.IMAGE_SELECT.route) {
             ImageSelectScreen(
                 viewModel = sharedViewModel,
-                onBackClick = onFinish
+                onBackClick = onFinish,
+                onNextClick = { navController.navigate(WritingRoute.WRITING.route) }
             )
         }
 

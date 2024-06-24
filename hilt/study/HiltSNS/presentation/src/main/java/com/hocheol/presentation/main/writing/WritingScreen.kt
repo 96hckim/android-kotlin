@@ -18,9 +18,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hocheol.presentation.theme.ConnectedTheme
 import com.hocheol.presentation.component.SNSImagePager
 import com.hocheol.presentation.component.SNSTextField
+import com.hocheol.presentation.theme.ConnectedTheme
 import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable

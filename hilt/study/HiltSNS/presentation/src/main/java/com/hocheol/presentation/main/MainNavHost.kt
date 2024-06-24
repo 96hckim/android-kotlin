@@ -16,11 +16,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hocheol.presentation.R
 import com.hocheol.presentation.main.board.BoardScreen
+import com.hocheol.presentation.main.board.BoardViewModel
 import com.hocheol.presentation.main.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainNavHost() {
+fun MainNavHost(
+    boardViewModel: BoardViewModel
+) {
     val navController = rememberNavController()
 
     Surface {
@@ -43,7 +46,7 @@ fun MainNavHost() {
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     composable(route = MainRoute.BOARD.route) {
-                        BoardScreen()
+                        BoardScreen(boardViewModel)
                     }
 
                     composable(route = MainRoute.SETTING.route) {

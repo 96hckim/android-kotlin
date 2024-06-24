@@ -40,7 +40,8 @@ import org.orbitmvi.orbit.compose.collectAsState
 @Composable
 fun ImageSelectScreen(
     viewModel: WritingViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit
 ) {
     val state = viewModel.collectAsState().value
 
@@ -48,7 +49,7 @@ fun ImageSelectScreen(
         images = state.images,
         selectedImages = state.selectedImages,
         onBackClick = onBackClick,
-        onNextClick = viewModel::onNextClick,
+        onNextClick = onNextClick,
         onItemClick = viewModel::onItemClick
     )
 }

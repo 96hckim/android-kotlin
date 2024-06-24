@@ -58,14 +58,6 @@ class WritingViewModel @Inject constructor(
         }
     }
 
-    fun onNextClick() = intent {
-        if (state.selectedImages.isEmpty()) {
-            postSideEffect(WritingSideEffect.Toast(message = "이미지를 선택해 주세요."))
-        } else {
-            postSideEffect(WritingSideEffect.NavigateToWritingScreen)
-        }
-    }
-
     fun onTextChange(newText: String) = blockingIntent {
         reduce {
             state.copy(text = newText)
@@ -92,8 +84,6 @@ data class WritingState(
 
 sealed interface WritingSideEffect {
     class Toast(val message: String) : WritingSideEffect
-
-    data object NavigateToWritingScreen : WritingSideEffect
 
     data object Finish : WritingSideEffect
 }
