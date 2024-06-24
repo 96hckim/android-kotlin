@@ -16,6 +16,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 
 const val SERVER_HOST = "http://10.0.2.2:8080"
+//const val SERVER_HOST = "http://192.168.137.1:8080"
 
 @Module
 @InstallIn(SingletonComponent::class)
