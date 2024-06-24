@@ -3,6 +3,7 @@ package com.hocheol.presentation.main.board
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.hocheol.domain.usecase.main.board.DeleteBoardUseCase
 import com.hocheol.domain.usecase.main.board.GetBoardsUseCase
 import com.hocheol.presentation.model.main.board.BoardCardModel
 import com.hocheol.presentation.model.main.board.toUIModel
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BoardViewModel @Inject constructor(
-    private val getBoardsUseCase: GetBoardsUseCase
+    private val getBoardsUseCase: GetBoardsUseCase,
+    private val deleteBoardUseCase: DeleteBoardUseCase
 ) : ViewModel(), ContainerHost<BoardState, BoardSideEffect> {
 
     override val container: Container<BoardState, BoardSideEffect> = container(
@@ -48,6 +50,11 @@ class BoardViewModel @Inject constructor(
         reduce {
             state.copy(boardCardModelFlow = boardCardModelFlow)
         }
+    }
+
+    fun onBoardDelete(model: BoardCardModel) = intent {
+        deleteBoardUseCase(model.boardId).getOrThrow()
+        load()
     }
 }
 
