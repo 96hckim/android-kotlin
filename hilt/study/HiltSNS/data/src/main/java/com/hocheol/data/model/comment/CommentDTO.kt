@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class CommentDTO(
     val id: Long,
     val comment: String,
-    val createAt: String,
+    val createdAt: String,
     val createUserId: Long,
     val createUserName: String,
     val profileImageUrl: String

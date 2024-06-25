@@ -35,11 +35,12 @@ import com.hocheol.presentation.theme.ConnectedTheme
 
 @Composable
 fun CommentDialog(
+    isMine: Boolean,
     visible: Boolean,
     comments: List<Comment>,
     onDismissRequest: () -> Unit,
     onCloseClick: () -> Unit,
-    onSendClick: (String) -> Unit,
+    onCommentSend: (String) -> Unit,
     onDeleteComment: (Comment) -> Unit
 ) {
     if (visible) {
@@ -53,12 +54,13 @@ fun CommentDialog(
 
             DialogContainer {
                 CommentContent(
+                    isMine = isMine,
                     comments = comments,
                     onCloseClick = onCloseClick,
                     commentText = commentText,
                     onCommentTextChange = { commentText = it },
-                    onSendClick = {
-                        onSendClick(commentText)
+                    onCommentSend = {
+                        onCommentSend(commentText)
                         commentText = ""
                     },
                     onDeleteComment = onDeleteComment
@@ -83,14 +85,14 @@ private fun DialogContainer(content: @Composable () -> Unit) {
     }
 }
 
-// Extracted composable for the comment content
 @Composable
 private fun CommentContent(
+    isMine: Boolean,
     comments: List<Comment>,
     onCloseClick: () -> Unit,
     commentText: String,
     onCommentTextChange: (String) -> Unit,
-    onSendClick: () -> Unit,
+    onCommentSend: () -> Unit,
     onDeleteComment: (Comment) -> Unit
 ) {
     Column(
@@ -111,6 +113,7 @@ private fun CommentContent(
 
                 CommentCard(
                     modifier = Modifier,
+                    isMine = isMine,
                     profileImageUrl = comment.profileImageUrl,
                     username = comment.username,
                     text = comment.text,
@@ -124,7 +127,7 @@ private fun CommentContent(
         CommentInputRow(
             commentText = commentText,
             onCommentTextChange = onCommentTextChange,
-            onSendClick = onSendClick
+            onCommentSend = onCommentSend
         )
     }
 }
@@ -157,7 +160,7 @@ private fun CommentHeader(
 private fun CommentInputRow(
     commentText: String,
     onCommentTextChange: (String) -> Unit,
-    onSendClick: () -> Unit
+    onCommentSend: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -168,7 +171,7 @@ private fun CommentInputRow(
             onValueChange = onCommentTextChange
         )
 
-        IconButton(onClick = onSendClick) {
+        IconButton(onClick = onCommentSend) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = "전송"
@@ -182,11 +185,12 @@ private fun CommentInputRow(
 private fun CommentDialogPreview() {
     ConnectedTheme {
         CommentDialog(
+            isMine = true,
             visible = true,
             comments = emptyList(),
             onDismissRequest = {},
             onCloseClick = {},
-            onSendClick = {},
+            onCommentSend = {},
             onDeleteComment = {}
         )
     }

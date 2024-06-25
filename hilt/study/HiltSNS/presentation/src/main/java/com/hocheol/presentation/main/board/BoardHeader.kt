@@ -1,7 +1,6 @@
 package com.hocheol.presentation.main.board
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -22,6 +21,7 @@ import com.hocheol.presentation.theme.ConnectedTheme
 @Composable
 fun BoardHeader(
     modifier: Modifier = Modifier,
+    isMine: Boolean,
     profileImageUrl: String? = null,
     username: String,
     onOptionClick: () -> Unit
@@ -40,17 +40,19 @@ fun BoardHeader(
 
         Text(
             text = username,
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(1f),
             style = MaterialTheme.typography.titleMedium
         )
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        IconButton(onClick = onOptionClick) {
-            Icon(
-                imageVector = Icons.Filled.MoreVert,
-                contentDescription = "옵션"
-            )
+        if (isMine) {
+            IconButton(onClick = onOptionClick) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "옵션"
+                )
+            }
         }
     }
 }
@@ -61,6 +63,7 @@ private fun BoardHeaderPreview() {
     ConnectedTheme {
         Surface {
             BoardHeader(
+                isMine = false,
                 profileImageUrl = null,
                 username = "User Name",
                 onOptionClick = {}

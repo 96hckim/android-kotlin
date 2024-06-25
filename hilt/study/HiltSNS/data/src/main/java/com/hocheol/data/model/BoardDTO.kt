@@ -23,6 +23,7 @@ fun BoardDTO.toDomainModel(): Board {
     val contentParam = Json.decodeFromString<ContentParam>(content)
 
     return Board(
+        userId = createUserId,
         id = id,
         title = title,
         content = contentParam.text,

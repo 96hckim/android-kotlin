@@ -44,9 +44,13 @@ fun BoardScreen(
     }
 
     BoardScreen(
+        myUserId = state.myUserId,
         boardCardModels = state.boardCardModelFlow.collectAsLazyPagingItems(),
         deletedBoardIds = state.deletedBoardIds,
+        addedComments = state.addedComments,
+        deletedComments = state.deletedComments,
         onOptionClick = { modelForDialog = it },
+        onCommentSend = viewModel::onCommentSend,
         onDeleteComment = viewModel::onDeleteComment
     )
 
@@ -59,10 +63,14 @@ fun BoardScreen(
 
 @Composable
 private fun BoardScreen(
+    myUserId: Long,
     boardCardModels: LazyPagingItems<BoardCardModel>,
-    deletedBoardIds: Set<Long> = emptySet(),
+    deletedBoardIds: Set<Long>,
+    addedComments: Map<Long, List<Comment>>,
+    deletedComments: Map<Long, List<Comment>>,
     onOptionClick: (BoardCardModel) -> Unit,
-    onDeleteComment: (Comment) -> Unit
+    onCommentSend: (Long, String) -> Unit,
+    onDeleteComment: (Long, Comment) -> Unit
 ) {
     Surface {
         if (boardCardModels.itemCount == 0) {
@@ -85,14 +93,17 @@ private fun BoardScreen(
                     count = boardCardModels.itemCount,
                     key = { index -> boardCardModels[index]?.boardId ?: index }
                 ) { index ->
-                    boardCardModels[index]?.run {
-                        if (!deletedBoardIds.contains(this.boardId)) {
+                    boardCardModels[index]?.let { model ->
+                        if (!deletedBoardIds.contains(model.boardId)) {
                             BoardCard(
-                                username = this.username,
-                                images = this.images,
-                                text = this.text,
-                                comments = this.comments,
-                                onOptionClick = { onOptionClick(this) },
+                                isMine = model.userId == myUserId,
+                                boardId = model.boardId,
+                                username = model.username,
+                                images = model.images,
+                                text = model.text,
+                                comments = model.comments + addedComments[model.boardId].orEmpty() - deletedComments[model.boardId].orEmpty().toSet(),
+                                onOptionClick = { onOptionClick(model) },
+                                onCommentSend = onCommentSend,
                                 onDeleteComment = onDeleteComment
                             )
                         }
@@ -106,6 +117,7 @@ private fun BoardScreen(
 private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
     val data = listOf(
         BoardCardModel(
+            userId = 1L,
             boardId = 1,
             username = "user1",
             images = listOf("https://via.placeholder.com/150", "https://via.placeholder.com/150"),
@@ -113,6 +125,7 @@ private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
             comments = emptyList()
         ),
         BoardCardModel(
+            userId = 2L,
             boardId = 2,
             username = "user2",
             images = emptyList(),
@@ -120,6 +133,7 @@ private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
             comments = emptyList()
         ),
         BoardCardModel(
+            userId = 3L,
             boardId = 3,
             username = "user3",
             images = listOf("https://via.placeholder.com/150"),
@@ -138,9 +152,14 @@ private fun BoardScreenPreview() {
 
     ConnectedTheme {
         BoardScreen(
+            myUserId = 0L,
             boardCardModels = lazyPagingItems,
+            deletedBoardIds = emptySet(),
+            addedComments = emptyMap(),
+            deletedComments = emptyMap(),
             onOptionClick = {},
-            onDeleteComment = {}
+            onCommentSend = { _, _ -> },
+            onDeleteComment = { _, _ -> }
         )
     }
 }

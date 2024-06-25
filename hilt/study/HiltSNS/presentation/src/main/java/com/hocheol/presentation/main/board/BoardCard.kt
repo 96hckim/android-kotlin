@@ -29,13 +29,16 @@ import com.hocheol.presentation.theme.ConnectedTheme
 
 @Composable
 fun BoardCard(
+    isMine: Boolean,
+    boardId: Long,
     profileImageUrl: String? = null,
     username: String,
     images: List<String>,
     text: String,
     comments: List<Comment>,
     onOptionClick: () -> Unit,
-    onDeleteComment: (Comment) -> Unit
+    onCommentSend: (Long, String) -> Unit,
+    onDeleteComment: (Long, Comment) -> Unit
 ) {
     var commentDialogVisible by remember { mutableStateOf(false) }
 
@@ -52,6 +55,7 @@ fun BoardCard(
                 .fillMaxWidth()
         ) {
             BoardHeader(
+                isMine = isMine,
                 modifier = Modifier.fillMaxWidth(),
                 profileImageUrl = profileImageUrl,
                 username = username,
@@ -99,18 +103,19 @@ fun BoardCard(
                 onClick = { commentDialogVisible = true },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text(text = "댓글")
+                Text(text = "${comments.size} 댓글")
             }
         }
     }
 
     CommentDialog(
+        isMine = isMine,
         visible = commentDialogVisible,
         comments = comments,
         onDismissRequest = { commentDialogVisible = false },
         onCloseClick = { commentDialogVisible = false },
-        onSendClick = {},
-        onDeleteComment = onDeleteComment
+        onCommentSend = { onCommentSend(boardId, it) },
+        onDeleteComment = { onDeleteComment(boardId, it) }
     )
 }
 
@@ -119,13 +124,16 @@ fun BoardCard(
 private fun BoardCardPreview() {
     ConnectedTheme {
         BoardCard(
+            isMine = true,
+            boardId = 0,
             profileImageUrl = null,
             username = "User Name",
             images = emptyList(),
             text = "내용1\n내용2\n내용3",
             comments = emptyList(),
             onOptionClick = {},
-            onDeleteComment = {}
+            onCommentSend = { _, _ -> },
+            onDeleteComment = { _, _ -> }
         )
     }
 }

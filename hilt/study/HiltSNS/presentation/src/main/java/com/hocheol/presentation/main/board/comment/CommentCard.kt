@@ -25,6 +25,7 @@ import com.hocheol.presentation.theme.ConnectedTheme
 @Composable
 fun CommentCard(
     modifier: Modifier = Modifier,
+    isMine: Boolean,
     profileImageUrl: String? = null,
     username: String = "",
     text: String = "",
@@ -58,12 +59,14 @@ fun CommentCard(
                 )
             }
 
-            IconButton(onClick = onDeleteComment) {
-                Icon(
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = "삭제",
-                    modifier = Modifier.size(16.dp)
-                )
+            if (isMine) {
+                IconButton(onClick = onDeleteComment) {
+                    Icon(
+                        imageVector = Icons.Filled.Clear,
+                        contentDescription = "삭제",
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
         }
     }
@@ -74,6 +77,7 @@ fun CommentCard(
 private fun CommentCardPreview() {
     ConnectedTheme {
         CommentCard(
+            isMine = true,
             username = "User Name",
             text = "Comment",
             onDeleteComment = {}

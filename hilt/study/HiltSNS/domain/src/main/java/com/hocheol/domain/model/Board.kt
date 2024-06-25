@@ -1,6 +1,7 @@
 package com.hocheol.domain.model
 
 data class Board(
+    val userId: Long,
     val id: Long,
     val title: String,
     val content: String,

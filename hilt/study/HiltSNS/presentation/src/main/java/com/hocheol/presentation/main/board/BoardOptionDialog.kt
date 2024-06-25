@@ -68,6 +68,7 @@ private fun BoardOptionDialogPreview() {
     var model: BoardCardModel? by remember {
         mutableStateOf(
             BoardCardModel(
+                userId = 1L,
                 boardId = 1,
                 username = "Sample User Name",
                 images = emptyList(),
