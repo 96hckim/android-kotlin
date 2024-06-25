@@ -39,7 +39,7 @@ fun CommentDialog(
     comments: List<Comment>,
     onDismissRequest: () -> Unit,
     onCloseClick: () -> Unit,
-    onSendClick: () -> Unit,
+    onSendClick: (String) -> Unit,
     onDeleteComment: (Comment) -> Unit
 ) {
     if (visible) {
@@ -49,76 +49,130 @@ fun CommentDialog(
                 usePlatformDefaultWidth = false
             )
         ) {
-            var text by remember { mutableStateOf("") }
+            var commentText by remember { mutableStateOf("") }
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                    color = MaterialTheme.colorScheme.primaryContainer
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxHeight(0.5f)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "${comments.size} 댓글",
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
-
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            IconButton(onClick = onCloseClick) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = "닫기"
-                                )
-                            }
-                        }
-
-                        LazyColumn(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            items(
-                                count = comments.size
-                            ) { index ->
-                                val comment = comments[index]
-
-                                CommentCard(
-                                    modifier = Modifier,
-                                    profileImageUrl = comment.profileImageUrl,
-                                    username = comment.username,
-                                    text = comment.text,
-                                    onDeleteComment = { onDeleteComment(comment) }
-                                )
-                            }
-                        }
-
-                        HorizontalDivider()
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            SNSTextField(
-                                modifier = Modifier.weight(1f),
-                                value = text,
-                                onValueChange = { text = it }
-                            )
-
-                            IconButton(onClick = onSendClick) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.Send,
-                                    contentDescription = "전송"
-                                )
-                            }
-                        }
-                    }
-                }
+            DialogContainer {
+                CommentContent(
+                    comments = comments,
+                    onCloseClick = onCloseClick,
+                    commentText = commentText,
+                    onCommentTextChange = { commentText = it },
+                    onSendClick = {
+                        onSendClick(commentText)
+                        commentText = ""
+                    },
+                    onDeleteComment = onDeleteComment
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun DialogContainer(content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Surface(
+            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+            color = MaterialTheme.colorScheme.primaryContainer
+        ) {
+            content()
+        }
+    }
+}
+
+// Extracted composable for the comment content
+@Composable
+private fun CommentContent(
+    comments: List<Comment>,
+    onCloseClick: () -> Unit,
+    commentText: String,
+    onCommentTextChange: (String) -> Unit,
+    onSendClick: () -> Unit,
+    onDeleteComment: (Comment) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxHeight(0.5f)
+    ) {
+        CommentHeader(
+            commentCount = comments.size,
+            onCloseClick = onCloseClick
+        )
+
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
+            items(
+                count = comments.size
+            ) { index ->
+                val comment = comments[index]
+
+                CommentCard(
+                    modifier = Modifier,
+                    profileImageUrl = comment.profileImageUrl,
+                    username = comment.username,
+                    text = comment.text,
+                    onDeleteComment = { onDeleteComment(comment) }
+                )
+            }
+        }
+
+        HorizontalDivider()
+
+        CommentInputRow(
+            commentText = commentText,
+            onCommentTextChange = onCommentTextChange,
+            onSendClick = onSendClick
+        )
+    }
+}
+
+@Composable
+private fun CommentHeader(
+    commentCount: Int,
+    onCloseClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "$commentCount 댓글",
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        IconButton(onClick = onCloseClick) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = "닫기"
+            )
+        }
+    }
+}
+
+@Composable
+private fun CommentInputRow(
+    commentText: String,
+    onCommentTextChange: (String) -> Unit,
+    onSendClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        SNSTextField(
+            modifier = Modifier.weight(1f),
+            value = commentText,
+            onValueChange = onCommentTextChange
+        )
+
+        IconButton(onClick = onSendClick) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Send,
+                contentDescription = "전송"
+            )
         }
     }
 }
