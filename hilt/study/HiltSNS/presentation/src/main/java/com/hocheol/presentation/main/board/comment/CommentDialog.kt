@@ -35,7 +35,7 @@ import com.hocheol.presentation.theme.ConnectedTheme
 
 @Composable
 fun CommentDialog(
-    isMine: Boolean,
+    userId: Long,
     visible: Boolean,
     comments: List<Comment>,
     onDismissRequest: () -> Unit,
@@ -54,7 +54,7 @@ fun CommentDialog(
 
             DialogContainer {
                 CommentContent(
-                    isMine = isMine,
+                    userId = userId,
                     comments = comments,
                     onCloseClick = onCloseClick,
                     commentText = commentText,
@@ -87,7 +87,7 @@ private fun DialogContainer(content: @Composable () -> Unit) {
 
 @Composable
 private fun CommentContent(
-    isMine: Boolean,
+    userId: Long,
     comments: List<Comment>,
     onCloseClick: () -> Unit,
     commentText: String,
@@ -113,7 +113,7 @@ private fun CommentContent(
 
                 CommentCard(
                     modifier = Modifier,
-                    isMine = isMine,
+                    isMine = comment.userId == userId,
                     profileImageUrl = comment.profileImageUrl,
                     username = comment.username,
                     text = comment.text,
@@ -185,7 +185,7 @@ private fun CommentInputRow(
 private fun CommentDialogPreview() {
     ConnectedTheme {
         CommentDialog(
-            isMine = true,
+            userId = 0L,
             visible = true,
             comments = emptyList(),
             onDismissRequest = {},

@@ -96,11 +96,8 @@ private fun BoardScreen(
                     boardCardModels[index]?.let { model ->
                         if (!deletedBoardIds.contains(model.boardId)) {
                             BoardCard(
-                                isMine = model.userId == myUserId,
-                                boardId = model.boardId,
-                                username = model.username,
-                                images = model.images,
-                                text = model.text,
+                                userId = myUserId,
+                                model = model,
                                 comments = model.comments + addedComments[model.boardId].orEmpty() - deletedComments[model.boardId].orEmpty().toSet(),
                                 onOptionClick = { onOptionClick(model) },
                                 onCommentSend = onCommentSend,
@@ -117,27 +114,27 @@ private fun BoardScreen(
 private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
     val data = listOf(
         BoardCardModel(
-            userId = 1L,
             boardId = 1,
-            username = "user1",
-            images = listOf("https://via.placeholder.com/150", "https://via.placeholder.com/150"),
             text = "This is a sample post text from user1.",
+            images = listOf("https://via.placeholder.com/150", "https://via.placeholder.com/150"),
+            userId = 1L,
+            username = "user1",
             comments = emptyList()
         ),
         BoardCardModel(
-            userId = 2L,
             boardId = 2,
-            username = "user2",
-            images = emptyList(),
             text = "This is yet another sample post text from user2.",
+            images = emptyList(),
+            userId = 2L,
+            username = "user2",
             comments = emptyList()
         ),
         BoardCardModel(
-            userId = 3L,
             boardId = 3,
-            username = "user3",
-            images = listOf("https://via.placeholder.com/150"),
             text = "This is another sample post text from user3.",
+            images = listOf("https://via.placeholder.com/150"),
+            userId = 3L,
+            username = "user3",
             comments = emptyList()
         )
     )

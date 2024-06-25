@@ -6,21 +6,23 @@ import com.hocheol.domain.model.Comment
 
 @Immutable
 data class BoardCardModel(
-    val userId: Long,
     val boardId: Long,
-    val username: String,
-    val images: List<String>,
     val text: String,
+    val images: List<String>,
+    val userId: Long,
+    val username: String,
+    val profileImageUrl: String? = null,
     val comments: List<Comment>
 )
 
 fun Board.toUIModel(): BoardCardModel {
     return BoardCardModel(
-        userId = userId,
         boardId = id,
-        username = username,
-        images = images,
         text = content,
+        images = images,
+        userId = userId,
+        username = username,
+        profileImageUrl = profileImageUrl,
         comments = comments
     )
 }

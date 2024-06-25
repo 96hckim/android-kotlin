@@ -80,6 +80,7 @@ class BoardViewModel @Inject constructor(
         val comment = Comment(
             id = commentId,
             text = text,
+            userId = user.id,
             username = user.username,
             profileImageUrl = user.profileImageUrl
         )

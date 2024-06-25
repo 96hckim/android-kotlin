@@ -25,16 +25,13 @@ import androidx.compose.ui.unit.dp
 import com.hocheol.domain.model.Comment
 import com.hocheol.presentation.component.SNSImagePager
 import com.hocheol.presentation.main.board.comment.CommentDialog
+import com.hocheol.presentation.model.main.board.BoardCardModel
 import com.hocheol.presentation.theme.ConnectedTheme
 
 @Composable
 fun BoardCard(
-    isMine: Boolean,
-    boardId: Long,
-    profileImageUrl: String? = null,
-    username: String,
-    images: List<String>,
-    text: String,
+    userId: Long,
+    model: BoardCardModel,
     comments: List<Comment>,
     onOptionClick: () -> Unit,
     onCommentSend: (Long, String) -> Unit,
@@ -55,31 +52,31 @@ fun BoardCard(
                 .fillMaxWidth()
         ) {
             BoardHeader(
-                isMine = isMine,
+                isMine = model.userId == userId,
                 modifier = Modifier.fillMaxWidth(),
-                profileImageUrl = profileImageUrl,
-                username = username,
+                profileImageUrl = model.profileImageUrl,
+                username = model.username,
                 onOptionClick = onOptionClick
             )
 
-            if (images.isNotEmpty()) {
+            if (model.images.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SNSImagePager(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1f),
-                    images = images
+                    images = model.images
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            var maxLines by remember(text) { mutableIntStateOf(1) }
+            var maxLines by remember(model.text) { mutableIntStateOf(1) }
             var showMore by remember { mutableStateOf(false) }
 
             Text(
-                text = text,
+                text = model.text,
                 modifier = Modifier.fillMaxWidth(),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = maxLines,
@@ -109,13 +106,13 @@ fun BoardCard(
     }
 
     CommentDialog(
-        isMine = isMine,
+        userId = userId,
         visible = commentDialogVisible,
         comments = comments,
         onDismissRequest = { commentDialogVisible = false },
         onCloseClick = { commentDialogVisible = false },
-        onCommentSend = { onCommentSend(boardId, it) },
-        onDeleteComment = { onDeleteComment(boardId, it) }
+        onCommentSend = { onCommentSend(model.boardId, it) },
+        onDeleteComment = { onDeleteComment(model.boardId, it) }
     )
 }
 
@@ -124,12 +121,15 @@ fun BoardCard(
 private fun BoardCardPreview() {
     ConnectedTheme {
         BoardCard(
-            isMine = true,
-            boardId = 0,
-            profileImageUrl = null,
-            username = "User Name",
-            images = emptyList(),
-            text = "내용1\n내용2\n내용3",
+            userId = 1L,
+            model = BoardCardModel(
+                userId = 1L,
+                boardId = 1,
+                username = "Sample User Name",
+                images = emptyList(),
+                text = "Sample Text",
+                comments = emptyList()
+            ),
             comments = emptyList(),
             onOptionClick = {},
             onCommentSend = { _, _ -> },
