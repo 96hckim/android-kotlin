@@ -1,5 +1,7 @@
 package com.hocheol.data.model
 
+import com.hocheol.data.model.comment.CommentDTO
+import com.hocheol.data.model.comment.toDomainModel
 import com.hocheol.domain.model.Board
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -13,7 +15,8 @@ data class BoardDTO(
     val updatedAt: String,
     val createUserId: Long,
     val createUserName: String,
-    val createUserProfileFilePath: String
+    val createUserProfileFilePath: String,
+    val commentList: List<CommentDTO>
 )
 
 fun BoardDTO.toDomainModel(): Board {
@@ -25,6 +28,7 @@ fun BoardDTO.toDomainModel(): Board {
         content = contentParam.text,
         images = contentParam.images,
         username = createUserName,
-        profileImageUrl = createUserProfileFilePath
+        profileImageUrl = createUserProfileFilePath,
+        comments = commentList.map { it.toDomainModel() }
     )
 }

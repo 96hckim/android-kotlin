@@ -22,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hocheol.domain.model.Comment
 import com.hocheol.presentation.component.SNSImagePager
+import com.hocheol.presentation.main.board.comment.CommentDialog
 import com.hocheol.presentation.theme.ConnectedTheme
 
 @Composable
@@ -31,9 +33,12 @@ fun BoardCard(
     username: String,
     images: List<String>,
     text: String,
+    comments: List<Comment>,
     onOptionClick: () -> Unit,
-    onReplyClick: () -> Unit
+    onDeleteComment: (Comment) -> Unit
 ) {
+    var commentDialogVisible by remember { mutableStateOf(false) }
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.primaryContainer,
@@ -91,13 +96,22 @@ fun BoardCard(
             }
 
             TextButton(
-                onClick = onReplyClick,
+                onClick = { commentDialogVisible = true },
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(text = "댓글")
             }
         }
     }
+
+    CommentDialog(
+        visible = commentDialogVisible,
+        comments = comments,
+        onDismissRequest = { commentDialogVisible = false },
+        onCloseClick = { commentDialogVisible = false },
+        onSendClick = {},
+        onDeleteComment = onDeleteComment
+    )
 }
 
 @Preview
@@ -109,8 +123,9 @@ private fun BoardCardPreview() {
             username = "User Name",
             images = emptyList(),
             text = "내용1\n내용2\n내용3",
+            comments = emptyList(),
             onOptionClick = {},
-            onReplyClick = {}
+            onDeleteComment = {}
         )
     }
 }

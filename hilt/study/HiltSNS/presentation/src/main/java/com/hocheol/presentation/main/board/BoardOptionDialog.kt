@@ -71,7 +71,8 @@ private fun BoardOptionDialogPreview() {
                 boardId = 1,
                 username = "Sample User Name",
                 images = emptyList(),
-                text = "Sample Text"
+                text = "Sample Text",
+                comments = emptyList()
             )
         )
     }

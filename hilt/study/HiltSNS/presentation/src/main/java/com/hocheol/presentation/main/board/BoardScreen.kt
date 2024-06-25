@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.hocheol.domain.model.Comment
 import com.hocheol.presentation.model.main.board.BoardCardModel
 import com.hocheol.presentation.theme.ConnectedTheme
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +47,7 @@ fun BoardScreen(
         boardCardModels = state.boardCardModelFlow.collectAsLazyPagingItems(),
         deletedBoardIds = state.deletedBoardIds,
         onOptionClick = { modelForDialog = it },
-        onReplyClick = {}
+        onDeleteComment = viewModel::onDeleteComment
     )
 
     BoardOptionDialog(
@@ -61,7 +62,7 @@ private fun BoardScreen(
     boardCardModels: LazyPagingItems<BoardCardModel>,
     deletedBoardIds: Set<Long> = emptySet(),
     onOptionClick: (BoardCardModel) -> Unit,
-    onReplyClick: (BoardCardModel) -> Unit
+    onDeleteComment: (Comment) -> Unit
 ) {
     Surface {
         if (boardCardModels.itemCount == 0) {
@@ -90,8 +91,9 @@ private fun BoardScreen(
                                 username = this.username,
                                 images = this.images,
                                 text = this.text,
+                                comments = this.comments,
                                 onOptionClick = { onOptionClick(this) },
-                                onReplyClick = { onReplyClick(this) }
+                                onDeleteComment = onDeleteComment
                             )
                         }
                     }
@@ -107,19 +109,22 @@ private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
             boardId = 1,
             username = "user1",
             images = listOf("https://via.placeholder.com/150", "https://via.placeholder.com/150"),
-            text = "This is a sample post text from user1."
+            text = "This is a sample post text from user1.",
+            comments = emptyList()
         ),
         BoardCardModel(
             boardId = 2,
             username = "user2",
-            images = listOf("https://via.placeholder.com/150"),
-            text = "This is another sample post text from user2."
+            images = emptyList(),
+            text = "This is yet another sample post text from user2.",
+            comments = emptyList()
         ),
         BoardCardModel(
             boardId = 3,
             username = "user3",
-            images = emptyList(),
-            text = "This is yet another sample post text from user3."
+            images = listOf("https://via.placeholder.com/150"),
+            text = "This is another sample post text from user3.",
+            comments = emptyList()
         )
     )
     return flowOf(PagingData.from(data))
@@ -135,7 +140,7 @@ private fun BoardScreenPreview() {
         BoardScreen(
             boardCardModels = lazyPagingItems,
             onOptionClick = {},
-            onReplyClick = {}
+            onDeleteComment = {}
         )
     }
 }

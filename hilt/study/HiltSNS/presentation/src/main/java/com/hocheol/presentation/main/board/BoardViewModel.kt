@@ -3,6 +3,7 @@ package com.hocheol.presentation.main.board
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.hocheol.domain.model.Comment
 import com.hocheol.domain.usecase.main.board.DeleteBoardUseCase
 import com.hocheol.domain.usecase.main.board.GetBoardsUseCase
 import com.hocheol.presentation.model.main.board.BoardCardModel
@@ -60,6 +61,9 @@ class BoardViewModel @Inject constructor(
                 deletedBoardIds = state.deletedBoardIds + model.boardId
             )
         }
+    }
+
+    fun onDeleteComment(comment: Comment) = intent {
     }
 }
 
