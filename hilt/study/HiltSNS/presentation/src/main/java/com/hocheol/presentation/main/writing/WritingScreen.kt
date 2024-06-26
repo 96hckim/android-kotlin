@@ -17,10 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import com.hocheol.presentation.component.SNSImagePager
-import com.hocheol.presentation.component.SNSTextField
+import com.hocheol.presentation.main.writing.toolbar.WritingToolbar
 import com.hocheol.presentation.theme.ConnectedTheme
+import com.mohamedrejeb.richeditor.model.RichTextState
+import com.mohamedrejeb.richeditor.ui.BasicRichTextEditor
 import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
@@ -31,9 +34,8 @@ fun WritingScreen(
     val state = viewModel.collectAsState().value
 
     WritingScreen(
+        richTextState = state.richTextState,
         images = state.selectedImages.map { it.uri },
-        text = state.text,
-        onTextChange = viewModel::onTextChange,
         onBackClick = onBackClick,
         onPostClick = viewModel::onPostClick
     )
@@ -42,9 +44,8 @@ fun WritingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WritingScreen(
+    richTextState: RichTextState,
     images: List<String>,
-    text: String,
-    onTextChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onPostClick: () -> Unit
 ) {
@@ -73,6 +74,12 @@ private fun WritingScreen(
                     }
                 )
             },
+            bottomBar = {
+                WritingToolbar(
+                    modifier = Modifier.fillMaxWidth(),
+                    richTextState = richTextState
+                )
+            },
             content = { innerPadding ->
                 Column(
                     modifier = Modifier.padding(innerPadding)
@@ -86,12 +93,19 @@ private fun WritingScreen(
 
                     HorizontalDivider()
 
-                    SNSTextField(
+                    BasicRichTextEditor(
+                        state = richTextState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(3f),
-                        value = text,
-                        onValueChange = onTextChange
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+                        decorationBox = { innerTextField ->
+                            if (richTextState.annotatedString.isEmpty()) {
+                                Text(text = "문구를 입력해 주세요.")
+                            }
+                            innerTextField()
+                        }
                     )
                 }
             }
@@ -104,9 +118,8 @@ private fun WritingScreen(
 private fun WritingScreenPreview() {
     ConnectedTheme {
         WritingScreen(
+            richTextState = RichTextState(),
             images = emptyList(),
-            text = "",
-            onTextChange = {},
             onBackClick = {},
             onPostClick = {}
         )

@@ -23,6 +23,7 @@ hiltNavigationCompose = "1.2.0"
 orbit = "7.1.0"
 coil = "2.6.0"
 paging = "3.3.0"
+richeditorCompose = "1.0.0-rc05-k2"
 room = "2.6.1"
 
 splashScreen = "1.0.1"
@@ -65,6 +66,7 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+richeditor-compose = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "richeditorCompose" }
 room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,8 @@ import com.hocheol.presentation.component.SNSImagePager
 import com.hocheol.presentation.main.board.comment.CommentDialog
 import com.hocheol.presentation.model.main.board.BoardCardModel
 import com.hocheol.presentation.theme.ConnectedTheme
+import com.mohamedrejeb.richeditor.model.RichTextState
+import com.mohamedrejeb.richeditor.ui.BasicRichText
 
 @Composable
 fun BoardCard(
@@ -72,12 +75,15 @@ fun BoardCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            var maxLines by remember(model.text) { mutableIntStateOf(1) }
+            var maxLines by remember(model.richTextState) { mutableIntStateOf(1) }
             var showMore by remember { mutableStateOf(false) }
 
-            Text(
-                text = model.text,
+            BasicRichText(
+                state = model.richTextState,
                 modifier = Modifier.fillMaxWidth(),
+                style = TextStyle.Default.copy(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = maxLines,
                 onTextLayout = { textLayoutResult ->
@@ -127,7 +133,7 @@ private fun BoardCardPreview() {
                 boardId = 1,
                 username = "Sample User Name",
                 images = emptyList(),
-                text = "Sample Text",
+                richTextState = RichTextState().setText("Sample Text"),
                 comments = emptyList()
             ),
             comments = emptyList(),

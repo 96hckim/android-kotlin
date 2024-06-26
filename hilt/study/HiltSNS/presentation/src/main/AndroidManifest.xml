@@ -13,6 +13,8 @@
         </activity>
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".main.MainActivity" />
-        <activity android:name=".main.writing.WritingActivity" />
+        <activity
+            android:name=".main.writing.WritingActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>

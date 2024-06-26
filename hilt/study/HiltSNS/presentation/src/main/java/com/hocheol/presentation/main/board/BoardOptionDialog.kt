@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import com.hocheol.presentation.model.main.board.BoardCardModel
 import com.hocheol.presentation.theme.ConnectedTheme
+import com.mohamedrejeb.richeditor.model.RichTextState
 
 @Composable
 fun BoardOptionDialog(
@@ -69,7 +70,7 @@ private fun BoardOptionDialogPreview() {
         mutableStateOf(
             BoardCardModel(
                 boardId = 1,
-                text = "Sample Text",
+                richTextState = RichTextState().setText("Sample Text"),
                 images = emptyList(),
                 userId = 1L,
                 username = "Sample User Name",

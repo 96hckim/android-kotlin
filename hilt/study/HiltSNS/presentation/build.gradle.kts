@@ -76,4 +76,7 @@ dependencies {
 
     // paging3
     implementation(libs.paging.compose)
+
+    // rich compose editor
+    implementation(libs.richeditor.compose)
 }

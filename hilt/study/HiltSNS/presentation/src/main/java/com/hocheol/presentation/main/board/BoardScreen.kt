@@ -24,6 +24,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.hocheol.domain.model.Comment
 import com.hocheol.presentation.model.main.board.BoardCardModel
 import com.hocheol.presentation.theme.ConnectedTheme
+import com.mohamedrejeb.richeditor.model.RichTextState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.orbitmvi.orbit.compose.collectAsState
@@ -115,7 +116,7 @@ private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
     val data = listOf(
         BoardCardModel(
             boardId = 1,
-            text = "This is a sample post text from user1.",
+            richTextState = RichTextState().setText("This is a sample post text from user1."),
             images = listOf("https://via.placeholder.com/150", "https://via.placeholder.com/150"),
             userId = 1L,
             username = "user1",
@@ -123,7 +124,7 @@ private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
         ),
         BoardCardModel(
             boardId = 2,
-            text = "This is yet another sample post text from user2.",
+            richTextState = RichTextState().setText("This is yet another sample post text from user2."),
             images = emptyList(),
             userId = 2L,
             username = "user2",
@@ -131,7 +132,7 @@ private fun mockPagingData(): Flow<PagingData<BoardCardModel>> {
         ),
         BoardCardModel(
             boardId = 3,
-            text = "This is another sample post text from user3.",
+            richTextState = RichTextState().setText("This is another sample post text from user3."),
             images = listOf("https://via.placeholder.com/150"),
             userId = 3L,
             username = "user3",

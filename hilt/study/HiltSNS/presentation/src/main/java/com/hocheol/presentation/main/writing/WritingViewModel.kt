@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.hocheol.domain.model.Image
 import com.hocheol.domain.usecase.main.writing.GetImageListUseCase
 import com.hocheol.domain.usecase.main.writing.PostBoardUseCase
+import com.mohamedrejeb.richeditor.model.RichTextState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -58,16 +58,10 @@ class WritingViewModel @Inject constructor(
         }
     }
 
-    fun onTextChange(newText: String) = blockingIntent {
-        reduce {
-            state.copy(text = newText)
-        }
-    }
-
     fun onPostClick() = intent {
         postBoardUseCase(
             title = "제목없음",
-            content = state.text,
+            content = state.richTextState.toHtml(),
             images = state.selectedImages
         )
 
@@ -77,9 +71,9 @@ class WritingViewModel @Inject constructor(
 
 @Immutable
 data class WritingState(
+    val richTextState: RichTextState = RichTextState(),
     val images: List<Image> = emptyList(),
-    val selectedImages: List<Image> = emptyList(),
-    val text: String = ""
+    val selectedImages: List<Image> = emptyList()
 )
 
 sealed interface WritingSideEffect {
