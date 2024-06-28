@@ -69,4 +69,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     ksp(libs.room.compiler)
+
+    // coroutines test
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.runner)
 }

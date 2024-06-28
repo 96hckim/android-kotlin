@@ -79,4 +79,7 @@ dependencies {
 
     // rich compose editor
     implementation(libs.richeditor.compose)
+
+    // coroutines test
+    testImplementation(libs.kotlinx.coroutines.test)
 }
