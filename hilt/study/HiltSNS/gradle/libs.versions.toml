@@ -27,6 +27,7 @@ richeditorCompose = "1.0.0-rc05-k2"
 room = "2.6.1"
 kotlinxCoroutinesTest = "1.8.1"
 runner = "1.6.1"
+robolectric = "4.12.2"
 
 splashScreen = "1.0.1"
 coroutinesCore = "1.8.1"
@@ -77,6 +78,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 hilt-androiod-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore" }

@@ -80,6 +80,13 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
+    // for instrumentation tests
     androidTestImplementation(libs.hilt.androiod.testing)
     kspAndroidTest(libs.hilt.compiler)
+
+    // for local unit tests
+    testImplementation(libs.hilt.androiod.testing)
+    kspTest(libs.hilt.compiler)
+
+    testImplementation(libs.robolectric)
 }
