@@ -18,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.hocheol.hiltsns.CustomRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -79,4 +79,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    androidTestImplementation(libs.hilt.androiod.testing)
+    kspAndroidTest(libs.hilt.compiler)
 }
