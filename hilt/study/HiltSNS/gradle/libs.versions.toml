@@ -33,6 +33,9 @@ robolectric = "4.12.2"
 workRuntimeKtx = "2.9.0"
 hiltWork = "1.2.0"
 
+javapoet = "1.13.0"
+autoService = "1.1.1"
+
 splashScreen = "1.0.1"
 coroutinesCore = "1.8.1"
 annotation = "1.8.0"
@@ -87,6 +90,11 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltWork" }
+
+hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "hilt" }
+javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
+auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoService" }
+auto-service = { module = "com.google.auto.service:auto-service", version.ref = "autoService" }
 
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore" }
