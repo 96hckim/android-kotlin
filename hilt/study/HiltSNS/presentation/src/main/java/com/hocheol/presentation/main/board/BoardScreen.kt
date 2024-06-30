@@ -3,8 +3,11 @@ package com.hocheol.presentation.main.board
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -50,6 +54,7 @@ fun BoardScreen(
         deletedBoardIds = state.deletedBoardIds,
         addedComments = state.addedComments,
         deletedComments = state.deletedComments,
+        onRefresh = viewModel::load,
         onOptionClick = { modelForDialog = it },
         onCommentSend = viewModel::onCommentSend,
         onDeleteComment = viewModel::onDeleteComment
@@ -69,6 +74,7 @@ private fun BoardScreen(
     deletedBoardIds: Set<Long>,
     addedComments: Map<Long, List<Comment>>,
     deletedComments: Map<Long, List<Comment>>,
+    onRefresh: () -> Unit,
     onOptionClick: (BoardCardModel) -> Unit,
     onCommentSend: (Long, String) -> Unit,
     onDeleteComment: (Long, Comment) -> Unit
@@ -85,6 +91,12 @@ private fun BoardScreen(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(onClick = onRefresh) {
+                    Text(text = "새로고침")
+                }
             }
         } else {
             LazyColumn(
@@ -155,6 +167,7 @@ private fun BoardScreenPreview() {
             deletedBoardIds = emptySet(),
             addedComments = emptyMap(),
             deletedComments = emptyMap(),
+            onRefresh = {},
             onOptionClick = {},
             onCommentSend = { _, _ -> },
             onDeleteComment = { _, _ -> }

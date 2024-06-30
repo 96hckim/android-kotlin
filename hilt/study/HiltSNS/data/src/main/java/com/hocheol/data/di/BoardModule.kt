@@ -2,7 +2,7 @@ package com.hocheol.data.di
 
 import com.hocheol.data.usecase.main.board.DeleteBoardUseCaseImpl
 import com.hocheol.data.usecase.main.board.DeleteCommentUseCaseImpl
-import com.hocheol.data.usecase.main.board.GetBoardsUseCaseImpl
+import com.hocheol.data.usecase.main.board.PagingSourceGetBoardsUseCase
 import com.hocheol.data.usecase.main.board.PostCommentUseCaseImpl
 import com.hocheol.domain.usecase.main.board.DeleteBoardUseCase
 import com.hocheol.domain.usecase.main.board.DeleteCommentUseCase
@@ -17,8 +17,11 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 @InstallIn(ActivityRetainedComponent::class)
 abstract class BoardModule {
 
+//    @Binds
+//    abstract fun bindGetBoardsUseCase(getBoardsUseCaseImpl: GetBoardsUseCaseImpl): GetBoardsUseCase
+
     @Binds
-    abstract fun bindGetBoardsUseCase(getBoardsUseCaseImpl: GetBoardsUseCaseImpl): GetBoardsUseCase
+    abstract fun bindPagingSourceGetBoardsUseCase(pagingSourceGetBoardsUseCase: PagingSourceGetBoardsUseCase): GetBoardsUseCase
 
     @Binds
     abstract fun bindDeleteBoardUseCase(deleteBoardUseCaseImpl: DeleteBoardUseCaseImpl): DeleteBoardUseCase
