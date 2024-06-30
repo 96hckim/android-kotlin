@@ -9,7 +9,7 @@ import com.hocheol.domain.usecase.main.writing.PostBoardUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class PostBoardUseCaseImpl @Inject constructor(
+class ForegroundServicePostBoardUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) : PostBoardUseCase {
 
