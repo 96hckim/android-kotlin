@@ -118,3 +118,5 @@ jetbrains-kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parceliz
 kotlin-symbol-processing = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 dynamic-feature = { id = "com.android.dynamic-feature", version.ref = "agp" }
+
+sns-hilt = { id = "sns.hilt.plugin", version = "1" }
