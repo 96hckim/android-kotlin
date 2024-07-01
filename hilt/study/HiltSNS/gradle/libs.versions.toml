@@ -1,4 +1,5 @@
 [versions]
+# Android 기본 제공
 agp = "8.5.0"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
@@ -11,6 +12,7 @@ composeBom = "2024.06.00"
 appcompat = "1.7.0"
 material = "1.12.0"
 
+# HiltSNS
 ksp = "2.0.0-1.0.21"
 navigationCompose = "2.7.7"
 datastorePreferences = "1.1.1"
@@ -26,13 +28,16 @@ paging = "3.3.0"
 richeditorCompose = "1.0.0-rc05-k2"
 room = "2.6.1"
 
+# Hilt 테스트
 kotlinxCoroutinesTest = "1.8.1"
 runner = "1.6.1"
 robolectric = "4.12.2"
 
+# HiltWorker
 workRuntimeKtx = "2.9.0"
 hiltWork = "1.2.0"
 
+# Hilt Extension
 javapoet = "1.13.0"
 autoService = "1.1.1"
 

@@ -34,9 +34,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hocheol.presentation.theme.ConnectedTheme
 import com.hocheol.presentation.component.SNSProfileImage
 import com.hocheol.presentation.login.LoginActivity
+import com.hocheol.presentation.theme.ConnectedTheme
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -146,6 +146,22 @@ fun SettingScreen(
         ) {
             Text(text = "로그아웃")
         }
+
+        // DFM 테스트
+//        val context = LocalContext.current
+//        Button(
+//            onClick = {
+//                context.startActivity(
+//                    Intent(
+//                        context,
+//                        Class.forName("com.hocheol.dynamicfeature.DynamicFeatureActivity")
+//                    )
+//                )
+//            },
+//            modifier = Modifier.padding(top = 16.dp)
+//        ) {
+//            Text(text = "Dynamic Feature")
+//        }
     }
 }
 
