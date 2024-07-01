@@ -41,10 +41,6 @@ hiltWork = "1.2.0"
 javapoet = "1.13.0"
 autoService = "1.1.1"
 
-splashScreen = "1.0.1"
-coroutinesCore = "1.8.1"
-annotation = "1.8.0"
-
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -100,10 +96,6 @@ hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "hilt" }
 javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
 auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoService" }
 auto-service = { module = "com.google.auto.service:auto-service", version.ref = "autoService" }
-
-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore" }
-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
