@@ -1,9 +1,14 @@
 # 쇼핑몰 앱
 
 ## 홈 화면
-| 홈 화면 1 | 홈 화면 2 |
-| :---: | :---: |
-| ![Screenshot_20240311_182205_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/eebf4171-de36-4b1c-ae70-3479a0f7b1d0) | ![Screenshot_20240311_182212_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/6f4bac76-007f-4aa3-a52c-48a3c3b41d92) |
+<table>
+  <tr>
+    <td>
+      <img src="https://github.com/96hckim/android-kotlin/assets/74343321/eebf4171-de36-4b1c-ae70-3479a0f7b1d0" width="25%"/>
+      <img src="https://github.com/96hckim/android-kotlin/assets/74343321/6f4bac76-007f-4aa3-a52c-48a3c3b41d92" width="25%"/>
+    </td>
+  </tr>
+</table>
 
 ### 홈 화면의 특징
 - 배너
