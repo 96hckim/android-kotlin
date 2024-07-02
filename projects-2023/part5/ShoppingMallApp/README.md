@@ -24,35 +24,15 @@
   - 카테고리
   - 가격
 
-## 카테고리
-| 카테고리 1 | 카테고리 2 |
-| :---: | :---: |
-| ![Screenshot_20240311_182346_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/200776f4-5400-4ab4-997c-91e948d5a575) | ![Screenshot_20240311_182355_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/983b53d2-a051-49f4-9697-7f2637a18a24) |
+## 카테고리 및 마이페이지
+| 카테고리 1 | 카테고리 2 | 마이페이지 1 | 마이페이지 2 |
+| :---: | :---: | :---: | :---: |
+| ![Screenshot_20240311_182346_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/200776f4-5400-4ab4-997c-91e948d5a575) | ![Screenshot_20240311_182355_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/983b53d2-a051-49f4-9697-7f2637a18a24) | ![Screenshot_20240311_182411_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/9267f317-54a0-4071-8555-5c92979d149a) | ![Screenshot_20240311_182417_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/75f91ff2-dbc8-4c18-a779-468aec84ac17) |
 
-## 마이페이지
-| 마이페이지 1 | 마이페이지 2 |
-| :---: | :---: |
-| ![Screenshot_20240311_182411_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/9267f317-54a0-4071-8555-5c92979d149a) | ![Screenshot_20240311_182417_ShoppingMallApp-dev](https://github.com/96hckim/android-kotlin/assets/74343321/75f91ff2-dbc8-4c18-a779-468aec84ac17) |
-
-## 상품상세
-| 상품상세 |
-| :---: |
-| ![상품 상세페이지](https://github.com/96hckim/android-kotlin/assets/74343321/229123c5-25e0-4dfa-a9a1-63c4cb83e8a3) |
-
-## 좋아요
-| 좋아요 |
-| :---: |
-| ![좋아요 모아보기](https://github.com/96hckim/android-kotlin/assets/74343321/931b9a9c-c17b-4678-959f-95697e4dbc01) |
-
-## 장바구니
-| 장바구니 |
-| :---: |
-| ![장바구니](https://github.com/96hckim/android-kotlin/assets/74343321/b7fdb54d-60e6-4553-b0f8-ae6a5a91b40a) |
-
-## 결제내역
-| 결제내역 |
-| :---: |
-| ![결제내역](https://github.com/96hckim/android-kotlin/assets/74343321/0ee39f89-9c22-42fe-a2b2-d5430a152ff5) |
+## 상품상세, 좋아요, 장바구니, 결제내역
+| 상품상세 | 좋아요 | 장바구니 | 결제내역 |
+| :---: | :---: | :---: | :---: |
+| ![상품 상세페이지](https://github.com/96hckim/android-kotlin/assets/74343321/229123c5-25e0-4dfa-a9a1-63c4cb83e8a3) | ![좋아요 모아보기](https://github.com/96hckim/android-kotlin/assets/74343321/931b9a9c-c17b-4678-959f-95697e4dbc01) | ![장바구니](https://github.com/96hckim/android-kotlin/assets/74343321/b7fdb54d-60e6-4553-b0f8-ae6a5a91b40a) | ![결제내역](https://github.com/96hckim/android-kotlin/assets/74343321/0ee39f89-9c22-42fe-a2b2-d5430a152ff5) |
 
 ## 사용 기술
 ### Design Pattern
